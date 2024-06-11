@@ -1,0 +1,9 @@
+{
+    "shipment.courier.search.url.en": "https://www.purolator.com/purolator/ship-track/tracking-summary.page?pin=KEY_PIN_NUMBER",
+    "shipment.courier.search.url.fr": "https://www.purolator.com/fr/ship-track/tracking-summary.page?pin=KEY_PIN_NUMBER",
+    "shipment.purointernational.search.url.en": "https://purolator.ts2000.net/iframe/quicktrackmultiresults/?searchFor=KEY_PIN_NUMBER",
+    "shipment.purointernational.search.url.fr": "https://purolator.ts2000.net/iframe/quicktrackmultiresults/?searchFor=KEY_PIN_NUMBER",
+    "shipment.fright.search.url.en": "https://freight.purolator.com/scripts/cgiip.exe/reftrace2.htm?seskey=&language=english&nav=top&BtnExcel=&prolist=KEY_PIN_NUMBER&shipdate=&dzip=&acctno=&BtnAction=Begin Trace",
+    "shipment.fright.search.url.fr": "https://freight.purolator.com/scripts/cgiip.exe/reftrace2.htm?seskey=&language=french&nav=top&BtnExcel=&prolist=KEY_PIN_NUMBER&shipdate=&dzip=&acctno=&BtnAction=Begin Trace",
+    
+}
