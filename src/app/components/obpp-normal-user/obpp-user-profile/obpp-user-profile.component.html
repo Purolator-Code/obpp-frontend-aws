@@ -1,0 +1,401 @@
+<div id="ngb-nav-4-panel">
+<div class="loader" *ngIf="showIFrameLoading">
+    <div>
+        <img alt="" src="../../../../assets/images/updated-ajax-loader.gif">
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h2 class="txt-puro-blue">{{'USER_PROFILE' | translate }}</h2>
+        </div>
+
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-sm-6">
+            <form name="userprofileForm" [formGroup]="userprofileForm" class="form-horizontal profile-form" novalidate>
+                <!-- First name -->
+                <div class="form-group"
+                    [ngClass]="{'has-error':userprofileForm.get('firstName')?.invalid && (userprofileForm.get('firstName')?.dirty || submitted)}">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <div class="form-floating mb-3">
+                                <input [readonly]="!formEditEnable.firstName"
+                                    [ngClass]="{'is-invalid': userprofileForm.get('firstName')?.invalid && userprofileForm.get('firstName')?.dirty}"
+                                    [(ngModel)]="userprofile.firstName" formControlName="firstName" required="required"
+                                    id="firstName" type="text" class="form-control"
+                                    placeholder="{{'FIRST_NAME' | translate }}">
+                                <div [attr.aria-label]="'edit FIRST_NAME' | translate" (click)="enableEditField('firstName')" *ngIf="!formEditEnable.firstName"
+                                    class="edit-icon" tabindex="0" (keydown.enter)="enableEditField('firstName')">
+                                    <span class="fa fa-pen  fa-lg"></span>
+                                </div>
+                                <label for="firstName">{{'FIRST_NAME' | translate }}</label>
+                            </div>
+                            <div
+                                *ngIf="userprofileForm.get('firstName')?.invalid && userprofileForm.get('firstName')?.dirty">
+                                <span class="error-block">{{'ERR_FIRST_NAME_INVALID' | translate }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End First name -->
+                <!-- Last Name-->
+                <div class="form-group"
+                    [ngClass]="{'has-error':userprofileForm.get('lastName')?.invalid && (userprofileForm.get('lastName')?.dirty || submitted)}">
+                    <div class="row">
+
+                        <div class="col-md-10">
+                            <div class="form-floating mb-3">
+                                <input [readonly]="!formEditEnable.lastName"
+                                    [ngClass]="{'is-invalid': userprofileForm.get('lastName')?.invalid && userprofileForm.get('lastName')?.dirty}"
+                                    [(ngModel)]="userprofile.lastName" formControlName="lastName" required="required"
+                                    id="lastName" type="text" class="form-control"
+                                    placeholder="{{'LAST_NAME' | translate }}">
+                                <div [attr.aria-label]="'edit LAST_NAME' | translate" (click)="enableEditField('lastName')" *ngIf="!formEditEnable.lastName" tabindex="0" (keydown.enter)="enableEditField('lastName')"
+                                    class="edit-icon">
+                                    <span class="fa fa-pen  fa-lg"></span>
+                                </div>
+                                <label for="lastName">{{'LAST_NAME' | translate }}</label>
+                            </div>
+                            <div
+                                *ngIf="userprofileForm.get('lastName')?.invalid && userprofileForm.get('lastName')?.dirty">
+                                <span class="error-block">{{'ERR_LAST_NAME_INVALID' | translate }}</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+                <!-- End Last Name -->
+
+                <!-- Phone number and extension -->
+
+                <div class="form-group row mb-3"
+                    [ngClass]="{'has-error':userprofileForm.get('phoneNumber')?.invalid && (userprofileForm.get('phoneNumber')?.dirty || submitted) && userprofileForm.get('phoneNumberExt')?.invalid && (userprofileForm.get('phoneNumberExt')?.dirty || submitted)}">
+
+                    <div class="col-sm-10">
+
+                        <div class="row" style="flex-wrap:nowrap;">
+
+                            <div class="col-sm-6">
+                                <div class="form-floating">
+                                    <input [readonly]="!formEditEnable.phoneNumber" [textMask]="{mask: phoneNumberMask}"
+                                        [ngClass]="{'is-invalid': userprofileForm.get('phoneNumber')?.invalid && userprofileForm.get('phoneNumber')?.dirty}"
+                                        [(ngModel)]="userprofile.phoneNumber" formControlName="phoneNumber"
+                                        id="phoneNumber" type="text" class="form-control" placeholder="###-###-####">
+                                    <div [attr.aria-label]="'edit Phone'" (click)="enableEditField('phoneNumber')" *ngIf="!formEditEnable.phoneNumber" tabindex="0" (keydown.enter)="enableEditField('phoneNumber')"
+                                        class="edit-icon">
+                                        <span class="fa fa-pen  fa-lg"></span>
+                                    </div>
+                                    <label for="phoneNumber">Phone ###-###-####</label>
+                                </div>
+                                <div
+                                    *ngIf="userprofileForm.get('phoneNumber')?.invalid && userprofileForm.get('phoneNumber')?.dirty">
+                                    <span class="error-block">{{'ERR_PHONE_MSG' | translate }}</span>
+                                </div>
+                                <div *ngIf="isPhoneNumberValid">
+                                    <span class="error-block">{{'ERR_PHONE_MSG'| translate }}</span>
+                                </div>
+
+                            </div>
+                            <div class="col-sm-6">
+
+                                <div class="form-floating">
+                                    <input [readonly]="!formEditEnable.phoneNumberExt" maxlength="6"
+                                        [ngClass]="{'is-invalid': userprofileForm.get('phoneNumberExt')?.invalid && userprofileForm.get('phoneNumberExt')?.dirty}"
+                                        [(ngModel)]="userprofile.phoneNumberExt" formControlName="phoneNumberExt"
+                                        id="phoneNumberExt" type="text" class="form-control" placeholder="Ext xxxx">
+                                    <div [attr.aria-label]="'edit Ext'" (click)="enableEditField('phoneNumberExt')" tabindex="0" (keydown.enter)="enableEditField('phoneNumberExt')"
+                                        *ngIf="!formEditEnable.phoneNumberExt" class="edit-icon">
+                                        <span class="fa fa-pen  fa-lg"></span>
+                                    </div>
+                                    <label for="phoneNumberExt">Ext xxxx</label>
+                                </div>
+
+                                <div
+                                    *ngIf="userprofileForm.get('phoneNumberExt')?.invalid && (userprofileForm.get('phoneNumberExt')?.dirty || submitted)">
+                                    <span ng-message="required" class="error-block">{{'EXT_REQUIRED'
+                                        | translate }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- End phone number and extension -->
+                <!-- Company Name  -->
+                <div class="form-group mb-3"
+                    [ngClass]="{'has-error':userprofileForm.get('companyName')?.invalid && (userprofileForm.get('companyName')?.dirty || submitted)}">
+                    <div class="row">
+
+                        <div class="col-md-10">
+                            <div class="form-floating">
+                                <input [readonly]="!formEditEnable.companyName" maxlength="40"
+                                    [ngClass]="{'is-invalid': userprofileForm.get('companyName')?.invalid && userprofileForm.get('companyName')?.dirty}"
+                                    [(ngModel)]="userprofile.companyName" formControlName="companyName"
+                                    required="required" id="companyName" type="text" class="form-control"
+                                    placeholder="{{'COMPANY_NAME' | translate }}">
+                                <div [attr.aria-label]="'edit COMPANY_NAME' | translate" (click)="enableEditField('companyName')" *ngIf="!formEditEnable.companyName" tabindex="0" (keydown.enter)="enableEditField('companyName')"
+                                    class="edit-icon">
+                                    <span class="fa fa-pen  fa-lg"></span>
+                                </div>
+                                <label for="companyName">{{'COMPANY_NAME' | translate }}</label>
+                            </div>
+                            <div
+                                *ngIf="userprofileForm.get('companyName')?.invalid && (userprofileForm.get('companyName')?.dirty || submitted)">
+                                <span ng-message="required" class="error-block">{{'ERR_COMPANY_NAME_INVALID'
+                                    | translate }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Company Name-->
+                <!-- Email -->
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <div class="form-floating mb-3">
+                                <input [readonly]="true" [value]="userprofile.emailAddress"
+                                    formControlName="emailAddress" required="required" id="emailAddress" type="text"
+                                    class="form-control">
+                                <label for="emailAddress">{{'EMAIL' | translate }}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Email -->
+                <!-- Password -->
+                <div class="form-group">
+                    <div class="row">
+
+                        <div class="col-md-10">
+                            <div class="form-floating mb-3">
+                                <input [readonly]="true" [value]="userprofile.password" formControlName="Password" required="required"
+                                    id="Password" type="password" class="form-control"
+                                    placeholder="{{'PASSWORD' | translate }}">
+                                <div [attr.aria-label]="'edit PASSWORD' | translate" (click)="changePassword()" class="edit-icon" tabindex="0" (keydown.enter)="changePassword()"> <span
+                                        class="fa fa-pen  fa-lg"></span> </div>
+                                <label for="Password">{{'PASSWORD' | translate }}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Password -->
+                <!-- Language Preference -->
+                <div class="form-group row mb-3">
+                    <div class="col-md-10 mb-2">
+                        <label for="profile-languagePref" class="col-xs-5 control-label">{{'LANGUAGE_PREFERENCE'
+                            | translate}} <img class="icon" src="assets/images/icon-tooltip.svg"
+                                alt="{{'USER_LANG_PREF_TEXT' | translate }}"
+                                ngbTooltip="{{'USER_LANG_PREF_TEXT' | translate }}" tabindex="0" />
+                        </label>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="radio-button-row">
+                            <div class="form-check form-radio-custom">
+                                <input class="form-check-input" type="radio" name="language" id="EN" value="EN"
+                                    [checked]="userprofile.language === 'EN'" [(ngModel)]="userprofile.language"
+                                    formControlName="language" tabindex="0" (change)="enableEditField('language')">
+                                <label class="form-check-label" for="EN">{{'EN' | translate }}</label>
+                            </div>
+                            <div class="form-check  form-radio-custom">
+                                <input class="form-check-input" type="radio" name="language" id="FR" value="FR"
+                                    [checked]="userprofile.language === 'FR'" [(ngModel)]="userprofile.language"
+                                    formControlName="language" tabindex="0" (change)="enableEditField('language')">
+                                <label class="form-check-label" for="FR">{{'FR' | translate }}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Language Preference -->
+                <!-- New Email notification-->
+                <div class="form-group" *ngIf="roleName =='customer' && !isEditProfile">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <label for="profile-creditCardPaymentReceipt"
+                                class="col-xs-10 control-label">{{'EMAIL_NOTIFICATION_TEXT'
+                                | translate }}</label>
+                        </div>
+
+                        <div class="col-md-5">
+                            <div *ngIf="userprofile.userPreferenceDto[1].preferenceName === 'Invoice Notification'">
+                                <label class="control-label"
+                                    *ngIf="userprofile.userPreferenceDto[1].preferenceValue">{{'YES'
+                                    | translate}}</label> <label class="control-label"
+                                    *ngIf="!userprofile.userPreferenceDto[1].preferenceValue">{{'NO'
+                                    | translate }} </label>
+                            </div>
+                            <div *ngIf="userprofile.userPreferenceDto[0].preferenceName === 'Invoice Notification'">
+                                <label class="control-label"
+                                    *ngIf="userprofile.userPreferenceDto[0].preferenceValue">{{'YES'
+                                    | translate}}</label> <label class="control-label"
+                                    *ngIf="!userprofile.userPreferenceDto[0].preferenceValue">{{'NO'
+                                    | translate }} </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group mb-3" *ngIf="roleName =='customer' && isEditProfile">
+                    <div class="col-md-10">
+                        <div class="checkbox">
+                            <label *ngIf="userprofile.userPreferenceDto[1].preferenceName === 'Invoice Notification'">
+                                <input class="form-check-input" name="profile-acceptTerms" type="checkbox"
+                                    (change)="selectInvoiceNotification($event)"
+                                    [checked]="userprofile.userPreferenceDto[1].preferenceValue" />
+                                {{'EMAIL_NOTIFICATION_TEXT' | translate }}</label>
+                            <label *ngIf="userprofile.userPreferenceDto[0].preferenceName === 'Invoice Notification'">
+                                <input class="form-check-input" name="profile-acceptTerms" type="checkbox"
+                                    (change)="selectInvoiceNotification($event)"
+                                    [checked]="userprofile.userPreferenceDto[0].preferenceValue" />
+                                {{'EMAIL_NOTIFICATION_TEXT' | translate }}</label>
+                        </div>
+                    </div>
+                </div>
+                <!-- End New Email notification-->
+                <!-- Email notification payment and reciept-->
+                <div class="form-group mb-3" *ngIf="roleName =='customer' && !isEditProfile">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <label for="profile-creditCardPaymentReceipt"
+                                class="col-xs-10 control-label">{{'EMAIL_PAY_REMMITANCE_TEXT'
+                                | translate }}</label>
+                        </div>
+                        <div class="col-md-5">
+                            <div *ngIf="userprofile.userPreferenceDto[1].preferenceName === 'Payment Notification'">
+                                <label class="control-label"
+                                    *ngIf="userprofile.userPreferenceDto[1].preferenceValue">{{'YES'
+                                    | translate}}</label> <label class="control-label"
+                                    *ngIf="!userprofile.userPreferenceDto[1].preferenceValue">{{'NO'
+                                    | translate }} </label>
+                            </div>
+                            <div *ngIf="userprofile.userPreferenceDto[0].preferenceName === 'Payment Notification'">
+                                <label class="control-label"
+                                    *ngIf="userprofile.userPreferenceDto[0].preferenceValue">{{'YES'
+                                    | translate}}</label> <label class="control-label"
+                                    *ngIf="!userprofile.userPreferenceDto[0].preferenceValue">{{'NO'
+                                    | translate }} </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group mb-3" *ngIf="roleName =='customer' && isEditProfile">
+                    <div class="col-md-10">
+                        <div class="checkbox">
+                            <label *ngIf="userprofile.userPreferenceDto[0].preferenceName === 'Payment Notification'">
+                                <input class="form-check-input" name="profile-acceptTerms" type="checkbox"
+                                    (change)="selectPaymentInvoiceNotification($event)"
+                                    [checked]="userprofile.userPreferenceDto[0].preferenceValue" />
+                                {{'EMAIL_PAY_REMMITANCE_TEXT' | translate }}
+                            </label>
+                            <label *ngIf="userprofile.userPreferenceDto[1].preferenceName === 'Payment Notification'">
+                                <input class="form-check-input" name="profile-acceptTerms" type="checkbox"
+                                    (change)="selectPaymentInvoiceNotification($event)"
+                                    [checked]="userprofile.userPreferenceDto[1].preferenceValue" />
+                                {{'EMAIL_PAY_REMMITANCE_TEXT' | translate }}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Email notification payment and reciept-->
+                <div class="form-group mb-3" *ngIf="isEditProfile">
+                    <div class="d-flex align-items-center justify-content-start">
+                        <button class="btn btn-primary btn-block primary-btn" [disabled]="!userprofileForm.invalid && !enableSaveButton"
+                            (click)="saveProfile(userprofile)">{{'SAVE_PARTIAL'
+                            | translate}}</button>
+                        <button class="btn btn-primary cta-blue info-btn ms-4 sec-btn" (click)="cancelChanges()">{{'CANCEL' |
+                            translate}}</button>
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-block primary-btn acnt-button"
+                    (click)="gotoAccountSummary()">{{'RET_ACCT_SUMMARY_TEXT'
+                    | translate}}</button>
+
+            </form>
+        </div>
+        <div class="col-sm-6" *ngIf="roleName =='customer'">
+            <div class="panel-content">
+                <form name="creditCardDetailsForm" novalidate>
+                    <div class="row">
+                        <div ngClass="table-container">
+                            <table class="table table-creditcard table-striped" aria-describedby="">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">{{'CARD_NUMBER_TEXT'
+                                            | translate}}</th>
+                                        <th class="text-center" scope="col">
+                                            {{'EXPIRY_DATE_TEXT' | translate}}
+                                        </th>
+                                        <th class="text-center" scope="col">
+                                            {{'USER_PROFILE_ENROL_TEST' | translate}}
+                                        </th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let val of creditCardList">
+                                        <!-- Account Number Index  -->
+                                        <td class="table-creditcard-body">
+                                            <div class="cardProfileccMask">{{val.ccType}}{{val.ccMask}}
+                                                <span *ngIf="val.creditCardstatus === 'EXPIRED_TEXT'">
+                                                    <img alt="" title="{{'EXPIRED_TEXT' | translate}}"
+                                                        class="icon iconCreditCard"
+                                                        src="assets/images/icon-warning.png">
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td class="table-creditcard-body" style="text-align: center">
+                                            <div class="cardProfileExpiryDate">{{val.ccExpiry}}</div>
+                                        </td>
+                                        <td class="text-center">
+                                            <div>{{val.autoPayEnrolled | translate}}</div>
+                                        </td>
+                                        <td>
+                                            <img alt="a" title="{{'REMOVE_CREDIT_DETAILS' | translate}}" class="icon"
+                                                src="assets/images/blueclose.svg" tabindex="0"
+                                                (keydown.enter)="showConfirmAccountRemoveModal(val.creditCardId,val.ccType,val.ccMask,val.ccToken,val.ccExpiry,val.cardHolderName,val.obppUserId,val.autoPayEnrolled)"
+                                                (click)="showConfirmAccountRemoveModal(val.creditCardId,val.ccType,val.ccMask,val.ccToken,val.ccExpiry,val.cardHolderName,val.obppUserId,val.autoPayEnrolled);">
+                                        </td>
+                                        <td>
+                                            <div [attr.aria-label]="'edit'" (click)="loadIFrameForEdit(val.creditCardId,val.ccType,val.ccMask,
+                                                val.ccToken,val.ccExpiry,val.cardHolderName)" tabindex="0" (keydown.enter)="loadIFrameForEdit(val.creditCardId,val.ccType,val.ccMask,
+                                                val.ccToken,val.ccExpiry,val.cardHolderName)" class="edit-icon-pen">
+                                                <span class="fa fa-pen"></span>
+                                            </div>
+                                        </td>
+                                        <!-- End Account Number Index -->
+                                        <!-- Account Number -->
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <button class="btn btn-primary cta-blue info-btn m-auto sec-btn"
+                                (click)="loadIFrameForNew();">{{'ADD_CARD_TEXT' |
+                                translate}}</button>
+                        </div>
+                    </div>
+                </form>
+                <div *ngIf="showIFrame" class="iframe">
+
+                    <div id="paymentModal" class="modal-payment">
+                        <div class="modal-payment-content">
+                            <div class="form-group">
+                                <div class="section" id="paymentContainer">
+                                    {{'REQUEST_IN_PROGRESS' | translate}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <form name="init__payment" #cpwaForm id="init__payment" novalidate="" ngNoForm target="cpwa__frame"
+                        action="{{cpwa_frame_url}}" method="post">
+                        <input name="p" id="payload" type="hidden" value="{{cpwaPayload}}" />
+                    </form>
+                    <div>
+                        <iframe id="cpwa__frame" (load)="showIFrameLoading=false" name="cpwa__frame" width="300" height="850" frameborder="0" scrolling="no">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>

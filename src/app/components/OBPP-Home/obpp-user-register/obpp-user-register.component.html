@@ -1,0 +1,276 @@
+<!-- Begin Form -->
+<h1 class="txt-puro-blue pull-left">
+    {{ "SIMPLIFY_BILLING_PROCESS_TEXT" | translate }}
+  </h1> 
+<div class="card" *ngIf="!IsUserregistered">
+    <div class="card-header d-flex align-items-center justify-content-center card-head">
+        <label class="txt-puro-blue card-title text-center">{{'REGISTRATION_LABEL' | translate }}</label>
+    </div>
+    <div class="row" *ngIf="fieldErrorsObj && fieldErrorsObj.length > 0">
+        <div class="col-md-12 error-block">
+            <ul>
+                <li *ngFor="let errMsg of fieldErrorsObj">
+                    {{errMsg['message'] | translate}}
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="card-body d-flex flex-column">
+        <form *ngIf="!IsUserregistered" [formGroup]="registerForm" class="form-horizontal" novalidate>
+            <p class="font-p">{{"FIELDS_REQUIRED" | translate}}</p>
+            <div class="col-md-12 d-flex input-margin">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <div class="form-floating user-input-height user-input-width p-bottom-24">
+                            <input type="email" class="form-control" formControlName="emailAddress" id="emal"
+                                placeholder="{{'EMAIL' | translate }}" maxlength="100" required="required" required
+                                aria-label="email" aria-describedby="basic-addon1"
+                                [class]="registerForm.get('emailAddress')?.invalid && (registerForm.get('emailAddress')?.dirty || submitted) 
+                                ? 'form-control is-invalid':'form-control'">
+                            <label for="email">{{'EMAIL' | translate }}*</label>
+                        </div>
+                        <div
+                            *ngIf="registerForm.get('emailAddress')?.invalid && (registerForm.get('emailAddress')?.dirty || submitted)">
+                            <span class="error-block">{{'EMAIL_REQUIRED' | translate }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <div class="form-floating user-input-height phoneNumber-width p-bottom-24">
+                            <input id="phoneNumber" [textMask]="{mask: phoneNumberMask}" name="phoneNumber"
+                                formControlName="phoneNumber" class="register-phone form-control"
+                                placeholder="###-###-####" required="required"
+                                [class]="registerForm.get('phoneNumber')?.invalid && (registerForm.get('phoneNumber')?.dirty || submitted) 
+                                ? 'form-control is-invalid':'form-control'">
+                            <label for="phoneNumber">{{'PHONE' | translate }}*</label>
+                        </div>
+                        <div
+                            *ngIf="registerForm.get('phoneNumber')?.invalid && (registerForm.get('phoneNumber')?.dirty || submitted)">
+                            <span class="error-block">{{'PHONE_REQUIRED' | translate }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="input-group">
+                        <div class="form-floating user-input-height phoneNumberExt-width p-bottom-24">
+                            <input id="phoneNumberExt" name="phoneNumberExt" formControlName="phoneNumberExt"
+                                maxlength="6" placeholder="{{'EXTENSION' | translate }}" class="form-control" />
+                            <label for="phoneNumberExt"> {{'EXTENSION' | translate }}</label>
+                        </div>
+                        <div
+                            *ngIf="registerForm.get('phoneNumberExt')?.invalid && (registerForm.get('phoneNumberExt')?.dirty || submitted)">
+                            <span class="error-block">{{'EXT_REQUIRED' | translate }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 d-flex input-margin">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <div class="form-floating user-input-height user-input-width p-bottom-24">
+                            <input name="firstName" formControlName="firstName" class="form-control" maxlength="50"
+                                required="required" placeholder="{{'FIRST_NAME' | translate }}" 
+                                [class]="registerForm.get('firstName')?.invalid && (registerForm.get('firstName')?.dirty || submitted) 
+                                ? 'form-control is-invalid':'form-control'">
+                            <label for="firstName">{{'FIRST_NAME' | translate }}*</label>
+                        </div>
+                        <div
+                            *ngIf="registerForm.get('firstName')?.invalid && (registerForm.get('firstName')?.dirty || submitted)">
+                            <span class="error-block">{{'ERR_FIRST_NAME_INVALID' | translate }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <div class="form-floating user-input-height user-input-width p-bottom-24">
+                            <input name="companyName" formControlName="companyName" class="form-control" maxlength="40"
+                                required="required" placeholder="{{'COMPANY_NAME' | translate }}"
+                                [class]="registerForm.get('companyName')?.invalid && (registerForm.get('companyName')?.dirty || submitted) 
+                                ? 'form-control is-invalid':'form-control'">
+                            <label for="companyName">{{'COMPANY_NAME' | translate }}*</label>
+                        </div>
+                        <div
+                            *ngIf="registerForm.get('companyName')?.invalid && (registerForm.get('companyName')?.dirty || submitted)">
+                            <span class="error-block">{{'ERR_COMPANY_NAME_INVALID' | translate }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 d-flex input-margin">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <div class="form-floating user-input-height user-input-width p-bottom-24">
+                            <input name="lastName" formControlName="lastName" class="form-control" maxlength="50"
+                                required="required" placeholder="{{'LAST_NAME' | translate }}"
+                                [class]="registerForm.get('lastName')?.invalid && (registerForm.get('lastName')?.dirty || submitted) 
+                                ? 'form-control is-invalid':'form-control'">
+                            <label for="lastName"> {{'LAST_NAME' | translate }}*</label>
+                        </div>
+                        <div
+                            *ngIf="registerForm.get('lastName')?.invalid && (registerForm.get('lastName')?.dirty || submitted)">
+                            <span class="error-block">{{'ERR_LAST_NAME_INVALID' | translate }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 d-flex align-items-center">
+                    <div class="col-md-4">
+                        <label for="languagePref">{{'LANGUAGE_PREFERENCE' | translate }}*:</label>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="radio-inline p-2">
+                            <input type="radio" name="languagePref" value="EN" formControlName="languagePref" />
+                            <span class="p-left-10">{{'EN' | translate}}</span>
+                        </label>
+                        <label class="radio-inline p-2">
+                            <input type="radio" name="languagePref" formControlName="languagePref" value="FR" />
+                            <span class="p-left-10">{{'FR' | translate}}</span>
+                        </label>
+                    </div>
+                    <img class="icon" src="assets/images/icon-tooltip.svg" alt="{{'REGISTER_LANGUAGE_TOOLTIP_TEXT' | translate}}" tabindex="0" class="icon-tooltip"
+                        ngbTooltip="{{'REGISTER_LANGUAGE_TOOLTIP_TEXT' | translate}}">
+                </div>
+            </div>
+            <hr />
+            <div class="col-md-12 d-flex input-margin">
+                <div class="col-md-5" style="width:40%">
+                    <div class="input-group">
+                        <div class="form-floating user-input-height accountNumber-width p-bottom-24">
+                            <input name="accNumber" class="form-control" [(ngModel)]="addAccountObj.accNumber"
+                                [ngModelOptions]="{standalone: true}" type="text" minlength="2" maxlength="12"
+                                placeholder="{{'ACCOUNT_NUMBER_TEXT' | translate }}"
+                                [class]="(isEmptyAccountList() && submitted) || validateAccNumber() || isAccNumberDuplicated()
+                                ? 'form-control is-invalid':'form-control'">
+                            <label for="accNumber">{{'ACCOUNT_NUMBER_TEXT' | translate }}*</label>
+
+                        </div>
+                        <img class="icon" src="assets/images/icon-tooltip.svg" alt="{{'REGISTER_ACCOUNT_NUMBER_TOOLTIP_TEXT_UPDATED' | translate}}" tabindex="0" class="icon-tooltip icon-position"
+                            ngbTooltip="{{'REGISTER_ACCOUNT_NUMBER_TOOLTIP_TEXT_UPDATED' | translate}}">
+                        <div class="w-100" *ngIf="isEmptyAccountList() && submitted">
+                            <span class="error-block">{{'ADD_ACCOUNT_NUMBER' | translate }}</span>
+                        </div>
+                        <div class="w-100" *ngIf="validateAccNumber()">
+                            <span class="error-block">{{'ACCOUNT_NUMBER_REQUIRED' | translate }}</span>
+                        </div>
+                        <div class="w-100" *ngIf="isAccNumberDuplicated()">
+                            <span class="error-block">{{'DIFFERENT_ACCOUNT_NUMBER' | translate }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" style="width: 28%">
+                    <div class="input-group">
+                        <div class="form-floating user-input-height postalCode-width p-bottom-24">
+                            <input name="postalCode" [(ngModel)]="addAccountObj.postalCode"
+                                [ngModelOptions]="{standalone: true}" #postalCodeInput="ngModel" type="text" maxlength="12" class="form-control"
+                                placeholder="{{'POSTAL_CODE_TEXT' | translate }}" [class]="(isEmptyAccountList() && submitted) || validatePostalCode() ? 'form-control is-invalid':
+                                'form-control'">
+                            <label for="languagePref">{{'POSTAL_CODE_TEXT' | translate }}*</label>
+                        </div>
+                        <img class="icon" src="assets/images/icon-tooltip.svg" alt="{{'POSTALCODE_TOOLTIP_TEXT' | translate}}" tabindex="0" class="icon-tooltip icon-position"
+                            ngbTooltip="{{'POSTALCODE_TOOLTIP_TEXT' | translate}}">
+                        <div class="w-100" *ngIf="isEmptyAccountList() && submitted">
+                            <span class="error-block">{{ 'POSTAL_CODE_REQUIRED' | translate }}</span>
+                        </div>
+                        <div class="w-100" *ngIf="validatePostalCode()">
+                            <span class="error-block">{{'POSTAL_CODE_REQUIRED' | translate }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <div class="form-floating user-input-height billing-width p-bottom-24">
+                            <select *ngIf="getLangValue() != 'fr'" [(ngModel)]="addAccountObj.accessdrp"
+                                [ngModelOptions]="{standalone: true}" class="form-select" name="accessdrp"
+                                id="accessdrp">
+                                <option *ngFor="let v of globalDataConfiguration.accessValuesEn" [value]="v.code">
+                                    {{v.description}}
+                                </option>
+                            </select>
+                            <select *ngIf="getLangValue() == 'fr'" [(ngModel)]="addAccountObj.accessdrp"
+                                [ngModelOptions]="{standalone: true}" class="form-select" name="accessdrp"
+                                id="accessdrp">
+                                <option *ngFor="let v of globalDataConfiguration.accessValuesFr" [value]="v.code">
+                                    {{v.description}}
+                                </option>
+                            </select>
+                            <label for="languagePref">{{'BILLING_CENTRE_ACCESS' | translate }}</label>
+                        </div>
+                        <img class="icon" src="assets/images/icon-tooltip.svg" alt="{{'BILLING_CENTRE_ACCESS_TOOLTIP' | translate}}" tabindex="0" class="icon-tooltip icon-position"
+                            ngbTooltip="{{'BILLING_CENTRE_ACCESS_TOOLTIP' | translate}}">
+                    </div>
+                </div>
+            </div>
+            <button (click)="getAccountInformation()" [disabled]="IsSubmitDisable()" title="{{'ADD_LABEL' | translate}}"
+                class="btn btn-primary cta-blue info-btn form-control">{{'ADD_LABEL' | translate}}</button>
+            <div class="row" *ngIf="errorInAccountNumber">
+                <div class="w-100">
+                    <span class="error-block">{{'POSTAL_CODE_ACCOUNT_NUMBER_COMBINATION' | translate }}</span>
+                </div>
+            </div>
+
+            <div class="row p-top-10">
+                <div class="col-md-10">
+                    <account-list-model [alerts]="addAccountObjArray"></account-list-model>
+                </div>
+            </div>
+            <hr />
+            <div class="form-group">
+                <div class="col-md-7 input-margin">
+                    <div class="checkbox">
+                        <label class="custom-control-label remember-size">
+                            <input name="acceptTerms" formControlName="acceptTerms" 
+                                type="checkbox" required="required" tabindex="0" #myCheckbox  (keydown.enter)="checkOnEnter($event)">
+                            {{'I_ACCEPT_THE' | translate}}
+                           
+                            
+                        </label>
+                    </div>
+                    <div class="terms-block">
+                        <a class="text-primary cursor-pointer terms" (click)="openTerms()" tabindex="0">{{'TERMS_AND_CONDITIONS' |
+                            translate}}</a>
+                    </div>
+                    <div class="w-100" *ngIf="registerForm.get('acceptTerms')?.value == false && submitted">
+                        <span class="error-block" >{{'ACCEPT_TERMS_AND_CONDITIONS' | translate}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-2">
+                        <button class="btn btn-primary btn-block primary-btn"
+                            (click)="submitNewUser()" tabindex="0" (keydown.enter)="submitNewUser()">{{'REGISTER_TEXT' |
+                            translate}}</button>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-primary btn-block primary-btn"
+                            (click)="redirectToHome()"  tabindex="0" (keydown.enter)="redirectToHome()">{{'CANCEL' |
+                            translate}}</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div *ngIf="IsUserregistered">
+
+    <div class="row">
+        <h2 class="col-xs-12"><img class="icon" src="assets/images/icon-alert-success.png"> {{'REGISTER_COMPLETE' |
+            translate}}</h2>
+    </div>
+    <div class="row">
+        <div class="col-xs-7">
+            <h3>
+                {{'THANK_YOU' | translate}}
+            </h3>
+            <br />
+        </div>
+        <div class="row">
+            <div class="col-xs-3">
+                <a routerLink="." (click)="redirectToHome()">{{'RETURN_TO_BILLING_CENTRE_TEXT' | translate}}</a>
+                <br />
+            </div>
+        </div>
+    </div>
+</div>

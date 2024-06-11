@@ -1,0 +1,433 @@
+<div id="ngb-nav-2-panel">
+    <div class="container" *ngIf="!isChangeSuccessful">
+        <div class="col-md-12">
+            <div class="ml-20 mt-20">
+                <h3 class="bold">{{ "SETTINGS_ACCT_SUMMARY_TEXT" | translate }}</h3>
+            </div>
+        </div>
+        <div *ngIf="isChangeError">
+            <div class="row">
+                <div class="col-md-12 pl-1">
+                    <span class="error-block">{{
+                        "SETTINGS_ACCT_CHANGES" | translate
+                        }}</span>
+                </div>
+            </div>
+        </div>
+        <form [formGroup]="manageAccountsForm" class="register-form" novalidate>
+            <div class="table-responsive">
+                <table class="table table-striped" aria-describedby="manageaccounts" role="table">
+                    <thead class="th-thead">
+                        <tr>
+                            <th>
+                                <label class="control-label" tabindex="0" [attr.aria-label]="'ACCOUNT_NUMBER_TEXT' | translate">
+                                    {{ "ACCOUNT_NUMBER_TEXT" | translate }}
+                                </label>
+                            </th>
+                            <th>
+                                <label class="control-label" tabindex="0">
+                                    {{ "BC_ACCOUNT_STATUS_TEXT" | translate }}
+                                    <img alt="{{ 'BC_ACCOUNT_STATUS_TEXT' | translate }}" class="icon icon-tooltip"
+                                        src="assets/images/icon-tooltip.svg" tabindex="0"
+                                        ngbTooltip="{{ 'ACCOUNT_STATUS_TOOLTIP' | translate }}" />  
+                                </label>
+                            </th>
+                            <th class="w-100">
+                                <label class="control-label" tabindex="0">
+                                    {{ "BC_ACCOUNT_ACCESS_TEXT" | translate }}
+                                </label>
+                            </th>
+                            <th class="w-175">
+                                <label class="control-label" tabindex="0">
+                                   {{ "INVOICE_LANG_PREF_TEXT" | translate }}
+                                   <img alt="{{ 'LANGUAGE_PREFERENCE_TOOLTIP' | translate }}" class="icon icon-tooltip"
+                                        src="assets/images/icon-tooltip.svg" tabindex="0"
+                                        ngbTooltip="{{ 'LANGUAGE_PREFERENCE_TOOLTIP' | translate }}" />
+                                </label>
+                            </th>
+                            <th class="w-100">
+                                <label [ngClass]="localStorageService.get('lang') == 'fr' ? 'control-label fr-text' : 'control-label'" tabindex="0">
+                                    {{ "PAPERLESS_TEXT" | translate }}
+                                    <img alt="{{ 'PAPERLESS_BILLING_TOOLTIP_TEXT' | translate }}"
+                                    class="icon icon-tooltip" src="assets/images/icon-tooltip.svg" tabindex="0"
+                                    ngbTooltip="{{ 'PAPERLESS_BILLING_TOOLTIP_TEXT' | translate }}" />
+                                </label>
+                            </th>
+                            <th>
+                                <label [ngClass]="localStorageService.get('lang') == 'fr' ? 'control-label fr-text' : 'control-label'" tabindex="0">
+                                    {{ "CONTACT_NAME_TEXT" | translate }}
+                                </label>
+                            </th>
+                            <th class="w-120">
+                                <label class="control-label" tabindex="0">
+                                    {{ "AUTOPAY_STATUS" | translate }}
+                                </label>
+                            </th>
+                            <th class="w-80">
+                                <label [ngClass]="localStorageService.get('lang') == 'fr' ? 'control-label fr-text' : 'control-label'" tabindex="0">
+                                    {{ "ENROL_MANAGE_USER_AUTOPAY_TEXT" | translate }}
+                                </label>
+                            </th>
+                            <th>
+                                <label class="control-label w-80" tabindex="0">
+                                    {{ "BC_REMOVE_ACCOUNT_ACCESS_TEXT" | translate }}
+                                    <img alt="{{ 'REMOVE_ACCOUNT_TOOLTIP' | translate }}" class="icon icon-tooltip"
+                                    src="assets/images/icon-tooltip.svg" tabindex="0"
+                                    ngbTooltip="{{ 'REMOVE_ACCOUNT_TOOLTIP' | translate }}" />
+                                </label>
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody formArrayName="accountDetails" style="border-style: none">
+                        <tr *ngIf="accountDetails.controls.length === 0">
+                            <td colspan="10" class="txt-puro-red text-center" style="color: #f00000 !important">
+                                {{ "ACCOUNT_DATA_NOT_FOUND" | translate }}
+                            </td>
+                        </tr>
+                        <tr *ngFor="
+                                let account of accountDetails.controls
+                                | paginate : { itemsPerPage: 5, currentPage: p };
+                                let i = index
+                            " [formGroupName]="fieldGlobalIndex(i)">
+                            <td tabindex="0" class="align-middle">
+                                <span>
+                                    {{ account.get("accountNumber")?.value }}
+                                </span>
+                            </td>
+                            <td tabindex="0" class="align-middle">
+                                <span class="d-flex align-items-center">
+                                    <img alt="" class="icon icon-tooltip" src="../../../../assets/images/approved.svg"
+                                        *ngIf="account.get('status')?.value == 'AP'" style="margin-right: 5px" />
+                                    <div [ngSwitch]="account.get('status')?.value">
+                                        <div *ngSwitchCase="'P'">{{ "PENDING" | translate }}</div>
+                                        <div *ngSwitchCase="'AP'">{{ "APPROVED" | translate }}</div>
+                                        <div *ngSwitchCase="'R'">{{ "REJECTED" | translate }}</div>
+                                    </div>
+                                </span>
+                            </td>
+                            <td class="align-middle" tabindex="0">
+                                <span>
+                                    <div [ngSwitch]="account.value.access">
+                                        <div *ngSwitchCase="'No Access'">
+                                            {{ "NO_ACCESS_TEXT" | translate }}
+                                        </div>
+                                        <div *ngSwitchCase="'View Only'">
+                                            {{ "VIEW_ONLY_TEXT" | translate }}
+                                        </div>
+                                        <div *ngSwitchCase="'Full Access'">
+                                            {{ "FULL_ACCESS_TEXT" | translate }}
+                                        </div>
+                                    </div>
+                                </span>
+                            </td>
+                            <td class="align-middle">
+                                <span *ngIf="!account.value.isAddedNewly" class="d-flex">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" value="English"
+                                            formControlName="languagePref" aria-label="eng-radio"
+                                            [attr.disabled]="isViewOnly?true:null" tabindex="0"/>
+                                        <label class="form-check-label">{{ "ENGLISH_TEXT" | translate }}
+                                        </label>
+                                    </div>
+                                    &nbsp;&nbsp;
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" value="French"
+                                            formControlName="languagePref" aria-label="french-radio"
+                                            [attr.disabled]="isViewOnly?true:null" tabindex="0"/>
+                                        <label class="form-check-label">{{ "FRENCH_TEXT" | translate }}
+                                        </label>
+                                    </div>
+                                </span>
+                            </td>
+                            <td class="align-middle">
+                                <div *ngIf="!account.value.isAddedNewly" class="form-check">
+                                    <input type="checkbox" formControlName="paperLessBilling"
+                                        [attr.disabled]="isViewOnly?true:null"
+                                        [checked]="account.value.paperLessBilling" aria-label="paper-less" tabindex="0"  (keydown.enter)="checkOnEnter(account.value.accountNumber)" tabindex="0"/>
+                                </div>
+                            </td>
+                            <td class="align-middle">
+                                <div *ngIf="!account.value.isAddedNewly">
+                                    <div class="input-group">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" formControlName="contactName"
+                                                id="contactName" placeholder="Name" maxlength="40"
+                                                [readonly]="isViewOnly" tabindex="0" />
+                                            <label for="contactName">Name</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="align-middle" tabindex="0">
+                                <span>
+                                    <label class="control-label">
+                                        <div [ngSwitch]="account.value.obppAutoPayAccountStatus">
+                                            <div *ngSwitchCase="'Not Enrolled'">
+                                                <span title="{{ 'NOT_ENROLLED_TOOLTIP_TEXT' | translate }}">{{
+                                                    "NOT_ENROLLED_TEXT" | translate }}</span>
+                                            </div>
+                                            <div *ngSwitchCase="'Enrolled' || 'ENROLLED'">
+                                                <span title="{{ 'ENROLLED_TOOLTIP_TEXT' | translate }}">{{
+                                                    "ENROLLED_TEXT" | translate }}</span>
+                                            </div>
+                                            <div *ngSwitchCase="'Suspended' || 'SUSPENDED'">
+                                                <span title="{{ 'SUSPENDED_TOOLTIP_TEXT' | translate }}">{{
+                                                    "SUSPENDED_TEXT" | translate }}</span>
+                                            </div>
+                                            <div *ngSwitchCase="
+                          'Enrolled by Another User' || 'ENROLLEDBYANOTHERUSER'
+                        ">
+                                                <span title="{{
+                            'ENROLLEDBYOTHERUSER_TOOLTIP_TEXT' | translate
+                          }}">{{
+                                                    "ENROLLEDBY_ANOTHER_USER_TEXT" | translate
+                                                    }}</span>
+                                            </div>
+                                            <div *ngSwitchCase="
+                          'PendingActivation' || 'PENDINGACTIVATION'
+                        ">
+                                                <span title="{{
+                            'PENDINGACTIVATIONSTATUS_TOOLTIP_TEXT' | translate
+                          }}">{{ "PENDING_ACTIVATION_TEXT" | translate }}</span>
+                                            </div>
+                                            <div *ngSwitchCase="'PendingRemoval' || 'PENDINGREMOVAL'">
+                                                <span title="{{
+                            'PENDINGREMOVALSTATUS_TOOLTIP_TEXT' | translate
+                          }}">{{ "PENDING_REMOVAL_TEXT" | translate }}</span>
+                                            </div>
+                                            <div *ngSwitchCase="
+                          'PendingAcceptance' || 'PENDINGACCEPTANCE'
+                        ">
+                                                <span title="{{
+                            'PENDINGACCEPTANCESTATUS_TOOLTIP_TEXT' | translate
+                          }}">{{ "PENDING_ACCEPTANCE_TEXT" | translate }}</span>
+                                            </div>
+                                            <div *ngSwitchCase="'Locked for Processing'">
+                                                <span title="{{
+                            'LOCKEDFORPROCESSING_TOOLTIP_TEXT' | translate
+                          }}">{{ "LOCKED_FOR_PROCESSING_TEXT" | translate }}</span>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </span>
+                            </td>
+                            <td class="text-center align-middle">
+                                <span>
+                                    <input type="checkbox" formControlName="enrollForAutoPay"
+                                        (change)="switchButton($event)" [checked]="account.value.enrollForAutoPay"
+                                        aria-label="enroll-for-auto-apy" [attr.disabled]="isViewOnly?true:null"  tabindex="0" (keydown.enter)="switchButton($event)" tabindex="0" />
+                                </span>
+                            </td>
+                            <td class="text-center align-middle">
+                                <span *ngIf="!account.value.isAddedNewly">
+                                    <input type="checkbox" formControlName="removeAccess"
+                                        [attr.disabled]="isViewOnly?true:null" [checked]="account.value.removeAccess"
+                                        aria-label="remove-access"  tabindex="0" (keydown.enter)="removeAccessBox(account.value.accountNumber)" tabindex="0" />
+                                </span>
+                                <span *ngIf="account.value.isAddedNewly" class="remove-account" tabindex="0">
+                                    <img title="{{ 'REMOVE_ACCOUNT' | translate }}"
+                                        class="icon icon-tooltip icon-position" src="assets/images/blueclose.svg"
+                                        alt="Remove Access" (click)="removeByIndex(i)" /></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <pagination-controls 
+                    (pageChange)="p = $event"
+                    class="text-center"
+                    [previousLabel]="'PREVIOUS' | translate"
+                    [nextLabel]="'NEXT' | translate">
+                </pagination-controls>
+            </div>
+
+            <div *ngIf="displayAddAccountPage">
+                <div class="table-responsive">
+                    <table class="table" aria-describedby="">
+                        <th></th>
+                        <tbody formGroupName="addAccountForm" style="border-style: none">
+                            <tr style="height: 75px">
+                                <td>
+                                    <div class="input-group">
+                                        <div class="form-floating" aria-live="polite" style="position: relative;">
+                                            <input [id]="'accountNumber'" type="text" formControlName="accountNumber" [class]="
+                                                (addAccountForm.get('accountNumber')?.invalid &&
+                                                    addAccountForm.get('accountNumber')?.dirty) ||
+                                                duplicateAccountNumberError
+                                                    ? 'form-control is-invalid'
+                                                    : 'form-control'
+                                                " minlength="2" maxlength="12" required="required" tabindex="0"/>
+                                            <label for="accountNumber">{{
+                                                "ACCOUNT_NUMBER_TEXT" | translate
+                                                }}</label>
+                                            <div *ngIf="duplicateAccountNumberError">
+                                                <span class="error-block" id="duplicateAccountNumberError">{{
+                                                    "ERR_ACCT_EXISTS" | translate
+                                                    }}</span>
+                                            </div>
+                                            <div *ngIf="addAccountForm.get('accountNumber')?.invalid && addAccountForm.get('accountNumber')?.dirty">
+                                                <span class="error-block" id="invalidAccountNumberError">{{
+                                                    "ERR_ACCT_MAINTENANCE" | translate
+                                                    }}</span>
+                                            </div>
+                                            <img alt="{{
+                                                'REGISTER_ACCOUNT_NUMBER_TOOLTIP_TEXT_UPDATED'
+                                                  | translate
+                                              }}" class="icon icon-tooltip icon-position" src="assets/images/icon-tooltip.svg"  tabindex="0"
+                                                                    ngbTooltip="{{
+                                                'REGISTER_ACCOUNT_NUMBER_TOOLTIP_TEXT_UPDATED'
+                                                  | translate
+                                              }}" style="position: absolute; top: 25px; right: -20px;"/>
+                                        </div>
+                                        
+                                    </div>      
+                                </td>
+                                <td>
+                                    <div class="input-group" aria-live="polite">
+                                        <div class="form-floating" style="position: relative;">
+                                            <input type="text" formControlName="postalCode" [class]="
+                                            (addAccountForm.get('postalCode')?.invalid &&
+                                                addAccountForm.get('postalCode')?.dirty) ||
+                                            showCombinationError
+                                                ? 'form-control is-invalid'
+                                                : 'form-control'
+                                            " minlength="4" maxlength="11" required="required" />
+                                            <label for="postalCode">{{
+                                                "POSTAL_CODE_TEXT" | translate
+                                                }}</label>
+                                            <div *ngIf="
+                                                    addAccountForm.get('postalCode')?.invalid &&
+                                                    addAccountForm.get('postalCode')?.dirty
+                                                    ">
+                                                <span class="error-block">{{
+                                                    "POSTAL_CODE_REQUIRED" | translate
+                                                    }}</span>
+                                            </div>
+                                            <div *ngIf="showCombinationError">
+                                                <span class="error-block">{{
+                                                    "POSTAL_CODE_ACCOUNT_NUMBER_COMBINATION" | translate
+                                                    }}
+                                                </span>
+                                            </div>
+                                            <img alt="{{ 'POSTALCODE_TOOLTIP_TEXT' | translate }}"
+                                            class="icon icon-tooltip icon-position" src="assets/images/icon-tooltip.svg"
+                                             ngbTooltip="{{ 'POSTALCODE_TOOLTIP_TEXT' | translate }}" [attr.aria-label]="'POSTALCODE_TOOLTIP_TEXT' | translate" style="position: absolute; top: 25px; right: -20px;"/>
+                                        </div>
+                                        
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <div class="form-floating w-175">
+                                            <select formControlName="accountAccess" id="accountAddAccess"
+                                                class="form-select" name="accessdrp">
+                                                <option value="Full Access" selected>
+                                                    {{ "FullAccess" | translate }}
+                                                </option>
+                                                <option value="View Only">
+                                                    {{ "ViewOnly" | translate }}
+                                                </option>
+                                            </select>
+                                            <label for="languagePref">{{
+                                                "BILLING_CENTRE_ACCESS" | translate
+                                                }}</label>
+                                        </div>
+                                        <img alt="{{ 'BILLING_CENTRE_ACCESS_TOOLTIP' | translate }}"  tabindex="0"
+                                            class="icon icon-tooltip icon-position" src="assets/images/icon-tooltip.svg"
+                                             ngbTooltip="{{
+                        'BILLING_CENTRE_ACCESS_TOOLTIP' | translate
+                      }}" />
+                                    </div>
+                                </td>
+                                <td class="text-center" style="vertical-align: top">
+                                    <div
+                                        class="d-flex flex-column align-items-center justify-content-around user-input-height">
+                                        <label [ngClass]="
+                        localStorageService.get('lang') == 'fr'
+                          ? 'control-label fr-text'
+                          : 'control-label'
+                      ">
+                                            {{ "ENROL_MANAGE_USER_AUTOPAY_TEXT" | translate }}
+                                        </label>
+                                        <input type="checkbox" formControlName="needToEnroll"
+                                            [checked]="addAccountForm.value.needToEnroll"
+                                            (change)="switchButton($event)" tabindex="0" (keydown.enter)="switchButton($event)"/>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="remove-account"  (keydown.enter)="remove(false)">
+                                        <img title="{{ 'REMOVE_ACCOUNT' | translate }}"
+                                            class="icon icon-tooltip icon-position" src="assets/images/blueclose.svg"
+                                            alt="Remove Access" (click)="remove(false)" tabindex="0" /></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <button class="btn btn-primary btn-block primary-btn"
+                        (click)="checkAccountNumberAndPostalCode()" [disabled]="isViewOnly" (keydown.enter)="checkAccountNumberAndPostalCode()" >
+                        {{ "ADD_LABEL" | translate }}
+                    </button>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-md-7">
+                    <div class="form-floating h-100">
+                        <input type="textarea" class="form-control mt-2" id="additionalMessages" [readonly]="isViewOnly"
+                            formControlName="additionalNotes" rows="3" style="max-width: 85%; height: 100%" />
+                        <label for="additionalMessages">{{
+                            "ADDATIONAL_CHANGES_INCLUDE_TEXT" | translate
+                            }}</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <button class="btn btn-primary btn-block primary-btn" (click)="checkAndSave()"
+                            [disabled]="isViewOnly">
+                            {{
+                            optToEnroll == true
+                            ? ("SAVE_AND_ENROL_TEXT" | translate)
+                            : ("SUBMIT_REQ_TEXT" | translate)
+                            }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="container" *ngIf="isChangeSuccessful">
+        <div class="row">
+            <div class="ml-20 mt-20">
+                <h3 class="bold">
+                    <img alt="" class="icon me-3" src="assets/images/icon-alert-success.png" />{{ "BILLING_ACCNT_TEXT1"
+                    | translate }}
+                </h3>
+            </div>
+        </div>
+        <div class="row">
+            <p class="col-md-12">{{ "NOTIFICATION_ACCOUNT_TEXT" | translate }}</p>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-2 mb-3">
+                    <button class="btn btn-primary btn-block "
+                        (click)="returnmanageAccountsClick()" [disabled]="isViewOnly" (keydown.enter)="returnmanageAccountsClick()">
+                        {{ "MANAGE_ACCOUNTS_TEXT" | translate }}
+                    </button>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <button class="btn btn-primary btn-block " (click)="returntoAccountSummaryClick()"
+                        [disabled]="isViewOnly" (keydown.enter)="returntoAccountSummaryClick()">
+                        {{ "RET_ACCT_SUMMARY_TEXT" | translate }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

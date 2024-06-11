@@ -1,0 +1,197 @@
+<div class="header-bg">
+  <obpp-loader-component *ngIf="isLoading"></obpp-loader-component>
+  <obpp-payment-loader-component *ngIf="isPaymentInProgress"></obpp-payment-loader-component>
+
+  <div class="container navbar-top-container">
+    <nav class="navbar navbar-expand-lg bg-white header-title-border">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="javascript:void(0);" href="{{ 'PUROLATOR_SITE_URL' | translate }}">
+            <img alt="purolator logo" src="assets/images/logo-purolator.svg" />
+          </a>
+        </div>
+        <button class="navbar-toggler no-print" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+          <nav>
+            <ul class="nav navbar-nav navbar-right no-print" [class]="
+              !isHomePage &&
+              this.usernameHeader != '' &&
+              this.usernameHeader != null
+                ? ''
+                : 'nav-tab'
+            ">
+              <li>
+                <a class="nav-link text-color-primary" aria-current="page"
+                  *ngIf="!isLoggedUser && !isAdminUser && !isHomePage" (click)="homeLink()"
+                  [routerLink]="['/']">{{"HOME_LABEL" | translate}}</a>
+                <a class="nav-link text-color-primary" aria-current="page" *ngIf="isLoggedUser && !isAdminUser && activeTab != 'accounts'"
+                  (click)="updateActiveId('/user/account-summary')" [routerLink]="['/user/account-summary']">{{"HOME_LABEL" | translate}}</a>
+              </li>
+
+              <li *ngIf="isHomePage">
+                <a class="nav-link text-color-primary" href="#" (click)="scrollToLogin()" role="button"
+                  aria-expanded="false">{{'HOME_LOGIN_TEXT'|translate}}</a>
+              </li>
+
+              <li *ngIf="isHomePage">
+                <a class="nav-link text-color-primary" href="#" (click)="scrollToLogin()" role="button"
+                  aria-expanded="false">{{'QUICK PAY_TEXT'|translate}}</a>
+              </li>
+
+              <li class="dropdown">
+                <a class="nav-link nav-link-main dropdown-toggle text-color-primary" data-bs-toggle="dropdown" href="#"
+                  role="button" aria-expanded="false">{{'SUPPORT_TEXT'|translate}}</a>
+
+                <ul class="dropdown-menu">
+                  <li>
+                    <a class="dropdown-item text-color-primary" target="_blank"
+                      href="{{ 'CONTACT_US_URL' | translate }}"><span class="link-label">{{
+                        "CONTACT_US" | translate
+                        }}</span></a>
+                  </li>
+                </ul>
+              </li>
+
+              <li class="dropdown" no-print>
+                <a href="#" id="imageDropdown" data-toggle="dropdown" *ngIf="
+                  !isHomePage &&
+                  this.usernameHeader != '' &&
+                  this.usernameHeader != null
+                " data-bs-toggle="dropdown">
+                  <img src="../../../../assets/images/logout.svg" alt="logout" />
+                </a>
+                <ul class="dropdown-menu logout-menu" role="menu" aria-labelledby="imageDropdown">
+                  <li>
+                    <a ngbDropdownItem [routerLink]="['/user/user-profile']">{{ "PROFILE" | translate }}<br />({{
+                      usernameHeader }})</a>
+                  </li>
+                  <li>
+                    <a ngbDropdownItem href="#" (click)="logout()">{{
+                      "LOGOUT" | translate
+                      }}</a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </nav>
+  </div>
+
+  <div class="container pt-4 pb-4 d-flex">
+    <div *ngIf="isLoggedUser && !isHomePage && !isAdminUser" class="col-lg-2 sidebar">
+      <ul class="list-ul no-print">
+        <li class="list-li">
+          <span class="list-span"><img class="pr-5 w-24" alt="truck" src="../../../../assets/images/truck.svg">
+            <a class="text-color-primary" target="_blank"
+              href="https://www.purolator.com/en/shipping/holiday-shipping"><span class="link-label">{{
+                "HOLIDAY_SHIPPING" | translate }}</span></a></span>
+        </li>
+        <li class="list-li">
+          <span class="list-span"><img class="pr-5 w-24" alt="pcakage" src="../../../../assets/images/package.svg">
+            <a class="text-color-primary" target="_blank" href="https://www.purolator.com/en/support/how-to-ship"><span
+                class="link-label">{{ "HOW_TO_SHIP" | translate }}</span></a></span>
+        </li>
+        <li class="list-li">
+          <span class="list-span"><img class="pr-5 w-24" alt="human" src="../../../../assets/images/human.svg">
+            <a class="text-color-primary" target="_blank" href="https://eshiponline.purolator.com/ShipOnline/"><span
+                class="link-label">{{ "SCHEDULE_PCIKUP" | translate }}</span></a></span>
+        </li>
+        <li class="list-li">
+          <span class="list-span"><img class="pr-5 w-24" alt="shipping" src="../../../../assets/images/shipping.svg">
+            <a class="text-color-primary" target="_blank" href="http://www.purolatorinternational.com/"><span
+                class="link-label">{{ "US_SHIPPERS" | translate }}</span></a></span>
+        </li>
+        <li class="list-li">
+          <div class="d-flex align-items-center">
+              <img class="pr-5 w-24" alt="location" src="../../../../assets/images/location.svg">
+              <a class="text-color-primary" target="_blank" href="{{ 'FIND_LOCATION_URL' | translate }}">
+                  <span class="link-label">{{ "FIND_LOCATION" | translate }}</span>
+              </a>
+          </div>
+        </li>    
+        <li class="list-li">
+          <span class="list-span"><img class="pr-5 w-22" alt="chat" src="../../../../assets/images/chat.svg"><a
+              class="text-color-primary" title="Chat" href="javascript:void(0);" (click)="openLiveChat()">
+              {{'CHAT' | translate}}</a></span>
+        </li>
+      </ul>
+    </div>
+
+    <div *ngIf="isLoggedUser && !isHomePage && isAdminUser" class="col-lg-2">
+      <ul class="list-ul">
+        <li (click)="navigatetab('viewCustomerScreen', '')" (keydown.enter)="navigatetab('viewCustomerScreen','')" tabindex="0"
+          [class]="activeTab==='viewCustomerScreen'?'list-li list-li-active d-flex align-items-center':'list-li'">
+          <span [class]="activeTab==='viewCustomerScreen'?'list-span list-span-active':'list-span'"><img class="pr-5"
+              alt="card" [src]="activeTab==='viewCustomerScreen' ? '../../../../assets/images/card-checklist-active.svg':
+              '../../../../assets/images/card-checklist.svg'">{{
+            "VIEW_CUSTOMER_SCREENS" | translate }}</span>
+        </li>
+        <li (click)="navigatetab('manageusers','')" (keydown.enter)="navigatetab('manageusers','')"
+          [class]="activeTab==='manageusers'?'list-li list-li-active':'list-li'">
+          <span [class]="activeTab==='manageusers'?'list-span list-span-active':'list-span'">
+            <img class="pr-5 w-24" alt="shied" [src]="activeTab==='manageusers' ? '../../../../assets/images/shield-check-active.svg':
+              '../../../../assets/images/shield-check.svg'">{{
+            "MANAGE_USERS" | translate }}</span>
+        </li>
+        <li (click)="navigatetab('transactionlog', '')" tabindex="0" (keydown.enter)="navigatetab('transactionlog','')"
+          [class]="activeTab==='transactionlog'?'list-li list-li-active':'list-li'">
+          <span [class]="activeTab==='transactionlog'?'list-span list-span-active':'list-span'"><img class="pr-5" [src]="activeTab==='transactionlog' ? '../../../../assets/images/transactionlog-active.svg':
+              '../../../../assets/images/transactionlog.svg'" alt="transaction">{{
+            "TRANSACTION_LOG" | translate }}</span>
+        </li>
+        <!-- <li (click)="navigatetab('loosebills', '')"
+          [class]="activeTab==='loosebills'?'list-li list-li-active':'list-li'">
+          <span [class]="activeTab==='loosebills'?'list-span loosebills-active':'loosebills'"><img class="pr-5" [src]="activeTab==='loosebills' ? '../../../../assets/images/loosebills-active.svg':
+              '../../../../assets/images/loosebills.svg'" alt="loosebills">{{ "LOOSE_BILLS_TEXT" | translate }}</span>
+        </li> -->
+        <li (click)="navigatetab('quickpay', '')" [class]="activeTab==='quickpay'?'list-li list-li-active':'list-li'"
+        tabindex="0" (keydown.enter)="navigatetab('quickpay','')">
+          <span [class]="activeTab==='quickpay'?'list-span list-span-active':'list-span'"><img class="pr-5" [src]="activeTab==='quickpay' ? '../../../../assets/images/quickpay-active.svg':
+              '../../../../assets/images/quickpay.svg'" alt="quickpay">{{ "QUICK_PAY_TEXT" | translate }}</span>
+        </li>
+        <li (click)="navigatetab('notificationlog','')" tabindex="0" (keydown.enter)="navigatetab('notificationlog','')"
+          [class]="activeTab==='notificationlog'?'list-li list-li-active':'list-li'">
+          <span [class]="activeTab==='notificationlog'?'list-span list-span-active':'list-span'"><img class="pr-5"
+              [src]="activeTab==='notificationlog' ? '../../../../assets/images/notificationlog-active.svg':
+              '../../../../assets/images/notificationlog.svg'" alt="notificationlog">{{ "NOTIFICATION_LOG_TEXT" |
+            translate }}</span>
+        </li>
+      </ul>
+    </div>
+
+    <div [class]="!isHomePage && isLoggedUser ? 'col-lg-10' : 'col-lg-12'">
+      <div class="row mt-2 no-print">
+        <error-inline-message *ngIf="showAlert" [alerts]="alerts" [lang]="langLabel"></error-inline-message>
+      </div>
+
+      <div *ngIf="isHomePage" class="header-title no-print">
+        <h2 class="txt-puro-blue pull-left">
+          {{ "SIMPLIFY_BILLING_PROCESS_TEXT" | translate }}
+        </h2>
+      </div>
+
+      <div *ngIf="isHomePage" class="img-div no-print">
+        <img src="../../../../assets/images/login-image.png" alt="login-image"
+          style="width: 1320px; margin-bottom: 2rem" />
+        <div class="card register-card">
+          <label class="txt-puro-blue card-title">
+            {{ "NEW_TO_BILLINGCENTRE_TEXT" | translate }}
+          </label>
+          <button class="btn btn-primary btn-block primary-btn" [routerLink]="['/register']" (click)="updateNotHome()">
+            {{ "REGISTER_TEXT" | translate }}
+          </button>
+        </div>
+      </div>
+
+      <div class="col row" #loginQuickpay>
+        <router-outlet></router-outlet>
+      </div>
+      <div class="p-6"></div>
+    </div>
+  </div>
+</div>

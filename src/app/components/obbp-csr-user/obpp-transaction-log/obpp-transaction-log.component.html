@@ -1,0 +1,450 @@
+<ng-template #loading>
+    <div class="col-12 text-center">Loading...</div>
+</ng-template>
+<div *ngIf="$transactionLogMetaData | async as transactionData ; else loading">
+    <h2 class="text-blue">{{ 'TL_TITLE_LABLE' | translate }}</h2>
+    <div class="white-background-box">
+        <form [formGroup]="transactionLogSearchForm" class="form-horizontal register-form" novalidate>
+            <div *ngIf="showZeroResultsMessage" class="row">
+                <div class="col-xs-12 error-block">
+                    <span class="error-block">{{ 'NO_TRANSACTIONS_FOUND' | translate }}</span>
+                </div>
+            </div>
+            <div *ngIf="showZeroFieldsError" class="row">
+                <div class="col-xs-12 error-block">
+                    <span class="error-block">{{ 'TL_ONE_OF_THE_FIELDS_MANDATORY' | translate }}</span>
+                </div>
+            </div>
+            <div class="inner-form-box mt-4">
+                <p class="req-text">{{ 'TL_ONE_OF_THE_FIELDS_LABEL' | translate }}*</p>
+                <div class="flex-row justify-unset mt-4">
+                    <div class="form-check form-check-inline">
+                        <input type="radio" formControlName="searchDuration" value="CURRENT" checked
+                            (click)="changeDates($event)" class="form-check-input" tabindex="0">
+                        <label class="form-check-label ms-1">{{'TL_CURRENT_LABEL' | translate}}
+                            {{transactionData.CURRENT}}
+                            {{'MONTH' | translate}})</label>
+                    </div>
+                    <div class="form-check form-check-inline ms-2">
+                        <input type="radio" formControlName="searchDuration" value="HISTORY"
+                            (click)="changeDates($event)" class="form-check-input" tabindex="0">
+                        <label class="form-check-label ms-1">{{'TL_HISTORICAL_LABEL' | translate }} {{'MONTH_FROM' |
+                            translate}}
+                            {{transactionData.CURRENT}} {{'MONTH_UPTO' | translate}}
+                            {{transactionData.HISTORY}}{{'MONTH' |
+                            translate}})</label>
+                    </div>
+                </div>
+                <div class="d-flex flex-row align-items-start justify-content-between mt-4">
+                    <div class="w-32">
+                        <p class="req-text">{{ 'TL_CUSTOMER_INFO_LABEL' | translate }}</p>
+                        <div class="input-group">
+                            <div class="form-floating user-input p-bottom-24">
+                                <input name="accountNumber" formControlName="accountNumber" type="text" [class]="transactionLogSearchForm.get('accountNumber')?.invalid &&
+                                transactionLogSearchForm.get('accountNumber')?.dirty? 'form-control is-invalid text-input ':
+                                'text-input form-control'" maxlength="50" placeholder="{{'TL_ACCOUNT_LABEL' | translate
+                                }}" />
+                                <label for="accountNumber" class="control-label">{{'TL_ACCOUNT_LABEL' | translate
+                                    }}*</label>
+                                <div
+                                    *ngIf="transactionLogSearchForm.get('accountNumber')?.invalid && transactionLogSearchForm.get('accountNumber')?.dirty">
+                                    <span class="error-block">{{'ERR_ACCT_MSG_TL' | translate }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <div class="form-floating user-input p-bottom-24">
+                                <input name="name" formControlName="name" type="text" [class]="transactionLogSearchForm.get('name')?.invalid &&
+                            transactionLogSearchForm.get('name')?.dirty? 'form-control is-invalid text-input ':
+                            'text-input form-control'" maxlength="50" placeholder="{{'TL_NAME_LABEL' | translate
+                            }}" />
+                                <label for="accountNumber" class="control-label">{{'TL_NAME_LABEL' | translate
+                                    }}</label>
+                                <div
+                                    *ngIf="transactionLogSearchForm.get('name')?.invalid && transactionLogSearchForm.get('name')?.dirty">
+                                    <span class="error-block">Please enter valid name</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-30">
+                        <p class="req-text">{{ 'TL_CC_INFO_LABEL' | translate }}</p>
+                        <div class="input-group">
+                            <div class="form-floating user-input p-bottom-24">
+                                <select class="form-select custom-select" name="acreditCardTypesdrp" id="floatingSelect"
+                                    (change)="changeCreditTypeValue($event)">
+                                    <option
+                                        *ngFor="let creditCardType of objectToArray(transactionData.creditCardTypes)"
+                                        value="{{creditCardType}}">
+                                        {{creditCardType}}
+                                    </option>
+                                </select>
+                                <label for="cc-type" class="control-label">{{'TL_CC_TYPE_LABEL' | translate }}</label>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <div class="form-floating user-input p-bottom-24">
+                                <input name="cardHolderName" formControlName="cardHolderName" type="text" [class]="transactionLogSearchForm.get('cardHolderName')?.invalid
+                                && transactionLogSearchForm.get('cardHolderName')?.dirty?
+                                'text-input form-control is-invalid':'text-input form-control'" maxlength="6"
+                                    minlength="6" placeholder="{{'TL_CARDHOLDER_NAME_LABEL' | translate
+                            }}" />
+                                <label for="cc-holder-name" class="control-label">{{'TL_CARDHOLDER_NAME_LABEL' |
+                                    translate
+                                    }}</label>
+                                <div
+                                    *ngIf="transactionLogSearchForm.get('cardHolderName')?.invalid && transactionLogSearchForm.get('cardHolderName')?.dirty">
+                                    <span ng-message="required" class="error-block">{{'VALID_CARD_NAME_TEXT' | translate
+                                        }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <div class="form-floating user-input p-bottom-24">
+                                <input name="referenceNumber" formControlName="referenceNumber" type="text" [class]="transactionLogSearchForm.get('referenceNumber')?.invalid
+                                && transactionLogSearchForm.get('referenceNumber')?.dirty?
+                                'text-input form-control is-invalid':'text-input form-control'" maxlength="6"
+                                    minlength="6" placeholder="{{'TL_APPROVAL_REF_LABEL' | translate
+                            }}" />
+                                <label for="approval-ref" class="control-label">{{'TL_APPROVAL_REF_LABEL' | translate
+                                    }}</label>
+                                <div
+                                    *ngIf="transactionLogSearchForm.get('referenceNumber')?.invalid && transactionLogSearchForm.get('referenceNumber')?.dirty">
+                                    <span ng-message="required" class="error-block">{{'TL_ERR_APPROVAL_REF' | translate
+                                        }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="req-text mt-4">{{ 'TL_DIRECT_DEPOSIT_INFO_LABEL' | translate }}</p>
+                        <div class="input-group">
+                            <div class="form-floating user-input p-bottom-24">
+                                <input type="text" name="payerName" formControlName="payerName"
+                                    class="form-control" maxlength="25"
+                                    placeholder="{{'TL_PAYER_NAME_LABEL' | translate }}" />
+                                <label for="payee-name" class="control-label">{{'TL_PAYER_NAME_LABEL' | translate
+                                    }}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-30">
+                        <p class="req-text">{{ 'TL_PAYMENT_INFO_LABEL' | translate }}</p>
+                        <div class="input-group">
+                            <div class="form-floating user-input p-bottom-24">
+                                <input name="invoiceNumber" type="text"
+                                    [class]="transactionLogSearchForm.get('invoiceNumber')?.invalid && transactionLogSearchForm.get('invoiceNumber')?.dirty? 'text-input form-control is-invalid':'text-input form-control'"
+                                    formControlName="invoiceNumber" maxlength="50" placeholder="{{'TL_INVOICE_NUMBER_LABEL' | translate
+                            }}" />
+                                <label for="invoiceNumber" class="control-label">{{'TL_INVOICE_NUMBER_LABEL' | translate
+                                    }}*</label>
+                                <div
+                                    *ngIf="transactionLogSearchForm.get('invoiceNumber')?.invalid && transactionLogSearchForm.get('invoiceNumber')?.dirty">
+                                    <span class="error-block">{{'ERR_INV_MSG_TL' | translate }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <div class="form-floating user-input p-bottom-24">
+                                <input name="shipmentPin" type="text"
+                                    [class]="transactionLogSearchForm.get('shipmentPin')?.invalid && transactionLogSearchForm.get('shipmentPin')?.dirty? 'text-input form-control is-invalid':'text-input form-control'"
+                                    formControlName="shipmentPin" maxlength="35" placeholder="{{'BILL_OF_LADING_LABEL' | translate
+                            }}" />
+                                <label for="billOfLading" class="control-label">{{'BILL_OF_LADING_LABEL' | translate
+                                    }}*</label>
+                                <div
+                                    *ngIf="transactionLogSearchForm.get('shipmentPin')?.invalid && transactionLogSearchForm.get('shipmentPin')?.dirty">
+                                    <span class="error-block">{{'SHIPMENT_PIN_INVALID_TEXT' | translate }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="req-text mt-4">{{'TL_AMOUNT_LABEL' | translate }}*</p>
+                        <div class="input-group">
+                            <div class="form-floating user-input p-bottom-24">
+                                <input name="amountFrom" obppTwoDigitDecimaNumber type="text"
+                                    [class]="transactionLogSearchForm.get('amountFrom')?.invalid && transactionLogSearchForm.get('amountFrom')?.dirty? 'text-input form-control is-invalid':'text-input form-control'"
+                                    formControlName="amountFrom" (blur)="transformTotal($event)" placeholder="{{'TL_FROM_LABEL' | translate
+                            }}" />
+                                <label class="control-label" for="from">{{ 'TL_FROM_LABEL' | translate }}</label>
+                                <div
+                                    *ngIf="transactionLogSearchForm.get('amountFrom')?.invalid && transactionLogSearchForm.get('amountFrom')?.dirty">
+                                    <span class="error-block">{{'ERR_FROM_AMOUNT' | translate }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <div class="form-floating user-input p-bottom-24">
+                                <input name="amountTo" obppTwoDigitDecimaNumber type="text"
+                                    [class]="transactionLogSearchForm.get('amountTo')?.invalid && transactionLogSearchForm.get('amountTo')?.dirty? 'text-input form-control is-invalid':'text-input form-control'"
+                                    formControlName="amountTo" (blur)="transformTotal($event)" placeholder="{{'TL_TO_LABEL' | translate
+                            }}" />
+                                <label for="to" class="control-label">{{ 'TL_TO_LABEL' | translate }}</label>
+                                <div
+                                    *ngIf="transactionLogSearchForm.get('amountTo')?.invalid  && transactionLogSearchForm.get('amountTo')?.dirty">
+                                    <span ng-message="required" class="error-block">{{'ERR_TO_AMOUNT' | translate
+                                        }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="req-text mt-4">{{'TL_PAY_DT_LABEL' | translate }}*</p>
+                        <div class="d-flex flex-row align-items-start justify-content-between">
+                            <div class="w-50 d-flex flex-row align-items-center justify-content-between">
+                                <div class="input-group">
+                                    <div class="form-floating user-input p-bottom-24">
+                                        <input type="text"
+                                            [class]="transactionLogSearchForm.get('dateFrom')?.invalid  && transactionLogSearchForm.get('dateFrom')?.dirty?
+                                        'form-control margin-b-0 is-invalid':'form-control margin-b-0'"
+                                            formControlName="dateFrom" name="dateFrom" [(ngModel)]="model" ngbDatepicker
+                                            #a="ngbDatepicker" [maxDate]="maxDate" [minDate]="minDate" tabindex="0"
+                                            [autoClose]="true"  [footerTemplate]='fromDateTemplate' aria-placeholder="YYYY-MM-DD" placeholder="{{'TL_FROM_LABEL' | translate
+                                    }}">
+                                        <label for="from" class="control-label">{{ 'TL_FROM_LABEL' | translate}}</label>
+                                        <div
+                                            *ngIf="transactionLogSearchForm.get('dateFrom')?.invalid  && transactionLogSearchForm.get('dateFrom')?.dirty">
+                                            <span class="error-block">{{'ERR_FROM_DATE_REQD' | translate }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <img class="icon icon-cart-datepicker ms-1"
+                                    src="../../../../assets/images/new-date-icon.png" alt="calendar icon" tabindex="0" (keydown.enter)="a.toggle()"
+                                    (click)="a.toggle()" />
+                                <ng-template #fromDateTemplate>
+                                    <div class="mb-2">
+                                        <div class="d-flex justify-content-around" role="group">
+                                            <button class="btn btn-primary btn-sm me-2 ms-2"
+                                                (click)="model = today; a.close()">{{'TODAY_TEXT' | translate}}</button>
+                                            <button class="btn btn-primary cta-blue me-2" (click)="model = undefined">{{
+                                                'CLEAR_TEXT' | translate
+                                                }}</button>
+                                            <button class="btn btn-primary btn-sm me-2" (click)="a.close()">{{
+                                                'EFT_GUIDELINES_CLOSE' | translate
+                                                }}</button>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </div>
+                            <div class="w-50 ms-2 d-flex flex-row align-items-center justify-content-between">
+                                <div class="input-group">
+                                    <div class="form-floating user-input p-bottom-24">
+                                        <input type="text"
+                                            [class]="transactionLogSearchForm.get('dateTo')?.invalid  && transactionLogSearchForm.get('dateTo')?.dirty ?
+                                        'form-control text-input margin-b-0 is-invalid':'form-control text-input margin-b-0'"
+                                            formControlName="dateTo" name="dateTo" [(ngModel)]="modelTo" ngbDatepicker
+                                            #b="ngbDatepicker" [maxDate]="maxToDate" [minDate]="minToDate"
+                                            [autoClose]="true"  [footerTemplate]='t' placeholder="{{'TL_TO_LABEL' | translate
+                                    }}" aria-placeholder="YYYY-MM-DD" tabindex="0"/>
+                                        <label for="to" class="control-label">{{ 'TL_TO_LABEL' | translate }}</label>
+                                        <div
+                                            *ngIf="transactionLogSearchForm.get('dateTo')?.invalid  && transactionLogSearchForm.get('dateTo')?.dirty">
+                                            <span class="error-block">{{'ERR_TO_DATE_REQD' | translate }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <img class="icon icon-cart-datepicker ms-1"
+                                    src="../../../../assets/images/new-date-icon.png" alt="calendar icon" tabindex="0" (keydown.enter)="b.toggle()"
+                                    (click)="b.toggle()">
+                                <ng-template #t>
+                                    <div class="mb-2">
+                                        <div class="d-flex justify-content-around" role="group">
+                                            <button class="btn btn-primary btn-sm me-2 ms-2"
+                                                (click)="modelTo = today; b.close()">{{'TODAY_TEXT' | translate}}</button>
+                                            <button class="btn btn-primary cta-blue me-2" (click)="modelTo = undefined">{{
+                                                'CLEAR_TEXT' | translate
+                                                }}</button>
+                                            <button class="btn btn-primary btn-sm me-2" (click)="b.close()">{{
+                                                'EFT_GUIDELINES_CLOSE' | translate
+                                                }}</button>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex flex-row align-items-center justify-content-end mt-5">
+                    <button type="submit" class="btn px-4 blue-bg primary-btn" (click)="performSearch()">{{
+                        'SEARCH_KEY' | translate }}</button>
+                    <button class="btn white-bg ms-4 sec-btn" (click)="resetForm()">{{ 'RESET_KEY' | translate
+                        }}</button>
+                </div>
+            </div>
+        </form>
+
+        <div *ngIf="isSuccessfulSearch" class="mt-4">
+            <div class="d-flex flex-row align-items-center justify-content-end">
+                <div class="d-flex align-items-center">
+                    <div class="input-group">
+                        <div class="form-floating user-input p-bottom-24  w-160-px">
+                            <select class="form-select custom-select margin-b-0 h-65 w-full" name="acreditCardTypesdrp"
+                                id="dropdownMenucombineResult"
+                                (change)="filterTransictions({event: $event,  type: 'paymentStatus'})"
+                                [value]="paymentStatusDefaultValue">
+                                <option *ngFor="let paymentStatus of paymentStatusOptions"
+                                    value="{{paymentStatus.value}}">
+                                    {{paymentStatus.label | translate }}
+                                </option>
+                            </select>
+                            <label for="cc-type" class="control-label">{{'PAYMENT_STATUS_TEXT' | translate}}</label>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <div class="form-floating user-input p-bottom-24 w-160-px ms-2">
+                            <select class="form-select custom-select margin-b-0 h-65 w-full" name="acreditCardTypesdrp"
+                                id="dropdownMenucombineResult"
+                                (change)="filterTransictions({event: $event,  type: 'paymentType'})"
+                                [value]="paymentTypeDefaultValue === 'master' ? 'MasterCard' : paymentTypeDefaultValue | translate">
+                                <option *ngFor="let paymentType of objectToArray(transactionData.paymentTypes)"
+                                [value]="paymentType === 'EFT' ? 'EA' : paymentType">
+                                    {{paymentType}}
+                                </option>
+                            </select>
+                            <label for="cc-type" class="control-label">{{'TL_PAYMENT_TYPE_LABEL' | translate}}</label>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <div class="form-floating user-input p-bottom-24  w-160-px ms-2">
+                            <select class="form-select custom-select margin-b-0 h-65 w-full" name="acreditCardTypesdrp"
+                                id="dropdownMenucombineResult"
+                                (change)="filterTransictions({event: $event,  type: 'createMethod'})"
+                                [value]="createdMethodeDefaultValue">
+                                <option *ngFor="let createMethod of createMethodOptions" value="{{createMethod.value}}">
+                                    {{createMethod.label | translate}}
+                                </option>
+                            </select>
+                            <label for="cc-type" class="control-label">{{'TL_TYPE_LABEL' | translate}}</label>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <div class="form-floating user-input p-bottom-24  w-160-px ms-2">
+                            <select class="form-select custom-select margin-b-0 h-65 w-full" name="acreditCardTypesdrp"
+                                id="dropdownMenucombineResult"
+                                (change)="filterTransictions({event: $event,  type: 'sendToSAP'})"
+                                [value]="sendToSAPDefaultValue">
+                                <option *ngFor="let sendToSAP of sentToSAPOptions" value="{{sendToSAP.value}}">
+                                    {{sendToSAP.label | translate}}
+                                </option>
+                            </select>
+                            <label for="cc-type" class="control-label">{{'SENT_TO_SAP_TEXT' | translate}}</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <table id="transaction-table" class="transaction-log-table" aria-describedby="">
+                <thead>
+                    <tr>
+                        <th class="min-tbh-100" sortable="accountNumber" (sort)="onSort($event)" tabindex="0">
+                            {{'TL_ACCOUNT_LABEL' | translate}}
+                        </th>
+                        <th class="min-tbh-100" sortable="invoiceNumber" (sort)="onSortAdvanced($event)" tabindex="0">
+                            {{'TL_INVOICE_NUMBER_LABEL' | translate }}
+                        </th>
+                        <th class="min-tbh-150 make-right" sortable="invoiceAmount" (sort)="onSort($event)" tabindex="0">
+                            {{'TL_INVOICE_AMNT_LABEL' | translate }}
+                        </th>
+                        <th class="min-tbh-150" sortable="invoiceDateTime" (sort)="onSort($event)" tabindex="0">
+                            {{'TL_INVOICE_DT_LABEL' | translate}}
+                        </th>
+                        <th class="min-tbh-200 disable-sort" tabindex="0">
+                            {{'SHIPMENT_PIN_TEXT' |translate }}/{{'AMOUNT_TEXT' | translate }}
+                        </th>
+                        <th class="min-tbh-150 make-right" sortable="paymentAmount" (sort)="onSort($event)" tabindex="0">
+                            {{'TL_AMOUNT_LABEL' |translate}}
+                        </th>
+                        <th class="min-tbh-100" sortable="invoiceCurrency" (sort)="onSort($event)" tabindex="0">
+                            {{'CURRENCY_TEXT' | translate}}
+                        </th>
+                        <th class="min-tbh-150" sortable="paymentType" (sort)="onSort($event)" tabindex="0">
+                            {{'TL_PAYMENT_TYPE_LABEL' | translate }}
+                        </th>
+                        <th class="min-tbh-100" sortable="ccLastDigits" (sort)="onSort($event)" tabindex="0">
+                            {{'TL_CC_DIGITS_LABEL' |translate}}
+                        </th>
+                        <th class="min-tbh-150" sortable="paymentDateTime" (sort)="onSort($event)" tabindex="0">
+                            {{'TL_PAY_DT_LABEL' |translate}}
+                        </th>
+                        <th class="min-tbh-100" sortable="payerName" (sort)="onSort($event)" tabindex="0">
+                            {{'TL_PAYER_CARDHOLDER_NAME' |translate}}
+                        </th>
+                        <th class="min-tbh-100" sortable="referenceNumber" (sort)="onSortAdvanced($event)" tabindex="0">
+                            {{'TL_REF_LABEL' | translate }}
+                        </th>
+                        <th class="min-tbh-100" sortable="emailSend" (sort)="onSort($event)" tabindex="0">
+                            {{'TL_EMAIL_SENT_LABEL' | translate }}
+                        </th>
+                        <th class="min-tbh-150" sortable="accountName" (sort)="onSort($event)" tabindex="0">
+                            {{'TL_ACNT_NAME_LABEL' | translate }}
+                        </th>
+                        <th class="min-tbh-100" sortable="createMethod" (sort)="onSort($event)" tabindex="0">
+                            {{'TL_TYPE_LABEL' | translate }}
+                        </th>
+                        <th class="min-tbh-220" sortable="userid" (sort)="onSort($event)" tabindex="0">
+                            {{'TL_USER_ID_LABEL' | translate }}
+                        </th>
+                        <th class="min-tbh-280" sortable="paymentID" (sort)="onSort($event)" tabindex="0"> 
+                            {{'TL_PAYMENT_ID_LABEL' | translate }}
+                        </th>
+                        <th class="min-tbh-100" sortable="sendToSAP" (sort)="onSort($event)" tabindex="0">
+                            {{'SENT_TO_SAP_TEXT' | translate}}
+                        </th>
+                        <th class="min-tbh-100" sortable="shipmentPin" (sort)="onSort($event)" tabindex="0">
+                            {{'BILL_OF_LADING_LABEL'| translate }}
+                        </th>
+                        <th class="min-tbh-220" sortable="paymentTransactionID" (sort)="onSort($event)" tabindex="0">
+                            {{'PAYMENT_TRANSACTION_ID_TEXT' | translate}}
+                        </th>
+                        <th class="min-tbh-100" sortable="paymentStatus" (sort)="onSort($event)" tabindex="0">
+                            {{'PAYMENT_STATUS_TEXT' | translate}}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let transaction of transactionsAll | paginate:
+                    { itemsPerPage: 10, currentPage: p} let i=index" tabindex="0">
+                        <td class="text-center">{{transaction.accountNumber}}</td>
+                        <td class="text-center">{{transaction.invoiceNumber}}</td>
+                        <td class="text-right">{{transaction.invoiceAmount | currency }}</td>
+                        <td class="text-center">{{transaction.invoiceDateTime}}</td>
+                        <td class="text-center">
+                            <div *ngFor="let transactionLog of transaction.transactionLogDetailsDTOList; index as j">
+                                <span>
+                                    {{transactionLog.pinNumber}}-{{transactionLog.pinAmountPaid | currency}}
+                                </span>
+                            </div>
+                        </td>
+                        <td class="text-right">{{transaction.paymentAmount | currency}}</td>
+                        <td class="text-center">{{transaction.invoiceCurrency}}</td>
+                        <td class="text-center">{{transaction.paymentType}}</td>
+                        <td class="text-center">{{transaction.ccLastDigits}}</td>
+                        <td class="text-center">{{transaction.paymentDateTime}}</td>
+                        <td class="text-center">{{transaction.payerName}}</td>
+                        <td class="text-center">{{transaction.referenceNumber}}</td>
+                        <td class="text-center">{{transaction.emailSend}}</td>
+                        <td class="text-center">{{transaction.accountName}}</td>
+                        <td class="text-center">{{transaction.createMethod}}</td>
+                        <td class="text-center">{{transaction.userid}}</td>
+                        <td class="text-center">{{transaction.paymentID}}</td>
+                        <td class="text-center">{{transaction.sentToSAP}}</td>
+                        <td class="text-center">{{transaction.shipmentPin}}</td>
+                        <td class="text-center">{{transaction.paymentTransactionID}}</td>
+                        <td class="text-center">{{transaction.paymentStatus}}</td>
+                    </tr>
+                    <tr *ngIf="transactionsAll.length <= 0">
+                        <td colspan="16"><span class="txt-puro-red">
+                                {{'NO_TRANSACTIONS_FOUND'|translate}}</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="d-flex align-items-center justify-content-between mt-4">
+                <button class="btn blue-bg" (click)="exportedToSheet()">{{'DOWNLOAD_BUTTON_TEXT' | translate}}</button>
+                <div class="d-flex align-items-center">
+                    <pagination-controls
+                        (pageChange)="p = $event"
+                        class="text-center"
+                        [previousLabel]="'PREVIOUS' | translate"
+                        [nextLabel]="'NEXT' | translate">
+                    </pagination-controls>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,12 @@
+<div class="container-fluid p-0">
+  <div class="row" *ngIf="fieldErrorsObj && fieldErrorsObj.length > 0">
+    <div class="col-md-12 error-block error-block-outline">
+      <ul>
+        <li *ngFor="let errMsg of fieldErrorsObj">
+          {{errMsg['message'] | translate}}
+        </li>
+      </ul>
+    </div>
+  </div>
+  <router-outlet></router-outlet>
+</div>

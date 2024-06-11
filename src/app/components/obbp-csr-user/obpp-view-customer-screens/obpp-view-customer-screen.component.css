@@ -1,0 +1,185 @@
+.trns-container {
+  width: 96vw;
+  margin-left: -29%;
+}
+
+.container {
+    padding: 0;
+}
+
+h2 {
+  color: #001996;
+}
+
+.primary-btn {
+  width: 5rem;
+}
+
+.transactionLog-Container {
+  border-right: 1px solid #ddd;
+  min-height: 260px;
+  padding-right: 15px;
+  max-height: 300px !important;
+}
+
+.tab-content-trans {
+  clear: both;
+  padding: 10px 20px;
+  margin-left: -23px;
+  margin-right: -23px;
+  border-top: #ddd;
+}
+
+.radio-inline {
+  display: inline-block;
+  padding-left: 20px;
+  margin-bottom: 0;
+  font-weight: normal;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.t-inv-div {
+  border-radius: 10px !important;
+  background-color: #f2f2f2;
+  color: #666;
+  padding: 15px;
+}
+
+.t-inv > thead {
+  background-color: #f2f2f2;
+  color: #666;
+}
+
+.t-inv > tbody > tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.t-inv > tbody > tr:nth-child(odd) {
+  background-color: white;
+}
+
+.asc:before {
+  content: "\25B2";
+  color: #001996;
+  padding-right: 5px;
+}
+
+.desc:before {
+  content: "\25BC";
+  color: #001996;
+  padding-right: 5px;
+}
+
+th {
+  font-size: 14px !important;
+  border: 1px solid #ddd;
+  background-color: #f0f0f0;
+}
+
+th > a {
+  font-weight: normal;
+}
+
+.table > :not(caption) > * > * {
+  box-shadow: unset;
+}
+
+.table-scrollable {
+  display: inline-table;
+  height: 350px;
+  overflow-x: auto;
+}
+
+.table-scrollable > thead {
+  position: sticky;
+  top: 0px;
+  background-color: white;
+  z-index: 1;
+}
+
+td {
+  font-size: 14px;
+  border: 1px solid #ddd;
+  max-width: 400px;
+  word-wrap: break-word;
+}
+
+.td-date {
+  min-width: 100px;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+  background-color: #f9f9f9;
+}
+
+.icon-cart-datepicker {
+  cursor: pointer;
+}
+
+.icon {
+  display: inline-block;
+  padding: 5px 2px;
+}
+
+.button-drop-down-wdth {
+  min-width: 350px;
+  max-width: fit-content;
+  height: 35px;
+}
+
+.icon-right {
+  float: right;
+  display: flex;
+}
+
+.manageUserEnrolButton {
+  background-color: #008cba;
+  border: 1px solid #008cba;
+  outline: 0;
+  color: white;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  display: inline-block;
+  margin-left: 5px;
+  margin-top: 10px;
+  width: 340px;
+  height: 40px;
+}
+
+.row {
+  margin-right: -15px;
+  margin-left: -15px;
+}
+
+.col-xs-5 {
+  width: 71.66666667%;
+}
+
+.manageUser-searchContainer {
+  padding-left: 0;
+}
+
+.col-xs-4 {
+  width: 33.33333333%;
+  float: left;
+  position: relative;
+  min-height: 1px;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.input-group {
+  width: 50%;
+}
+
+.m-0 {
+  margin: 0;
+}
+
+.form-control:focus{
+  outline: 2px solid #001996 !important ;
+  border: none !important;
+}

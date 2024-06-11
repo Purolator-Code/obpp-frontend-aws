@@ -1,0 +1,21 @@
+.tab-content {
+  padding: 20px;
+  border: 1px solid #ddd;
+}
+
+h4,
+h2 {
+  color: #001996;
+}
+
+.p-30 {
+  padding: 30px;
+}
+
+.w-50 {
+  width: 50%;
+}
+
+.img-padding {
+    padding: 15px 10px 0px 10px;
+}

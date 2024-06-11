@@ -1,0 +1,26 @@
+.term-condition-container {
+  padding: 20px;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  max-height: 600px;
+  overflow-y: scroll;
+  background: #ffffff;
+  border: 1px solid #c0c0c0;
+  box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.1), 0px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.pdf {
+    visibility: hidden;
+    display: none;
+}
+
+.action-bar {
+  margin-top: 2rem;
+  margin-bottom: 4rem;
+  display: flex;
+  align-items: center;
+}
+
+.mr-2 {
+    margin-right: 8px;
+}

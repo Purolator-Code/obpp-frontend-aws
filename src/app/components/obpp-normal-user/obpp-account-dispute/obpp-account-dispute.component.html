@@ -1,0 +1,501 @@
+<div id="ngb-nav-1-panel">
+<div class="container" *ngIf="isUpdateInProgress">
+
+    <div class="row" *ngIf="errMsgFactory.length>0">
+        <div class="col-md-12 error-block">
+            <ul>
+                <li *ngFor="let errMsg of errMsgFactory">
+                    {{errMsg.value | translate}}
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="displayBalDueErrMsg">
+        <div class="col-md-12 error-block">
+            <span class="error-block">{{ 'AMOUNT_MORE_THAN_BALANCE_DUE' | translate }}</span>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="validAmountErrMsg">
+        <div class="col-md-12 error-block">
+            <span class="error-block">{{ 'VALID_AMOUNT_TEXT' | translate }}</span>
+        </div>
+    </div>
+
+    <div class="flex-row dispute-home-tab-bar" role="tabpanel" id="account-tabs-container">
+        <div class="sectio-w-50">
+            <div class="currency-date">
+                <div class="caurrency-area">
+                    <p>{{'CURRENCY_TEXT' | translate}}</p>
+                    <div class="flex-row">
+                        <input class="form-check-input s-24" type="checkbox" [(ngModel)]="isCAD" #cadCheckbox (keydown.enter)="checkonCad($event)"
+                            [ngModelOptions]="{standalone: true}" (change)="searchFunc()"  aria-label="CAD"/>
+                        <span class="cr-name">CAD <img src="assets/images/canada-flag.png" class="flag"
+                                title="CAD" alt="CAD"></span>
+                        <input class="form-check-input s-24" type="checkbox" [(ngModel)]="isUSD" #usdCheckbox (keydown.enter)="checkonUsd($event)"
+                            [ngModelOptions]="{standalone: true}" (change)="searchFunc()" aria-label="USD"/>
+                        <span class="cr-name">USD <img src="assets/images/american-flag.png" class="flag"
+                                title="USD" alt="USD"></span>
+                    </div>
+                </div>
+                <div class="form-floating">
+                    <select class="form-select custom-select-date h-56" (click)="searchFunc()"
+                        [(ngModel)]="invoiceDateRange" aria-label="date-range" id="customDateRange">
+                        <option value="0">{{'All' | translate}}</option>
+                        <option value="1">{{'PAST_MONTH' | translate}}</option>
+                        <option value="3">{{'PAST_3_MONTH' | translate}}</option>
+                        <option value="6">{{'PAST_6_MONTH' | translate}}</option>
+                        <option value="12">{{'PAST_1_YEAR' | translate}}</option>
+                        <option value="24">{{'PAST_2_YEAR' | translate}}</option>
+                    </select>
+                    <label for="floatingSelect">{{'DATE_RANGE' | translate}}</label>
+                </div>
+            </div>
+        </div>
+        <div class="sectio-w-50">
+            <div class="form-group search-term h-56">
+                <div class="form-floating search-input me-2">
+                    <input name="searchTerm" id="searchTerm" [(ngModel)]="searchField"
+                        placeholder="{{'ACNT_SMRY_PLACE_HOLDER_KEY' | translate}}" class="form-control placeholderChange"
+                        maxlength="50" />
+                    <label for="searchTerm" class=" control-label">{{'ACNT_SMRY_PLACE_HOLDER_KEY' | translate }}</label>
+                </div>
+                <div>
+                    <button (click)="searchFunc()" type="button"
+                        class="btn btn-primary btn-block btn-dispute h-56 me-2">{{'SEARCH_KEY' | translate }}</button>
+                </div>
+                <div>
+                    <button id="resetButton" type="button" class="btn btn-primary btn-block btn-dispute white-bg h-56"
+                        (click)="clearActnSmrySearchResult()" [disabled]="searchField == ''">
+                        {{'RESET_KEY' | translate }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="acct-summy-tbl">
+        <div class="account-header">
+            <label style="text-align: center; font-weight:700; font-size:18px; color:#111">{{'ACCOUNT_NAME' | translate}} - {{'ACCOUNT_TEXT_AUTOPAY' | translate}}</label>
+        </div>
+        <table aria-describedby="" class="table table-responsive table-striped w-100" tabindex="0">
+            <thead>
+                <tr>
+                    <th class="accountquickPay-tab-header account-tab-accNoqp" scope="col" sortable="invoiceNumber"
+                        (sort)="onSort($event)"><a href="javascript:void(0)">{{'INVOICE_NUMBER' |
+                            translate }}</a></th>
+                    <th class="accountquickPay-tab-header account-tab-accNoqp" scope="col" sortable="invoiceDate"
+                        (sort)="dateSort($event)"><a href="javascript:void(0)">{{'INVOICE_DATE' |
+                            translate
+                            }}</a></th>
+                    <th class="accountquickPay-tab-header account-tab-accNoqp" scope="col" sortable="dueDate"
+                        (sort)="dateSort($event)"><a href="javascript:void(0)">{{'DUE_DATE' |
+                            translate
+                            }}</a>
+                    </th>
+                    <th class="accountquickPay-tab-header account-tab-accNoqp" scope="col" sortable="invoiceAmount"
+                        (sort)="onSort($event)"><a href="javascript:void(0)">{{'INVOICE_AMOUNT'
+                            |
+                            translate }} </a></th>
+                    <th class="accountquickPay-tab-header account-tab-accNoqp" scope="col" sortable="balanceDue"
+                        (sort)="onSort($event)"><a href="javascript:void(0)">{{'BALANCE_DUE' |
+                            translate
+                            }} </a></th>
+                    <th class="accountquickPay-tab-header account-tab-accNoqp" scope="col" sortable="currency"
+                        (sort)="onSort($event)"><a href="javascript:void(0)">{{'CURRENCY_TEXT' |
+                            translate
+                            }} </a></th>
+                    <th class="accountquickPay-tab-header account-tab-accNoqp" scope="col"><a
+                            href="javascript:void(0)">{{'DISPUTE' |
+                            translate
+                            }} </a></th>
+                    <th class="accountquickPay-tab-header account-tab-accNoqp" scope="col"><a
+                            href="javascript:void(0)">{{'VIEW_PRINT_KEY' |
+                            translate
+                            }} </a></th>
+                    <th>&#160;&#160;&#160;&#160;</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let name of accountName| paginate:
+                { itemsPerPage: 5, currentPage: p} let i=index" class="account-row">
+                    <td colspan="9" class="padding-0">
+                        <ngb-accordion>
+                            <ngb-panel>
+                                <ng-template ngbPanelTitle>
+                                    <div class="title-label-text">{{ name[0] }} - {{name[1]}}
+                                    </div>
+                                </ng-template>
+                                <ng-template ngbPanelContent>
+                                    <div *ngFor="let invoice of accountsList; index as i" class="inner-accordian">
+                                        <ngb-accordion *ngIf="name[1] === invoice.accounts['accountNumber']">
+                                            <ngb-panel class="acct-summy-pnl" [disabled]="invoice?.pins?.length <= 0">
+                                                <ng-template ngbPanelTitle>
+                                                    <div class="w-100"  [style]="i%2===0?'background-color:#ededed':'background-color:#fff'">
+                                                        <table aria-describedby="" class="table-responsive" >
+                                                            <th></th>
+                                                            <tr>
+                                                                <td class="w-pr-12 text-start cell-account-info">
+                                                                    {{invoice['invoiceNumber']}}</td>
+                                                                <td class="w-pr-13 text-start cell-account-info">
+                                                                    {{invoice.invoiceDate}}
+                                                                </td>
+                                                                <td class="w-pr-13 text-start cell-account-info">
+                                                                    {{invoice.dueDate}}
+                                                                </td>
+                                                                <td class="w-pr-10 text-end cell-account-info">{{
+                                                                    invoice['invoiceAmount'] | currency }}
+                                                                </td>
+                                                                <td class="w-pr-15 text-end cell-account-info">{{
+                                                                    invoice['balanceDue']
+                                                                    | currency }}
+                                                                </td>
+                                                                <td
+                                                                    class="w-pr-13 p-left-7 text-center cell-account-info">
+                                                                    {{invoice['currency']}}</td>
+                                                                <td class="w-date text-center">
+                                                                    <button attr.aria-label="Dispute invoice {{invoice['invoiceNumber']}}"
+                                                                        class="btn btn-primary white-bg text-bold-14 blue-hover dispute-button" tabindex="0"
+                                                                        (keydown.enter)="$event.stopPropagation();openDisputePage(invoice)"
+                                                                        (click)="$event.stopPropagation();openDisputePage(invoice)">{{
+                                                                        'DISPUTE' | translate }}</button>
+                                                                </td>
+                                                                <td *ngIf="invoice?.pins?.length > 0"
+                                                                    class="text-center">
+                                                                  <button attr.aria-label="PDF Invoice {{invoice['invoiceNumber']}}"
+                                                                  tabindex="-1"
+                                                                          class="btn btn-primary white-bg text-bold-14  pdf-button"
+                                                                          (click)="$event.stopPropagation();getInvoicePDF(invoice['invoiceNumber'])" aria-label="pdf-download-icon">
+                                                                    <span class="sr-only">{{invoice['invoiceNumber']}} </span>
+                                                                    <img src="assets/images/icon-pdf-red.png" alt=""
+                                                                        class="m-right-10 p-left-2" title="PDF"
+                                                                        tabindex="0"
+                                                                        >
+                                                                  </button>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </ng-template>
+                                                <ng-template ngbPanelContent>
+                                                    <div class="table-scrollable">
+                                                        <table class="table table-striped">
+                                                            <thead>
+                                                                <th scope="col" sortable="service" role="columnheader"
+                                                                    (sort)="onSortPIN($event, invoice)" aria-sort="ascending" >
+                                                                    <a href="javascript:void(0)" aria-labelledby="service column" 
+                                                                     aria-sort="ascending" tabindex="0">{{'SERVICE_AVAILABILITY' | translate}}</a>
+                                                                
+                                                                </th>
+
+                                                                <th scope="col" sortable="itemNumber" role="columnheader"
+                                                                    (sort)="onSortPIN($event, invoice)" aria-sort="ascending">
+                                                                    <a href="javascript:void(0)" aria-labelledby="itemNumber column"  
+                                                                    aria-sort="ascending" tabindex="0">{{'ITEM_NUMBER' |
+                                                                        translate
+                                                                        }}</a>
+
+                                                                </th>
+
+                                                                <th scope="col" sortable="pinNumber" role="columnheader"
+                                                                    (sort)="onSortPIN($event, invoice)" aria-sort="ascending">
+                                                                    <a href="javascript:void(0)" aria-labelledby="pinNumber column"  
+                                                                    aria-sort="ascending" tabindex="0">{{'PIN_NUMBER' |
+                                                                        translate
+                                                                        }}</a>
+
+                                                                </th>
+                                                                <th class="text-end pr-4" scope="col" role="columnheader"
+                                                                    sortable="totalCharges"
+                                                                    (sort)="onSortPIN($event, invoice)" aria-sort="ascending">
+                                                                    <a href="javascript:void(0)" aria-labelledby="totalCharges column"  
+                                                                    aria-sort="ascending" tabindex="0">{{'PIN_AMOUNT' |
+                                                                        translate
+                                                                        }}</a>
+
+                                                                </th>
+                                                                <th class="text-end" scope="col" sortable="balanceDue" role="columnheader"
+                                                                    (sort)="onSortPIN($event, invoice)" aria-sort="ascending">
+                                                                    <a href="javascript:void(0)"aria-labelledby="balanceDue column"  
+                                                                    aria-sort="ascending" tabindex="0">{{'BALANCE_DUE' |
+                                                                        translate
+                                                                        }}</a>
+                                                                </th>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr *ngFor="let pin of invoice['pins']; index as j">
+                                                                    <td
+                                                                        class="invoice-invoiceNumberCell text-center cell-account-info" tabindex="0">
+                                                                        {{pin.service | translate}}</td>
+                                                                    <td
+                                                                        class="invoice-invoiceNumberCell text-center cell-account-info" tabindex="0">
+                                                                        {{pin.itemNumber}}</td>
+                                                                    <td
+                                                                        class="invoice-accountNumberCell text-center cell-account-info">
+                                                                        <a title="{{invoice.accountName}}"
+                                                                            [routerLink]=""
+                                                                            (click)="getShipmentTrackingURL(pin, invoice)" tabindex="0">{{pin.pinNumber}}</a>
+                                                                    </td>
+                                                                    <td
+                                                                        class="invoice-amountDueCell text-end pr-6 cell-account-info" tabindex="0">
+                                                                        {{pin.totalCharges |
+                                                                        currency}}</td>
+                                                                    <td
+                                                                        class="invoice-balanceDueCellqp text-end p-3 cell-account-info" tabindex="0">
+                                                                        {{pin.balanceDue | currency}}
+                                                                    </td>
+                                                                </tr>
+                                                                <tr *ngIf="invoice?.pins?.length <= 0">
+                                                                    <td colspan="12"><span
+                                                                            class="txt-puro-red">{{'NO_OPEN_INVOICES_TEXT'|translate}}</span>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </ng-template>
+                                            </ngb-panel>
+                                        </ngb-accordion>
+                                    </div>
+                                </ng-template>
+                            </ngb-panel>
+                        </ngb-accordion>
+                    </td>
+                </tr>
+                <tr *ngIf="accountsList.length <= 0">
+                    <td colspan="12"><span class="txt-puro-red">{{'NO_OPEN_INVOICES_TEXT'|translate}}</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <pagination-controls 
+        (pageChange)="p = $event"
+        class="text-center"
+        [previousLabel]="'PREVIOUS' | translate"
+        [nextLabel]="'NEXT' | translate">
+    </pagination-controls>
+</div>
+
+
+<div class="container" *ngIf="!isUpdateInProgress && !displaySuccessDisputeInvoice">
+
+    <div class="dispute-invoice-header-box flex-row">
+        <div class="invoice-detail flex-row">
+            <div class="heading-name">{{ 'DISPUTE_INVOICE' | translate }}</div>
+            <div class="heading-number"> # {{selectedInvoice.invoiceNumber}}</div>
+        </div>
+        <div class="invoice-detail flex-row">
+            <div class="heading-name">{{ 'BALANCE_DUE' | translate }}:</div>
+            <div class="heading-number">{{selectedInvoice.balanceDue |currency}}</div>
+        </div>
+    </div>
+
+    <div class="dispute-invoice-content-box flex-row">
+        <div class="form-box">
+            <div class="info-box mb-4">{{ 'YOUR_REQUEST_REVIEWED' | translate }}</div>
+            <div class="mandatory-mesaage mb-4">{{ 'TL_ONE_OF_THE_FIELDS_MANDATORY' | translate}}</div>
+
+            <div class="form-floating mb-4">
+                <input name="disputeAmount" id="disputeAmount" type="text" min="0.01" max="selectedInvoice.balanceDue"
+                    [ngClass]="{'is-invalid': checkDisputeAmout()}" class="form-control currency"
+                    [(ngModel)]="selectedInvoice.dispute.disputeAmount" [ngModelOptions]="{standalone: true}"
+                    obppTwoDigitDecimaNumber />
+                <label for="disputeAmount" class=" control-label">{{ 'DISPUTE_AMOUNT'| translate }}<span>*</span></label>
+                <div *ngIf="checkDisputeAmout()">
+                    <span class="error-block p-left-4">{{ 'VALID_AMOUNT_KEY' | translate }}</span>
+                </div>
+            </div>
+
+            <div class="form-floating mb-4">
+                <textarea name="pinNumber" id="pinNumber" type="text" class="form-control tarea" row="3" [(ngModel)]="selectedInvoice.disputePINS"
+                    [ngModelOptions]="{standalone: true}" placeholder="{{'PIN_NUMBER'| translate}}"></textarea>
+                <label for="pinNumber" class=" control-label">{{ 'PIN_NUMBER'| translate }}<span>*</span></label>
+                <div *ngIf="false">
+                    <span class="error-block p-left-4">{{ 'VALID_AMOUNT_KEY' | translate }}</span>
+                </div>
+            </div>
+
+            <div class="form-floating mb-4">
+                <select class="form-select custom-select" id="floatingSelect"
+                    [(ngModel)]="selectedInvoice.dispute.disputeReason">
+                    <option *ngFor="let op of dispute_reason_options" value="{{op.code | translate}}">
+                        {{op.description | translate}}
+                    </option>
+                </select>
+                <label for="floatingSelect">{{ 'DISPUTE_REASON' | translate }}<span>*</span></label>
+                <div *ngIf="selectedInvoice.dispute.disputeReason == ''">
+                    <span class="error-block p-left-4">{{ 'VALID_DISPUTE_REASON_KEY' | translate }}</span>
+                </div>
+            </div>
+
+            <div class="form-floating mb-4">
+                <textarea id="note" name="note" class="form-control placeholderChange tarea" style="height: 100px"
+                    [(ngModel)]="selectedInvoice.dispute.note" [ngModelOptions]="{standalone: true}"
+                    placeholder="{{ 'ADDITIONAL_INFO' | translate}}" maxlength="200"></textarea>
+                <label for="note" class=" control-label">{{ 'NOTES' | translate }}</label>
+            </div>
+
+            <div class="d-flex justify-content-around">
+                <button class="btn btn-primary btn-block primary-btn btn-width" (click)="submitDispute()" [disabled]="isViewOnly">
+                    {{ 'SUBMIT_DISPUTE' | translate }}
+                </button>
+                <button class="btn cta-blue info-btn sec-btn" (click)="goBackSummaryPage()">
+                    {{ 'CANCEL' | translate }}
+                </button>
+            </div>
+        </div>
+
+        <div class="list-box">
+            <div class="mt-6">
+                <p class="content-text">
+                    {{ 'YOU_MAY_ALSO_CHAT_TEXT' | translate }}
+                </p>
+            </div>
+
+            <div class="mt-6">
+                <div class="table-box">
+                    <table aria-describedby="disputed pins">
+                        <thead>
+                            <th class="accountquickPay-tab-header account-tab-accNoqp w-pinnum" scope="col"
+                                sortable="pinNumber" (sort)="onSortPINTable($event)" >
+                                <a href="javascript:void(0)" class="pinheaderhref">{{'PIN_NUMBER' |
+                                    translate
+                                    }}</a>
+
+                            </th>
+                            <th class="accountquickPay-tab-header account-tab-accNoqp w-pinnum text-center" scope="col"
+                                sortable="service" (sort)="onSortPINTable($event)">
+                                <a href="javascript:void(0)" class="pinheaderhref">Service</a>
+
+                            </th>
+                            <th class="accountquickPay-tab-header account-tab-accNoqp w-pinnum text-end" scope="col"
+                                sortable="totalCharges" (sort)="onSortPINTable($event)">
+                                <a href="javascript:void(0)" class="pinheaderhref">{{'PIN_AMOUNT' |
+                                    translate
+                                    }}</a>
+
+                            </th>
+                            <th class="accountquickPay-tab-header account-tab-accNoqp w-pinnum text-end" scope="col"
+                                sortable="dueDate" (sort)="onSortPINTable($event)">
+                                <a href="javascript:void(0)" class="pinheaderhref">{{'BALANCE_DUE' |
+                                    translate
+                                    }}</a>
+
+                            </th>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let pin of selectedInvoice['pins'] | paginate:
+                            { itemsPerPage: 10, currentPage: cp} let i=index">
+                                <td >
+                                    <a title="{{selectedInvoice.accountName}}" [routerLink]=""
+                                        (click)="getShipmentTrackingURL(pin, selectedInvoice)" tabindex="0" (keydown.enter)="getShipmentTrackingURL(pin, selectedInvoice)">{{pin.pinNumber}}</a>
+                                </td>
+                                <td class="text-center">{{pin.service | translate}}</td>
+                                <td class="text-end">
+                                    {{pin.totalCharges | currency}}
+                                </td>
+                                <td class="text-end">
+                                    {{pin.balanceDue | currency}}
+                                </td>
+                            </tr>
+                            <tr *ngIf="selectedInvoice?.pins?.length <= 0">
+                                <td colspan="4"><span class="txt-puro-red">{{'NO_OPEN_INVOICES_TEXT'|translate}}</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <pagination-controls 
+                        (pageChange)="p = $event"
+                        class="text-center"
+                        [previousLabel]="'PREVIOUS' | translate"
+                        [nextLabel]="'NEXT' | translate">
+                    </pagination-controls>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container" *ngIf="displaySuccessDisputeInvoice">
+
+    <div class="row form-group col-md-12 mb-4 mt-6">
+        <h4 class="txt-puro-blue description-addAccount text-14">{{ 'DISPUTE_INVOICE_SUCCESS_TEXT1' | translate }}
+            {{successDisputeObj.caseNumber}}</h4>
+    </div>
+    <div class="row form-group txt-puro-blue col-md-12 mb-4">
+        <div class="col-md-3">
+            <label for="qp-accNumber" class="control-label">{{ 'DISPUTE_INVOICE_NUMBER' | translate }}</label>
+        </div>
+        <div class="col-md-3">
+            <label name="qp-accNumber" class="control-label">{{successDisputeObj.invoiceNumber}}</label>
+        </div>
+    </div>
+    <div class="row no-print col-md-12 mb-4">
+        <h4 class="txt-puro-blue description-addAccount ng-binding text-14">{{ 'DISPUTE_INVOICE_SUCCESS_TEXT2' |
+            translate
+            }}</h4>
+        <h4 class="txt-puro-blue description-addAccount ng-binding text-14">{{ 'DISPUTE_INVOICE_SUCCESS_TEXT3' |
+            translate
+            }}</h4>
+    </div>
+    <div class="txt-puro-blue row form-group col-md-12">
+        <div class="col-md-3">
+            <label for="qp-accNumber" class="control-label">{{ 'BALANCE_DUE_TEXT' | translate }}</label>
+        </div>
+        <div class="col-md-5">
+            <label name="qp-accNumber" class="control-label">{{successDisputeObj.balanceDue |currency}} </label>
+        </div>
+    </div>
+    <!-- End Account Number -->
+    <!-- Invoice Number -->
+    <div class="txt-puro-blue row form-group col-md-12">
+        <div class="col-md-3">
+            <label for="qp-invoiceNumber" class="control-label">{{ 'DISPUTE_AMOUNT' | translate }}</label>
+        </div>
+        <div class="col-md-5">
+            <label name="qp-invoiceNumber" class="control-label">{{successDisputeObj.disputeAmount |currency}} {{
+                'CAD_TEXT'
+                | translate}}</label>
+        </div>
+    </div>
+    <!-- End Invoice Number -->
+    <!-- Pay Amount -->
+    <div class="txt-puro-blue row form-group col-md-12">
+        <div class="col-md-3">
+            <label for="qp-payAmount" class="control-label">{{ 'DISPUTE_REASON' | translate }}</label>
+        </div>
+        <div class="col-md-5">
+            <label name="qp-invoiceNumber" class="control-label">
+                <div [ngSwitch]='successDisputeObj.disputeReason'>
+                    <div *ngIf="localStorageService.get('lang') != 'fr'">
+                        <div *ngSwitchCase="'Shipment Issue'">{{'DISPUTE_REASON_DESC_1' | translate }}</div>
+                        <div *ngSwitchCase="'Pricing Error'">{{'DISPUTE_REASON_DESC_2' | translate }}</div>
+                        <div *ngSwitchCase="'Other'">{{'DISPUTE_REASON_DESC_3' | translate }}</div>
+                        <div *ngSwitchDefault>{{successDisputeObj.disputeReason}}</div>
+                    </div>
+                    <div *ngIf="localStorageService.get('lang') == 'fr'">
+                        <div *ngSwitchCase="'Probléme avec l\'envoi'">{{'DISPUTE_REASON_DESC_1' | translate }}</div>
+                        <div *ngSwitchCase="'Erreur de prix'">{{'DISPUTE_REASON_DESC_2' | translate }}</div>
+                        <div *ngSwitchCase="'Autre'">{{'DISPUTE_REASON_DESC_3' | translate }}</div>
+                        <div *ngSwitchDefault>{{successDisputeObj.disputeReason}}</div>
+                    </div>
+
+                </div>
+            </label>
+        </div>
+    </div>
+
+    <div class="d-flex form-group mt-6">
+        <div class="returnToDisputeLink">
+            <button class="btn btn-primary btn-dispute ml-4 disput-btn" (click)="returnToDispute()">{{ 'RETURN_TO_DISPUTE_TEXT' |
+                translate }}</button>
+        </div>
+        <div class="no-print">
+            <button class="btn btn-primary btn-dispute ml-4 dispute-btn" (click)="printPage()">{{ 'PRINT_TEXT' | translate
+                }}</button>
+        </div>
+    </div>
+</div>
+
+</div>

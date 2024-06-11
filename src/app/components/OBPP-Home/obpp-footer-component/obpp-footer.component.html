@@ -1,0 +1,30 @@
+ <div class="footer no-print">
+    <nav class="navbar navbar-default footer-bottom">
+
+        <div class="container col-md-12">
+            <div class="col-md-4 d-flex align-items-md-center">
+                <img alt="language" src="../../../../assets/images/language.svg">
+                <a *ngIf="langLabel == 'fr'" class="dropdown-item  cursor-pointer text-color-primary language-font"
+                    (click)="languageSwitch('en')" (keyup.enter)="languageSwitch('en')" tabindex="0"><span class="link-label">{{ 'lang' | translate
+                        }}</span></a>
+                <a *ngIf="langLabel != 'fr'" class="dropdown-item  cursor-pointer text-color-primary language-font"
+                    (click)="languageSwitch('fr')" (keyup.enter)="languageSwitch('fr')" tabindex="0"><span class="link-label">{{ 'lang' | translate
+                        }}</span></a>
+            </div>
+            <div class="col-md-8 d-flex flex-column align-items-md-end">
+                <p class="font-weight-bold mb-0">
+                    <a class="font-weight-bold font-color" href="/en/terms-and-conditions-service"
+                        title="Terms and Conditions of Service">{{'TERMS_AND_CONDITIONS_OF_SERVICE' |
+                        translate}}</a>&nbsp;|&nbsp;<a class="font-weight-bold font-color"
+                        href="/en/terms-and-conditions-site-use"
+                        title="Terms and Conditions of Site Use">{{'TERMS_AND_CONDITIONS_OF_SITE_USE' |
+                        translate}}</a>&nbsp;|&nbsp;<a class="font-weight-bold font-color" href="/en/privacy-statement"
+                        title="Privacy Statement">{{'PRIVACY' | translate}}</a>
+                </p>
+                <p style="color:#111">{{'COPYRIGHTS_TEXT' | translate: {'year': year} }}
+                </p>
+            </div>
+
+        </div>
+    </nav>
+</div>

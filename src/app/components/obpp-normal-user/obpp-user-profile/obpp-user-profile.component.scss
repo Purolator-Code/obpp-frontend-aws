@@ -1,0 +1,266 @@
+ul {
+  white-space: nowrap !important;
+  flex-direction: row !important;
+}
+
+.nav-tabs {
+  margin-right: 15px;
+  border-bottom: 0;
+}
+
+.nav-tabs > li {
+  margin-right: 1px;
+}
+
+.nav-tabs > li > button {
+  border-color: #eee #eee #ddd;
+  background-color: #eee;
+  color: #000;
+  border-radius: 15px 15px 0 0;
+  padding: 10px 15px;
+}
+
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus {
+  color: #000;
+}
+
+.register-form label.control-label,
+.profile-form label.control-label,
+.quickpay-form label.control-label,
+.cc-holder-name label.control-label,
+.changePassword-form label.control-label,
+.form-disputeInvoice label.control-label,
+.invoiceSummaryContainer label.control-label {
+  text-align: left;
+}
+
+.btn-addACard {
+  margin-left: 200px;
+  width: 110px;
+}
+
+.panel-heading {
+  width: 450px;
+  margin: 5px;
+  height: 55px;
+}
+
+.phone-display {
+  display: flex;
+  justify-content: space-between;
+}
+
+.phextn-display {
+  display: flex;
+}
+
+.profile-phone {
+  margin-right: 10px;
+}
+
+.profile-input-font {
+  font-weight: bold;
+}
+
+.table-creditcard {
+  width: 32em !important;
+}
+
+.table-creditcard-body {
+  // width: 12em;
+}
+
+/* Card Profile**/
+.panel-cardprofile {
+  width: 390px;
+  height: 0px;
+  margin-bottom: 57px;
+}
+.panel-table-inner.panel-cardprofile .header {
+  float: left;
+}
+
+.cardProfileccMask {
+  margin-left: 0px;
+}
+
+.cardProfileEnrolled {
+  margin-left: 40px;
+}
+.iconCreditCard {
+  margin-left: 2px;
+  margin-right: 2px;
+}
+/* Card profile ends**/
+
+.iframe {
+  padding: 25px 0 0 70px;
+}
+
+.panel-heading-margin {
+  margin-top: 10px !important;
+}
+
+.modal-payment {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+.modal-payment-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 8px solid #777;
+  width: 50%; /* Could be more or less, depending on screen size */
+}
+.edit-icon {
+  float: right;
+  margin-right: 20px;
+  margin-top: -40px;
+  position: relative;
+  z-index: 2;
+  cursor:pointer;
+}
+
+.edit-icon-pen{
+  float: right;
+  margin-right: 20px;
+  position: relative;
+  z-index: 2;
+  cursor:pointer;
+}
+form label, table {
+  font-size: 16px;
+}
+
+a {
+  color: #001996;
+}
+
+.form-check-input {
+  margin-top: 3px;
+}
+
+.form-check-input:checked {
+  background-color: #001996 !important;
+
+  width: 16px;
+  height: 16px;
+}
+
+.form-check-input[type=checkbox]:focus,
+.label::after,
+label.form-check-label:focus,
+.form-check-input[type=checkbox]::after,
+.form-check-input[type=checkbox]:not(:disabled):not(.disabled):active:focus {
+  border-radius: 0;
+  margin: 0 0.25rem 0 0;
+  width: 16px;
+  height: 16px;
+}
+
+label.form-check-label {
+  margin-left: 8px;
+}
+
+.form-radio-custom {
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
+}
+
+.radio-button-row {
+  display: flex;
+  align-items: center;
+}
+
+::ng-deep .loader {
+  position: fixed;
+  text-align: center;
+  padding: 15%;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 9999;
+  background-color: white;
+  opacity: .6;
+}
+
+.acnt-button {
+  width: 340px !important;
+}
+
+tr {
+  vertical-align: middle;
+  height: 55px;
+}
+
+.table>:not(:first-child) {
+  border-top: none;
+}
+
+.table>thead {
+  vertical-align: middle;
+  background-color: #d3d3d3;
+}
+
+
+.form-control:focus {
+   border: none !important;
+   outline: 2px solid #0A38E6 !important;
+}
+
+img:focus{
+  outline: 2px solid #0A38E6;
+  border-radius: 50%;
+ }
+
+
+ img:hover{
+   outline: 2px solid #001996 ;
+   border-radius: 50%;
+ }
+
+ 
+
+.edit-icon:focus{
+  outline: 2px solid #0A38E6 !important;
+}
+
+.edit-icon-pen:focus{
+  outline: 2px solid #0A38E6 !important;
+}
+input[type='checkbox']:focus{
+  outline: 2px solid #0A38E6 !important;
+  
+}
+
+.sec-btn:focus{
+  outline: 3px solid #001996;
+   background-color: #ffffff !important;
+   color: #001996 !important;
+   box-shadow: none !important;
+   border: none !important;
+ }
+
+
+ button:hover{
+  outline :1px solid #0a58ca !important;
+  border: 1px solid #0a58ca !important;
+}
+
+
+.table-creditcard th, .table-creditcard td {
+  padding-right: 0 !important;
+}
+

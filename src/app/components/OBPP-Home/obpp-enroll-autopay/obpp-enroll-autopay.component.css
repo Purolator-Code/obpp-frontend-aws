@@ -1,0 +1,238 @@
+.form-heading {
+  font-weight: 400;
+  font-size: 36px;
+  color: #001996;
+  text-align: center;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+.form-normal {
+  font-weight: 400;
+  font-size: 24px;
+  color: #001996;
+  text-align: center;
+}
+
+.req-field-txt {
+  font-size: 16px;
+  color: #111111;
+}
+
+.flex-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flex-col {
+  display: flex;
+  align-items: space-between;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+.justify-end {
+  justify-content: flex-end !important;
+}
+
+.justify-center {
+  justify-content: center !important;
+}
+
+.justify-unset {
+  justify-content: unset !important;
+}
+
+.align-unset {
+  align-items: unset !important;
+}
+
+.vertical-top {
+  vertical-align: top;
+}
+
+.mr-2 {
+  margin-right: 16px;
+}
+
+.ml-8p {
+  margin-left: 8px;
+}
+
+.ml-3 {
+  margin-left: 12px;
+}
+
+.ml-2 {
+  margin-left: 16px;
+}
+
+.mb-2 {
+  margin-bottom: 16px !important;
+}
+
+.mt-4 {
+  margin-top: 16px;
+}
+
+.mt-6 {
+  margin-top: 24px;
+}
+
+.mt-auto {
+  margin-top: auto;
+}
+
+.pl-4 {
+  padding-left: 16px !important;
+}
+
+.pr-2 {
+  padding-right: 8px;
+}
+
+.p-2 {
+  padding: 8px;
+}
+
+.w-5 {
+  width: 5%;
+}
+
+.w-15 {
+  width: 15%;
+}
+
+.w-20 {
+  width: 20%;
+}
+
+.w-22 {
+  width: 22%;
+}
+
+.w-25 {
+  width: 25%;
+}
+
+.w-50 {
+  width: 50%;
+}
+
+.w-60 {
+  width: 60%;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.h-50 {
+  height: 50px !important;
+}
+
+.h-68 {
+  height: 68px !important;
+}
+
+.input-box {
+  height: 50px;
+  font-size: 14px;
+  border: 1px solid #495057;
+}
+
+.control-label {
+  font-size: 12px;
+}
+
+.heading-control-label {
+  font-size: 16px;
+  font-weight: 400;
+  color: #111111;
+}
+
+.panel-table {
+  background-color: #f7f8fc;
+  padding: 10px 15px;
+  margin-bottom: 0;
+  border-radius: 10px;
+}
+
+.panel-table-content {
+  padding: 10px 15px;
+  margin-bottom: 0;
+  border-top: 1px solid #ddd;
+}
+
+.header-content {
+  text-align: center;
+  color: #001996;
+  font-weight: bold;
+  font-size: 21px;
+}
+
+small {
+  font-size: 75%;
+  margin-left: 1%;
+}
+
+.custom-card {
+  border: 1px solid black;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
+  height: 180px;
+  width: 380px;
+}
+
+.card-title {
+  font-size: 36px;
+}
+
+.user-input-width {
+  width: 535px;
+}
+
+.user-input-height {
+  height: 55px;
+}
+
+.enroll-label {
+  font-size: 24px;
+}
+
+.max-accs-label {
+  font-size: 16px;
+}
+
+.tbl-input-width {
+  width: 192px;
+}
+
+tbody,
+td,
+tfoot,
+th,
+thead,
+tr {
+  border-style: none;
+}
+
+.table > :not(:first-child) {
+  border: none;
+}
+
+.tbl-label-pos {
+  padding: 15px 0;
+}
+
+.p-20 {
+  padding: 20px;
+}
+
+.p-120 {
+  padding: 0 120px 15px;
+}

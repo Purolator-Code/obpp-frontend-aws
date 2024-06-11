@@ -1,0 +1,372 @@
+<div id="ngb-nav-3-panel">
+<div *ngIf="!declinedMessage && !paymentSuccessFlag">
+    <div>
+        <div class="ml-20 mt-20">
+            <h2 class="txt-puro-blue">{{ "WEEKLY_PGM" | translate }}</h2>
+        </div>
+    </div>
+    <div>
+        <table class="table table-striped" aria-describedby="tableDescription">
+            <thead class="panel-table">
+                <tr>
+                    <th scope="col" class="col-md-2"><label tabindex="0">{{ "ACCOUNT_TEXT_AUTOPAY" | translate }}</label></th>
+                    <th scope="col" class="col-md-2">
+                        <label tabindex="0">{{ "STATUS_TEXT" | translate }}
+                        <img class="icon" src="assets/images/icon-tooltip.svg"
+                            alt="{{ 'AUTOPAY_STATUS_TOOLTIP_TEXT' | translate }}" tabindex="0"
+                            ngbTooltip="{{ 'AUTOPAY_STATUS_TOOLTIP_TEXT' | translate }}" />
+                        </label>
+                    </th>
+                    <th scope="col" class="col-md-2">
+                        <label tabindex="0">{{ "ACTIVATION_DATE_UPDATED_TEXT" | translate }}
+                        <img class="icon" src="assets/images/icon-tooltip.svg"
+                            alt="{{ 'ACTIVATION_DATE_TOOLTIP_TEXT' | translate }}" tabindex="0"
+                            ngbTooltip="{{ 'ACTIVATION_DATE_TOOLTIP_TEXT' | translate }}" />
+                        </label>
+                    </th>
+                    <th scope="col" class="col-md-2 text-center">
+                        <label tabindex="0">{{ "SEND_NOTIFICATION_FOR_SUCCESSFUL_TRANSACTIONS" | translate }}
+                        <img class="icon" src="assets/images/icon-tooltip.svg"
+                            alt="{{ 'SEND_NOTIFICATION_TOOLTIP_TEXT' | translate }}" tabindex="0"
+                            ngbTooltip="{{ 'SEND_NOTIFICATION_TOOLTIP_TEXT' | translate }}" />
+                        </label>
+                    </th>
+                    <th scope="col" class="col-md-3">
+                        <label tabindex="0">{{ "SEND_NOTIFICATION_COPY" | translate }}
+                        <img class="icon" src="assets/images/icon-tooltip.svg"
+                            alt="{{ 'CONFIRMATION_MAIL_TOOLTIP_TEXT' | translate }}" tabindex="0"
+                            ngbTooltip="{{ 'CONFIRMATION_MAIL_TOOLTIP_TEXT' | translate }}" />
+                        </label>
+                    </th>
+                    <th scope="col" class="col-md-1">
+                        <label tabindex="0" [attr.aria-label]="'REMOVE_KEY' | translate">{{ "REMOVE_KEY" | translate }}</label>
+                    </th>
+                </tr>
+            </thead>
+            <tbody *ngIf="!creditCardList || creditCardList.length === 0">
+                <tr>
+                    <td colspan="6" class="text-center">
+                        {{ "NO_INVOICES_MATCHING_ERROR_OPEN_INVOICES" | translate }}
+                    </td>
+                </tr>
+            </tbody>
+            <tbody>
+                <tr *ngFor="let creditcard of creditCardList">
+                    <td colspan="7" class="p-0">
+                        <ngb-accordion>
+                            <ngb-panel>
+                                <ng-template ngbPanelTitle>
+                                    <label class="col-sm-3 title-label-text">{{ creditcard.ccType }} {{
+                                        creditcard.ccMask }}</label>
+                                    <span class="col-sm-1 remove-account">
+                                        <img title="{{ 'REMOVE_ACCOUNT' | translate }}" class="icon"
+                                            src="assets/images/blueclose.svg" alt="Remove Access" (click)="
+                                        this.removeAutoPayAccount(creditcard.creditCardId, '-1')" tabindex="0" (keydown.enter)="this.removeAutoPayAccount(creditcard.creditCardId, '-1')"/>
+                                    </span>
+                                </ng-template>
+                                <ng-template ngbPanelContent *ngIf="this.autopayList != null">
+                                    <div *ngFor="let autopayaccount of autopayList; index as i">
+                                        <div *ngIf="autopayaccount.creditcardid === creditcard.creditCardId">
+                                            <div
+                                                [class]="i%2 !== 0 && autopayList.length>1? 'row panel-card-tabel' : 'row panel-card-tabel odd-color'">
+                                                <div class="col-md-2 d-flex align-items-center">
+                                                    <div>
+                                                        <span style="vertical-align: middle;">
+                                                            <a href="javascript:void(0)" class="anchor-content" (click)="
+                                                                accountNumberLoad(autopayaccount.accountNumber)">
+                                                                {{ autopayaccount.accountNumber }}</a>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2 d-flex align-items-center" tabindex="0">
+                                                    <span>
+                                                        {{
+                                                        getDisplayobppAutoPayAccountStatus(
+                                                        autopayaccount.obppAutoPayAccountStatus
+                                                        ) | translate}}
+                                                    </span>
+                                                </div>
+                                                <div class="col-md-2 d-flex align-items-center justify-content-center" tabindex="0">
+                                                    <span>
+                                                        {{ autopayaccount.targetActionDateFrontEnd }}
+                                                    </span>
+                                                </div>
+                                                <div class="col-md-2 d-flex align-items-center justify-content-center" tabindex="0">
+                                                    <span>
+                                                        <input name="autoPayFlag" type="checkbox" [checked]="autopayaccount.sendSuccessfullNotificationInd" disabled />
+                                                    </span>
+                                                </div>
+                                                <div class="col-md-3 d-flex align-items-center" tabindex="0">
+                                                    <span>
+                                                        {{ autopayaccount.carbonCopyEmailAddress }}
+                                                    </span>
+                                                </div>
+                                                <div class="col-md-1 d-flex justify-content-center align-items-center">
+                                                    <span>
+                                                        <img title="{{ 'REMOVE_ACCOUNT' | translate }}" class="icon" tabindex="0"
+                                                            src="assets/images/blueclose.svg" alt="Remove Access" (keydown.enter)="this.removeAutoPayAccount(
+                                                                creditcard.creditCardId,
+                                                                autopayaccount.accountNumber
+                                                                )"
+                                                            (click)="
+                                                            this.removeAutoPayAccount(
+                                                            creditcard.creditCardId,
+                                                            autopayaccount.accountNumber
+                                                            )" />
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </ngb-panel>
+                        </ngb-accordion>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <hr />
+</div>
+<div *ngIf="showNextPage && !declinedMessage && !paymentSuccessFlag">
+    <div class="mt-5">
+        <div class="row" >
+            <div class="col-md-6" tabindex="0">
+                <div class="d-flex flex-column">
+                    <label id="labelAutoPay" class="label-autopay-text" tabindex="0">{{ "AUTO_PAY_ACCOUNT_TEXT" | translate }}</label>
+                    <ul>
+                        <li class="fs-14" *ngFor="let accountDetail of accountDetails.controls" tabindex="0">
+                            {{ accountDetail.value.accountNumberOriginal ? accountDetail.value.accountNumberOriginal : accountDetail.value.accountNumber }}
+                        </li>
+                    </ul>
+                    
+                    <button class="btn btn-primary btn-block primary-btn" id="goBack" tabindex="0" (click)="showNextPageAction()" (keydown.enter)="showNextPageAction()" >
+                        {{ "GO_BACK_TEXT" | translate }}
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-5" >
+                <div id="paymentModal" class="modal-payment">
+                    <!-- Modal content -->
+                    <div class="modal-payment-content">
+                        <div class="form-group">
+                            <div class="section" id="paymentContainer">
+                                {{ "PAYMENT_IN_PROGRESS" | translate }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                 <form #init__payment ngNoForm name="init__payment" id="init__payment" novalidate=""
+                    action="{{ paymentURL }}" target="cpwa__frame" method="post" tabindex="-1">
+                    <input name="p" id="payload" type="hidden" value="{{ cpwaPayload }}" />
+                </form>
+
+                <div>
+                    <iframe title="payment" id="cpwa__frame" name="cpwa__frame" width="475" height="{{ frameHeight }}" tabindex="0">
+                    </iframe>
+                </div> 
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="!showNextPage && !declinedMessage && !paymentSuccessFlag">
+    <span class="fs-20">{{ "SELECT_ENROL_ACCOUNT_TEXT" | translate }}</span>
+    <div class="tab-content-account mt-20">
+        <div class="form-group">
+            <div class="row panel-table-account">
+                <div class="col-md-2"></div>
+                <div class="col-md-2"></div>
+                <div class="col-md-2 d-flex align-items-center">
+                    <label for="languagePref" class="control-label bold" tabindex="0">
+                        {{ "ACTIVATION_DATE_UPDATED_TEXT" | translate }}
+                        <img class="icon" src="assets/images/icon-tooltip.svg"
+                            alt="{{ 'ACTIVATION_DATE_TOOLTIP_TEXT' | translate }}" tabindex="0"
+                            ngbTooltip="{{ 'ACTIVATION_DATE_TOOLTIP_TEXT' | translate }}" />
+                    </label>
+                </div>
+                <div class="col-md-2 d-flex align-items-center justify-content-center pr-0">
+                    <label for="languagePref" class="control-label bold" tabindex="0">
+                        {{ "SEND_NOTIFICATION_FOR_SUCCESSFUL_TRANSACTIONS" | translate }}
+                        <img class="icon" src="assets/images/icon-tooltip.svg"
+                            alt="{{ 'SEND_NOTIFICATION_TOOLTIP_TEXT' | translate }}" tabindex="0"
+                            ngbTooltip="{{ 'SEND_NOTIFICATION_TOOLTIP_TEXT' | translate }}" />
+                    </label>
+                </div>
+                <div class="col-md-3"></div>
+                <div class="col-md-1"></div>
+            </div>
+
+            <form [formGroup]="enrollAutoPayForm" class="form-horizontal register-form" novalidate>
+                <div class="form-group">
+                    <div formArrayName="accountDetails">
+                        <div *ngFor="
+                            let accountDetail of accountDetails.controls;
+                            let i = index">
+                            <div [formGroupName]="i" class="row panel-table-content">
+                                <div class="col-md-2 p-0">
+                                    <div class="input-group" aria-live="polite">
+                                        <div class="form-floating tbl-input-width user-input-height p-bottom-24">
+                                            <input [id]="'accountNumber-' + i" name="accountNumber" formControlName="accountNumber"
+                                                class="form-control w-140" minlength="2" maxlength="12"
+                                                required="required" (focusout)="checkAccountNumber(i)"
+                                                placeholder="{{ 'ACCOUNT_NUMBER_TEXT' | translate }}"
+                                                [readonly]="this.disableAddAccount" />
+                                            <label for="accountNumber">
+                                                {{ "ACCOUNT_NUMBER_TEXT" | translate }}*</label>
+                                        </div>
+                                        <div class="d-flex flex-column">
+                                            <span *ngIf="accountDetails.controls[i].get('isCheckAccountBalance')?.value"
+                                                ngbTooltip="{{
+                                                'OUTSTANDING_BALANCE_ICON_TEXT'
+                                                | translate}}" class="orangedot2"></span>
+                                            <img class="icon icon-tooltip icon-position"
+                                                src="assets/images/icon-tooltip.svg" alt="{{
+                                                    'REGISTER_ACCOUNT_NUMBER_TOOLTIP_TEXT_UPDATED'
+                                                    | translate}}" tabindex="0" *ngIf="i === 0" ngbTooltip="{{
+                                                'REGISTER_ACCOUNT_NUMBER_TOOLTIP_TEXT_UPDATED'
+                                                | translate}}"  />
+                                        </div>
+
+                                        <div *ngIf="
+                                            accountDetails.controls[i].get('accountNumber')
+                                            ?.invalid &&
+                                            accountDetails.controls[i].get('accountNumber')?.dirty
+                                            ">
+                                            <span class="error-block">{{
+                                                "ACCOUNT_NUMBER_REQUIRED" | translate
+                                                }}</span>
+                                        </div>
+                                        <div *ngIf="errorMap.get(this.i) === 'duperror'">
+                                            <span class="error-block">{{
+                                                "ERR_DUPLICATE_ACCT" | translate
+                                                }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 p-0" aria-live="polite">
+                                    <div class="input-group">
+                                        <div class="form-floating tbl-input-width user-input-height p-bottom-24">
+                                            <input name="postalCode" formControlName="postalCode"
+                                            [class]="(accountDetails.controls[i].get('postalCode')?.invalid &&
+                                            accountDetails.controls[i].get('postalCode')?.dirty)||
+                                            !accountDetails.controls[i].get('isValidPostalCode')?.value?
+                                            'form-control is-invalid w-140':'form-control w-140'"
+                                              minlength="4" maxlength="11"
+                                                required="required" (blur)="checkPostalCode(i)"
+                                                placeholder="{{ 'POSTAL_CODE_TEXT' | translate }}" />
+                                            <label for="postalCode">
+                                                {{ "POSTAL_CODE_TEXT" | translate }}*</label>
+                                        </div>
+                                        <img class="icon icon-tooltip icon-position" *ngIf="i === 0"
+                                            src="assets/images/icon-tooltip.svg"
+                                            alt="{{ 'POSTALCODE_TOOLTIP_TEXT' | translate }}" tabindex="0"
+                                            ngbTooltip="{{ 'POSTALCODE_TOOLTIP_TEXT' | translate }}" />
+                                        <div *ngIf="
+                                                accountDetails.controls[i].get('postalCode')?.invalid &&
+                                                accountDetails.controls[i].get('postalCode')?.dirty
+                                            ">
+                                            <span class="error-block">{{
+                                                "POSTAL_CODE_REQUIRED" | translate
+                                                }}</span>
+                                        </div>
+                                        <div *ngIf="!accountDetails.controls[i].get('isValidPostalCode')?.value">
+                                            <span class="error-block">{{
+                                                "POSTAL_CODE_ACCOUNT_NUMBER_COMBINATION" | translate
+                                                }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 p-0 d-flex align-items-center user-input-height">
+                                    <label tabindex="0">{{ accountDetail.value.paymentDate }}</label>
+                                </div>
+                                <div
+                                    class="col-md-2 p-0 d-flex align-items-center justify-content-center user-input-height">
+                                    <input formControlName="autoPayFlag" type="checkbox"
+                                        [checked]="accountDetail.value.autoPayFlag" aria-label="autopay-flag"/>
+                                </div>
+                                <div class="col-md-3 p-0">
+                                    <div class="input-group">
+                                        <div class="form-floating user-input-height p-bottom-24 ml-20" style="width: 210px">
+                                            <input name="emailNotificationId" formControlName="emailNotificationId"
+                                                maxlength="100" class="form-control"
+                                                placeholder="{{ 'SEND_NOTIFICATION_COPY' | translate }}" />
+                                            <label for="accountNumber">
+                                                {{ "SEND_NOTIFICATION_COPY" | translate }}*</label>
+                                        </div>
+                                        <img class="icon icon-tooltip icon-position p-0" *ngIf="i === 0"
+                                            src="assets/images/icon-tooltip.svg"
+                                            alt="{{ 'CONFIRMATION_MAIL_TOOLTIP_TEXT' | translate }}" tabindex="0"
+                                            ngbTooltip="{{ 'CONFIRMATION_MAIL_TOOLTIP_TEXT' | translate }}" />
+                                        <div *ngIf="
+                                                accountDetails.controls[i].get('emailNotificationId')
+                                                ?.invalid &&
+                                                accountDetails.controls[i].get('emailNotificationId')
+                                                ?.dirty
+                                            ">
+                                            <span class="error-block">{{
+                                                "EMAIL_REQUIRED" | translate
+                                                }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-1 p-0 rmv_acc">
+                                    <div class="input-group  justify-content-center">
+                                        <span>
+                                            <img title="{{ 'REMOVE_ACCOUNT' | translate }}" class="icon"
+                                                src="assets/images/blueclose.svg" alt="Remove Access" (keydown.enter)="remove(i)" tabindex="0"
+                                                (click)="remove(i)" /></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="pl-15 pt-10">
+                <button class="btn btn-primary btn-block primary-btn" (mousedown)="addAccount()" (keydown.enter)="addAccount()"
+                    [disabled]="
+            this.disableAddAccount || this.accountDetails.controls.length === 5">
+                    {{ "ADD_LABEL" | translate }}
+                </button>
+            </div>
+            <hr />
+            <div class="pl-15">
+                <button class="btn btn-primary btn-block primary-btn"
+                (mousedown)="register()" [disabled]="!this.enableNext" (keydown.enter)="register()">
+                    {{ "NEXT" | translate }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="paymentSuccessFlag" class="tab-content">
+    <div class="row">
+        <div class="col-md-8">
+            {{ "ENROLMENT_USER_CONFIRM_TEXT" | translate }}
+            <br /><br />
+        </div>
+    </div>
+    <div class="form-group no-print p-4">
+        <div class="row">
+            <div class="col-md-3 no-print">
+                <button class="btn btn-primary cta-blue info-btn form-control cta-blue info-btn sec-btn"
+                    (click)="reloadCurrentRoute()">
+                    {{ "GO_TO_AUTOPAY_TEXT" | translate }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="declinedMessage && !paymentSuccessFlag && !showNextPage">
+    <div class="row no-print">
+        <h2 class="col-md-12 txt-puro-red">
+            {{ "DECLINED_TRANSACTION_TEXT" | translate }}
+        </h2>
+    </div>
+    <br />
+</div>
+</div>

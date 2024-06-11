@@ -1,0 +1,426 @@
+<div class="card">
+    <div class="card-header d-flex align-items-center justify-content-center card-head">
+        <label class="txt-puro-blue card-title text-center">{{
+            "QUICK_PAY_TEXT" | translate
+            }}</label>
+    </div>
+
+    <div class="card-body d-flex flex-column">
+        <div class="row">
+            <div *ngIf="FromEmployeeCSR && !paymentSuccessFlag && !showIFrame">
+                <div class="col-md-5">
+                    <button class="btn openQuickPayButton" (click)="popUpQuickPay()">
+                        {{ "OPEN_QUICK_PAY_TEXT" | translate }}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="
+        errMsgFactory?.displayErrorMsgBlock &&
+        errMsgFactory?.getErrorMessageList().length > 0
+      ">
+            <div class="col-md-12 error-block">
+                <ul>
+                    <li *ngFor="let errMsg of errMsgFactory?.getErrorMessageList()">
+                        {{ errMsg.value | translate }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div *ngIf="declinedMessage && !paymentSuccessFlag && !showIFrame">
+            <div class="row no-print">
+                <h2 class="col-md-12 txt-puro-red">
+                    {{ "DECLINED_TRANSACTION_TEXT" | translate }}
+                </h2>
+            </div>
+            <br />
+        </div>
+
+        <div class="row p-2"></div>
+        <form [formGroup]="QuickPaymentForm" *ngIf="!showIFrame && showQuickPay">
+            <div class="col-md-12 d-flex">
+                <div class="col-md-6">
+                    <label for="emailAddress" style="font-size: 16px; color: #111; font-weight: bolder">
+                        {{ "EMAIL_RECEIPT_V2_TEXT" | translate }}
+                    </label>
+                    <div class="input-group">
+                        <div class="form-floating user-input-height p-bottom-24" style="width: 430px">
+                            <input name="emailAddress" type="email" formControlName="emailAddress" class="form-control"
+                                maxlength="100" placeholder="{{ 'EMAIL' | translate }}*" />
+                            <label for="emailAddress">{{ "EMAIL" | translate }}*</label>
+                        </div>
+                        <div *ngIf="
+                QuickPaymentForm.get('emailAddress')?.invalid &&
+                QuickPaymentForm.get('emailAddress')?.dirty
+              ">
+                            <span class="error-block">{{
+                                "EMAIL_REQUIRED" | translate
+                                }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card shadow payment-card">
+                        <div class="col-sm-12 amount-name-card d-flex justify-content-end align-items-center">
+                            <div class="col-sm-6">
+                                <label class="tot-pay-label">{{
+                                    "TOTAL_PAYMENT_KEY" | translate
+                                    }}</label>
+                            </div>
+                            <div class="col-sm-6 d-flex justify-content-end">
+                                <label class="no-inv-label">{{ "QUICK_PAY_NUMBER_OF_INVOICES_TEXT" | translate }} :
+                                    {{ invoiceLength }}</label>
+                            </div>
+                        </div>
+                        <div [class]="paymentCurrency === 'CAD' ? 'amount-card-focus amount-card shadow' :
+                        'amount-card'" (click)="setPaymentCurrency('cad')">
+                            <input class="form-radio-input" #cad type="radio" name="paymentCurrency" value="CAD"
+                                   id="cadRadio" [(ngModel)]="paymentCurrency" [ngModelOptions]="{ standalone: true }"
+                                (change)="searchFunc()" />
+                            <div>
+                                <label for="cadRadio"
+                                       [class]="
+                                    paymentCurrency === 'CAD'
+                                        ? 'total-amt-font-focus'
+                                        : 'total-amt-font'">{{getSelectedCADTotal()|currency}}
+                                    (CAD)</label>
+                            </div>
+                            <img src="../../../../assets/images/CAN FLAG.svg" alt="flag" />
+                        </div>
+                        <div [class]="paymentCurrency === 'USD'? 'amount-card-focus amount-card shadow': 'amount-card'"
+                            (click)="setPaymentCurrency('usd')">
+                            <input class="form-radio-input" #usd type="radio" name="paymentCurrency" id="usdRadio" value="USD"
+                                [(ngModel)]="paymentCurrency" [ngModelOptions]="{ standalone: true }"
+                                (change)="searchFunc()" />
+                            <div>
+                                <label for="usdRadio"
+                              [class]="paymentCurrency === 'USD'
+                                    ? 'total-amt-font-focus'
+                                    : 'total-amt-font'">{{getSelectedUSDTotal()|currency}} (USD)</label>
+                            </div>
+                            <img src="../../../../assets/images/US FLAG.svg" alt="flag" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="height: 60px;"></div>
+            <div *ngIf="amountInvalidFlag">
+                <span class="error-block">{{ "VALID_AMOUNT_TEXT" | translate }}</span>
+            </div>
+            <div class="tab-content">
+                <table class="table table-striped table-scrollable" aria-describedby="quick pay" aria-live="table content changed">
+                    <thead>
+                        <tr>
+                            <th class="accountquickPay-tab-header account-tab-accNoqp account-tab-header-checkbox"
+                                scope="col">
+                                <input type="checkbox" [(ngModel)]="checkAllInvoices"
+                                    [ngModelOptions]="{ standalone: true }" (change)="selctAllInvoices($event)" #checkAllInvoice
+                                    (keydown.enter)="checkAllInvoiceList($event)"
+                                    ngbTooltip="{{ 'ADD_ALL_INVOICES_TO_CART' | translate }}" aria-label="select all invoices"/>
+                            </th>
+                            <th class="accountquickPay-tab-header account-tab-accNoqp" scope="col"
+                                sortable="accountNumber" (sort)="onSort($event)">
+                                <a href="javascript:void(0)">{{ "ACCOUNT" | translate }}</a>
+                            </th>
+                            <th class="accountquickPay-tab-header account-tab-accNoqp" scope="col"
+                                sortable="invoiceNumber" (sort)="onSort($event)">
+                                <a href="javascript:void(0)">{{ "INVOICE_NUMBER" | translate }}</a>
+                            </th>
+                            <th class="accountquickPay-tab-header account-tab-accNoqp" scope="col"
+                                sortable="invoiceDate" (sort)="onSort($event)" style="width: 130px;">
+                                <a href="javascript:void(0)">{{ "INVOICE_DATE" | translate }}</a>
+                            </th>
+                            <th class="accountquickPay-tab-header account-tab-accNoqp" scope="col" sortable="dueDate"
+                                (sort)="onSort($event)" style="width: 130px;">
+                                <a href="javascript:void(0)">{{ "DUE_DATE" | translate }}</a>
+                            </th>
+                            <th scope="col" sortable="invoiceCurrency" (sort)="onSort($event)" style="width: 80px;">
+                                <a href="javascript:void(0)">{{ "CURRENCY_TEXT" | translate }} </a>
+                            </th>
+                            <th scope="col" sortable="invoiceAmount" (sort)="onSort($event)" class="w-160"
+                                style="text-align: end;">
+                                <a href="javascript:void(0)">{{ "INVOICE_AMOUNT" | translate }} </a>
+                            </th>
+                            <th class="accountquickPay-tab-header account-tab-accNoqp" scope="col" sortable="balanceDue"
+                                (sort)="onSort($event)" style="text-align: end;">
+                                <a href="javascript:void(0)">{{ "BALANCE_DUE" | translate }} </a>
+                            </th>
+                            <th class="accountquickPay-tab-header account-tab-accNoqp" scope="col" class="w-200"
+                                style="text-align: end;">
+                                <a href="javascript:void(0)">{{ "TL_PAYAMNT" | translate }} </a>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let invoice of invoiceList; index as i" [class]="i%2 !== 0 ? 'td-focus': 'td'">
+                            <td class="invoice-quickPaycheckboxCell account-tab-header-checkbox">
+                                <input type="checkbox" (change)="updatePaymentAmountFromSelect($event, i)"
+                                    [(ngModel)]="invoice.isChecked" [ngModelOptions]="{ standalone: true }"
+                                    #checkInvoice
+                                    (keydown.enter)="checkInvoices($event,invoice.isChecked,invoice.accountNumber,i)"
+                                    ngbTooltip="{{ 'ADD_INVOICE_TO_CART' | translate }}"  attr.aria-label = "invoice number {{invoice.accountNumber}}"/>
+                            </td>
+                            <td class="invoice-accountNumberCell">
+                                <span title="{{ invoice.accountName }}">{{
+                                    invoice.accountNumber
+                                    }}</span>
+                            </td>
+                            <td class="invoice-invoiceNumberCell">{{ invoice.invoiceNumber }}</td>
+                            <td class="invoice-invoiceDateCell" *ngIf="locstore.get('lang') != 'fr'">
+                                {{ parseDateToLang(invoice.invoiceDate) | date : "MMM, dd, yyyy" }}
+                            </td>
+                            <td class="invoice-invoiceDateCell" *ngIf="locstore.get('lang') == 'fr'">
+                                {{ parseDateToLang(invoice.invoiceDate) | date : "yyyy-MM-dd" }}
+                            </td>
+                            <td class="invoice-dueDateCell" *ngIf="locstore.get('lang') != 'fr'">
+                                {{ parseDateToLang(invoice.dueDate) | date : "MMM, dd, yyyy" }}
+                            </td>
+                            <td class="invoice-dueDateCell" *ngIf="locstore.get('lang') == 'fr'">
+                                {{ parseDateToLang(invoice.dueDate) | date : "yyyy-MM-dd" }}
+                            </td>
+                            <td class="invoice-amountDueCell align-right">
+                                {{ invoice.invoiceCurrency }}
+                            </td>
+                            <td class="invoice-amountDueCell align-right" style="text-align: end;">
+                                {{ invoice.invoiceAmount | currency }}
+                            </td>
+                            <td class="invoice-balanceDueCellqp align-left" style="text-align: end;">
+                                {{ invoice.balanceDue | currency }}
+                            </td>
+
+                            <td class="invoice-paymentAmountCell" style="text-align: end;">
+                                <p>{{ invoice.paymentAmount | currency}}</p>
+                            </td>
+                        </tr>
+                        <tr *ngIf="invoiceList.length <= 0">
+                            <td colspan="8">
+                                <span class="txt-puro-red">{{
+                                    "NO_OPEN_INVOICES_TEXT" | translate
+                                    }}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="row form-group no-print">
+                <div class="col-md-4">
+                    <button class="btn btn-primary btn-block primary-btn" (click)="popUpQuickPay()">
+                        {{ "ADD_LABEL" | translate }}
+                    </button>
+                </div>
+                <div class="col-md-6">
+                    <button class="btn white-bg  sec-btn btn-width" (click)="cancelConfirmation()">
+                        {{ "EXIT_TEXT" | translate }}
+                    </button>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-primary btn-block primary-btn" (click)="loadIFrame()"
+                    [disabled]="selectNext">
+                        {{ "NEXT" | translate }}
+                    </button>
+                </div>
+            </div>
+        </form>
+
+
+        <div *ngIf="showIFrame" class="col-md-12 d-flex">
+            <div class="col-md-6">
+                <div id="paymentModal" class="modal-payment">
+                    <!-- Modal content -->
+                    <div class="modal-payment-content">
+                        <div class="form-group">
+                            <div class="section" id="paymentContainer">
+                                {{ "PAYMENT_IN_PROGRESS" | translate }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <form #init__payment ngNoForm name="init__payment" id="init__payment" novalidate=""
+                    action="{{ paymentURL }}" target="cpwa__frame" method="post">
+                    <input name="p" id="payload" type="hidden" value="{{ cpwaPayload }}" />
+                </form>
+
+                <div>
+                    <iframe id="cpwa__frame" title="payment" name="cpwa__frame" width="500" height="1000"
+                        scrolling="yes">
+                    </iframe>
+                </div>
+            </div>
+
+            <div class="card shadow payment-iframe-card col-md-6">
+                <div class="col-sm-12 amount-name-card d-flex justify-content-end align-items-center">
+                    <div class="col-sm-6">
+                        <label class="tot-pay-label">{{
+                            "TOTAL_PAYMENT_KEY" | translate
+                            }}</label>
+                    </div>
+                    <div class="col-sm-6 d-flex justify-content-end">
+                        <label class="no-inv-label">{{ "QUICK_PAY_NUMBER_OF_INVOICES_TEXT" | translate }} :
+                            <span *ngIf="paymentCurrency === 'CAD'">{{ cadInvoiceCount }}</span>
+                            <span *ngIf="paymentCurrency === 'USD'">{{ usdInvoiceCount }}</span>
+                        </label>
+                    </div>
+                </div>
+                <div class='amount-card-focus amount-card shadow' *ngIf="paymentCurrency === 'CAD'">
+                    <label class="total-amt-font-focus" *ngIf="paymentCurrency === 'CAD'" style="margin-left: 115px;">{{ getSelectedCADTotal() | currency }}
+                        (CAD)</label>
+                    <img src="../../../../assets/images/CAN FLAG.svg" alt="flag" />
+                </div>
+                <div class="amount-card-focus amount-card shadow" *ngIf="paymentCurrency === 'USD'">
+                    <label *ngIf="paymentCurrency === 'USD'" class="total-amt-font-focus" style="margin-left: 115px;">
+                        {{ getSelectedUSDTotal() | currency }} (USD)</label>
+                    <img src="../../../../assets/images/US FLAG.svg" alt="flag" />
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="paymentSuccessFlag">
+            <h1 style="color: red">{{ paymentInfo }}</h1>
+            <div class="row no-print col-md-12">
+                <h2>{{ "THANK_YOU_TEXT" | translate }}</h2>
+            </div>
+            <br /><br />
+            <div class="form-horizontal quickpay-form p-4">
+                <div class="row p-3">
+                    <div class="form-group col-md-3">
+                        <label class="control-label">{{ "PAYMENT_RECEIPT_TEXT" | translate }}
+                        </label>
+                    </div>
+                    <div class="col-md-3 no-print">
+                        <button class="btn btn-primary btn-block primary-btn" (click)="printPage()">
+                            {{ "PRINT_TEXT" | translate }}
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Pay Amount -->
+                <div class="row p-3">
+                    <div class="form-group col-md-3">
+                        <label class="control-label">{{ "PAYMENT_AMT_TEXT" | translate }}
+                        </label>
+                    </div>
+                    <div class="col-md-3">
+                        <label name="qp-invoiceNumber" class="control-label currency">{{
+                            paymentInformation.paymentAmount |
+                            currency }}
+                        </label>
+                    </div>
+                </div>
+                <!-- End Pay Amount -->
+                <!-- Card Number-->
+
+                <div class="row p-3">
+                    <div class="form-group col-md-3">
+                        <label class="control-label">{{ "CARD_NUMBER_TEXT" | translate }}
+                        </label>
+                    </div>
+                    <div class="col-md-3">
+                        <label name="qp-invoiceNumber" class="control-label">{{
+                            paymentInformation.cardNumber
+                            }}</label>
+                        <span>
+                            <img *ngIf="paymentInformation.paymentType == 'Visa'" src="assets/images/icon-cc-visa.png"
+                                alt="Visa" />
+                            <img *ngIf="paymentInformation.paymentType == 'Master'"
+                                src="assets/images/icon-cc-mastercard.png" alt="MasterCard" />
+                            <img *ngIf="paymentInformation.paymentType == 'Amex'" src="assets/images/icon-cc-amex.png"
+                                alt="American Express" />
+                        </span>
+                    </div>
+                </div>
+                <!-- End Card Number -->
+                <!-- Invoice Date -->
+                <div class="row p-3">
+                    <div class="form-group col-md-3">
+                        <label class="control-label">{{ "DATE_TEXT" | translate }} </label>
+                    </div>
+                    <div class="col-md-3">
+                        <label name="qp-InvoiceDate" class="control-label">{{ paymentDate }}</label>
+                    </div>
+                </div>
+                <!-- End Invoice Date -->
+                <!-- Reference Number -->
+                <div class="row p-3">
+                    <div class="form-group col-md-3">
+                        <label class="control-label">{{ "CONFIRMATION_NUMBER_TEXT" | translate }}
+                        </label>
+                    </div>
+                    <div class="col-md-3">
+                        <label name="qp-InvoiceDate" class="control-label">{{
+                            paymentInformation.referenceNumber
+                            }}</label>
+                    </div>
+                </div>
+                <!-- End Reference Number -->
+                <!-- Receipt Email -->
+                <div class="row p-3" *ngIf="
+        paymentInformation.emailAddress != '' &&
+        paymentInformation.emailAddress != null
+      ">
+                    <div class="form-group col-md-3">
+                        <label class="control-label">{{ "QUICKPAY_ALERT_TEXT" | translate }}
+                        </label>
+                    </div>
+                    <div class="col-md-3">
+                        <label name="qp-InvoiceDate" class="control-label">{{
+                            paymentInformation.emailAddress
+                            }}</label>
+                    </div>
+                </div>
+                <!-- End Receipt Email -->
+                
+                <div class="row col-md-8 t-inv-div">
+                    <table class="table table-striped t-inv" aria-describedby="quickpay" >
+                        <thead>
+                            <th scope="col">{{ "ACCOUNT_NUMBER_TEXT" | translate }}</th>
+                            <th scope="col">{{ "INVOICE_NUMBER_TEXT" | translate }}</th>
+                            <th scope="col">{{ "CURRENCY_TEXT" | translate }}</th>
+                            <th scope="col">{{ "BALANCE_DUE" | translate }}</th>
+                            <th scope="col">{{ "TL_PAYAMNT" | translate }}</th>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let invoice of cpwaQuickPayData?.invoiceList">
+                                <td>{{ invoice.accountNumber }}</td>
+                                <td>{{ invoice.invoiceNumber }}</td>
+                                <td>{{ invoice.invoiceCurrency }}</td>
+                                <td *ngIf="!(invoice.balanceDue == 0.0)" style="text-align: center;">
+                                    {{ invoice.balanceDue | currency }}
+                                </td>
+                                <td *ngIf="invoice.balanceDue == 0.0"  style="text-align: center;"></td>
+                                <td style="text-align: end;">{{ invoice.paymentAmount | currency }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+           
+            <!-- Message -->
+            <div class="form-group no-print p-4">
+                <div class="row col-md-12">
+                    <div class="col-md-4">
+                        <button class="btn btn-primary btn-block" (click)="payAnotherInvoiceAfterPayment()">
+                            {{ "PAY_ANOTHER_INVOICE_TEXT" | translate }}
+                        </button>
+                    </div>
+
+                    <div class="col-md-4 no-print">
+                        <button class="btn btn-primary cta-blue info-btn" (click)="registerforBilling()">
+                            {{ "REGISTER_FOR_BILLING_CENTRE_TEXT" | translate }}
+                        </button>
+                    </div>
+                    <div class="no-print col-md-3">
+                        <div class="h-100 d-flex">
+                            <a class="cen-align" href (click)="payAnotherInvoice()">{{
+                                "RETURN_TO_BILLING_CENTRE_TEXT" | translate
+                                }}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

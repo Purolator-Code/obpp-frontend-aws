@@ -1,0 +1,799 @@
+.table > thead {
+  height: 55px;
+  background-color: #f5f6f6;
+}
+
+th {
+  padding: 8px;
+  hyphens: auto;
+  word-wrap: break-word; 
+}
+
+.th-center {
+  vertical-align: middle;
+}
+
+.th-left {
+  text-align: left;
+  vertical-align: middle;
+}
+
+.searDrop {
+  align-self: center;
+  float: right;
+  height: 28px;
+  font-size: 12px;
+}
+
+td {
+  font-size: 14px;
+  color: #111;
+  height: 55px;
+  padding: 8px;
+}
+
+.inher {
+  table-layout: inherit;
+}
+
+.w-lob {
+  width: 101px !important;
+  max-width: 101px !important;
+  min-width: 101px !important;
+}
+
+.wc-lob {
+  width: 130px;
+}
+
+.p-8 {
+  padding: 8px;
+}
+
+.w-invdate {
+  width: 125px !important;
+  max-width: 125px !important;
+  min-width: 125px !important;
+}
+
+.wc-invdate {
+  width: 210px;
+}
+
+.w-duedate {
+  width: 110px !important;
+  max-width: 110px !important;
+  min-width: 110px !important;
+}
+
+.w-invamt {
+  width: 135px !important;
+  max-width: 135px !important;
+  min-width: 135px !important;
+}
+
+.wc-invamt {
+  width: 250px;
+  padding-right: 65px;
+  text-align: right;
+}
+
+.w-baldue {
+  width: 120px !important;
+  max-width: 120px !important;
+  min-width: 120px !important;
+}
+
+.w-paymntamnt {
+  width: 120px !important;
+  max-width: 120px !important;
+  min-width: 120px !important;
+}
+
+.w-crr {
+  width: 95px !important;
+  max-width: 95px !important;
+  min-width: 95px !important;
+}
+
+.wc-crr {
+  width: 155px !important;
+  text-align: center;
+}
+
+.w-lob1 {
+  width: 85px !important;
+  max-width: 85px !important;
+  min-width: 85px !important;
+}
+
+.w-pinnum {
+  width: 105px !important;
+}
+
+.w-pdf {
+  width: auto;
+}
+
+.wc-pdf {
+  width: 206px !important;
+  text-align: center;
+}
+
+.w-checkb {
+  width: 45px !important;
+  height: 55px !important;
+  text-align: center;
+  min-width: 45px !important;
+  max-width: 45px !important;
+}
+
+a:not([href]) {
+  color: #001996;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.h-30 {
+  vertical-align: middle !important;
+  background-color: #f5f6f6;
+}
+
+.table > :not(:first-child) {
+  border-top: 1px solid currentColor;
+}
+
+.table > :not(caption) > * > * {
+  box-shadow: unset;
+}
+
+.t-inv > tbody > tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.t-inv > tbody > tr:nth-child(odd) {
+  background-color: white;
+}
+
+.d-inline-block {
+  width: 75% !important;
+}
+
+.curr-div {
+  display: flex;
+}
+
+.curr-div > input {
+  transform: scale(1.1);
+}
+
+.account-tabs {
+  margin-right: 0px !important;
+  margin-left: 0px !important;
+}
+
+.w-button {
+  width: 25%;
+  display: flex;
+}
+
+.d-cen {
+  align-items: center;
+}
+
+.d-in {
+  display: inline-block;
+  align-self: flex-end;
+}
+
+.big-button {
+  white-space: pre-wrap;
+  background-color: #dfdfdf;
+  border: 1px solid #dfdfdf;
+  color: #666;
+}
+
+.padding-0 {
+  padding: 0px;
+}
+
+.p-left-20 {
+  padding-left: 20px;
+}
+
+.p-bottom-dp {
+  padding-bottom: 20px;
+}
+
+ul {
+  white-space: nowrap !important;
+  flex-direction: row !important;
+}
+
+.acct-summy-tbl {
+  background-color: #f0f0f0;
+}
+
+.acct-summy-pnl {
+  margin-top: 20px !important;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+  --bs-table-accent-bg: unset;
+}
+
+::ng-deep .accordion-item {
+  overflow: hidden;
+  border-radius: 0 !important;
+}
+
+::ng-deep .accordion-button {
+  font-size: 16px !important;
+  background-color: #f5f6f6;
+  padding: 0 !important;
+  box-shadow: none;
+  display: flex;
+  align-items: center !important;
+  min-height: 55px !important;
+}
+
+.v-al {
+  vertical-align: middle !important;
+}
+
+ol {
+  padding-inline-start: 0px !important;
+}
+
+.table-scrollable {
+  display: block;
+  max-height: 350px;
+  overflow-x: auto;
+  overflow-y:auto;
+}
+
+.table-scrollable-parent {
+  display: block;
+  max-height: 650px;
+  overflow-x: auto;
+}
+
+.table-scrollable > thead {
+  position: sticky;
+  top: 0px;
+  background-color: white;
+  z-index: 1;
+}
+
+.table-scrollable-parent > table > thead {
+  height: 50px;
+  background: #d3d3d3;
+}
+
+.pin-amount-width {
+  width: 55%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+table {
+  empty-cells: show;
+}
+
+.ic-acc-summy {
+  font-size: 25px;
+  color: brown;
+  background-color: white;
+}
+
+.ic-disp {
+  display: flex;
+  padding-right: 20px;
+}
+
+.dropdown-toggle {
+  border-radius: 15px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  background-color: #dfdfdf;
+  border: 1px solid #dfdfdf;
+  padding: 15px;
+  font-size: 14px;
+  width: 100%;
+}
+
+.dropdown-toggle:hover {
+  background-color: #dfdfdf;
+  border: 1px solid #dfdfdf;
+  color: #666;
+}
+
+.dropdown-toggle::after {
+  display: none;
+}
+
+.account-dropdown-menu-scrollable {
+  max-height: 500px;
+  overflow-y: auto;
+  font-size: 14px;
+}
+
+.account-dropdown-header-leftContent {
+  width: 50%;
+  text-align: left;
+  white-space: pre-wrap;
+}
+
+.b-dis:disabled {
+  cursor: pointer;
+}
+
+.account-cart .row {
+  margin: 5px 0;
+}
+
+.nav > li > a {
+  position: relative;
+  display: block;
+  padding: 10px 15px;
+  cursor: pointer;
+  text-decoration: double;
+}
+
+.bt-search {
+  background-color: #f0f0f0;
+}
+
+.search-term {
+  margin-bottom: 6px !important;
+}
+
+.open-invoice {
+  border-radius: 0.25rem 0 0 0.25rem !important;
+  text-decoration: none !important;
+}
+
+.closed-invoice {
+  border-radius: 0 0.25rem 0.25rem 0 !important;
+  text-decoration: none !important;
+}
+
+.open-invoice:focus{
+  outline: 2px solid #001996 !important;
+  border: none !important;
+}
+.closed-invoice:focus{
+  outline: 2px solid #001996 !important;
+  border: none !important;
+}
+
+.active {
+  width: 184px;
+  height: 40px;
+  background: #001996;
+  padding: 10px 15px;
+  color: #fff !important;
+  text-align: center;
+  cursor: pointer;
+
+  border: 1px solid #a9a9a9;
+}
+
+::ng-deep .accordion-body {
+  padding: 0 !important;
+}
+
+.asc:before {
+  content: "\25B2";
+  color: #001996;
+  padding-right: 5px;
+}
+
+.desc:before {
+  content: "\25BC";
+  color: #001996;
+  padding-right: 5px;
+}
+
+.account-info {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 24px;
+  margin-bottom: 15px;
+  gap: 16px;
+  width: 500px;
+  height: 100px;
+  background: rgba(251, 221, 64, 0.4);
+  border: 1px solid #c0c0c0;
+  border-radius: 4px;
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+}
+
+.total-balance-lbl {
+  font-size: 16px;
+  line-height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 335px;
+  height: 55px;
+  background: rgba(100, 167, 11, 0.1);
+  border: 1px solid #c0c0c0;
+  border-radius: 4px;
+}
+
+.download-stmt-btn {
+  width: auto;
+}
+
+.total-accounts-dwnld {
+  width: 500px;
+  height: 175px;
+  padding: 24px;
+  border: 1px solid #c0c0c0;
+  border-radius: 8px;
+  justify-content: space-around;
+}
+
+.payment-card {
+  height: 288px;
+  width: 520px;
+  margin: auto;
+}
+
+.amount-name-card {
+  height: 20px;
+  width: 455px;
+  margin: auto;
+}
+
+.tot-pay-label {
+  font-size: 20px;
+  color: #001996;
+}
+
+.no-inv-label {
+  font-size: 16px;
+  color: #000;
+}
+
+.total-amt-font-focus {
+  font-size: 20px;
+  color: #001996;
+}
+
+.total-amt-font {
+  font-size: 20px;
+  color: #111;
+}
+
+.amount-card img {
+  margin-right: 12px;
+}
+
+::ng-deep .accordion-button:focus {
+  border: 1px solid black;
+}
+
+.amount-card-focus {
+  background-color: #00a9ce33;
+  border: 1px solid #001996;
+}
+
+.amount-card:hover {
+  background-color: #00a9ce33;
+}
+
+.account-tab-header-checkbox {
+  text-align: center;
+  width: 50px;
+}
+
+.amount-card {
+  height: 60px;
+  width: 455px;
+  margin: auto;
+  border: 1px solid #c0c0c0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.form-radio-input {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.pay-btn {
+  width: 128px;
+  height: 55px;
+  background: #da322a;
+  border-radius: 4px;
+  border: #da322a;
+}
+
+.pay-card {
+  width: 455px;
+  margin: auto;
+}
+
+.account-row {
+  margin-bottom: 15px;
+}
+
+.inactive {
+  color: #000 !important;
+  border: 1px solid #a9a9a9;
+  height: 40px;
+  padding: 10px 15px;
+}
+
+.filter-tab {
+  background: #ededed;
+  width: 100%;
+  height: 85px;
+  margin-top: 15px !important;
+}
+
+.date-select {
+  border: 1px solid #495057;
+  border-radius: 4px;
+  width: 155px;
+}
+
+.currency-check {
+  margin: 25px;
+}
+
+.flag-img {
+  transform: scale(0.7);
+}
+
+.currency-label {
+  font-size: 16px;
+}
+
+.p-left-5 {
+  padding-left: 5px;
+}
+
+.margin-right-10 {
+  margin-right: 10px;
+}
+
+.searchbtn {
+  width: fit-content;
+}
+
+.search-input {
+  width: 300px;
+  height: 55px;
+}
+
+.accountquickPay-tab-header {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.table-header-text {
+  font-size: 16px;
+  font-weight: 600 !important;
+  text-decoration: none;
+  color: #111;
+}
+
+::ng-deep .accordion-header {
+  min-height: 55px !important;
+}
+
+::ng-deep .accordion-button:not(.collapsed) {
+  background-color: #e7f1ff !important;
+}
+
+.title-label-text {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111 !important;
+  margin: auto;
+}
+
+input[type="checkbox"] {
+  margin-right: 0;
+  margin-left: 10px;
+}
+
+.checkb-input {
+  margin-left: 0 !important;
+}
+
+.even-color {
+  background-color: #ededed;
+}
+
+.odd-color {
+  background-color: #fff;
+}
+
+::ng-deep .accordion-button:disabled::after {
+  background-image: none !important;
+}
+
+::ng-deep .accordion-button::after {
+  color: #001996;
+  padding-right: 15px;
+  margin: 0;
+}
+
+.pin-table {
+  border: 1px solid #d3d3d3;
+  width: 100%;
+}
+
+.pin-thead {
+  background-color: #f5f6f6;
+  height: 55px;
+}
+
+.a-table {
+  color: #001996;
+  font-weight: 400;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+::ng-deep .ngx-pagination .current {
+  background: #001996 !important;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.currency-font {
+  color: #111;
+}
+
+.w-auto {
+  width: auto;
+}
+
+.payment-amount {
+  justify-content: space-around;
+  padding: 25px;
+}
+
+.m-0 {
+  margin: 0;
+}
+
+.m-auto {
+  margin: auto;
+}
+
+.f-20 {
+  font-size: 20px;
+}
+
+.tr-table {
+  vertical-align: middle;
+  height: 55px;
+}
+
+.account-header {
+  background-color: #d3d3d3;
+  height: 55px;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ifrmae-card {
+  margin: 10px;
+  width: auto;
+}
+
+@media print {
+  @page {
+    orientation: landscape !important;
+  }
+}
+.tab > a {
+  background-color: red;
+}
+
+.white-bg {
+  color: #001996;
+  background: inherit;
+  border: 0px solid #001996;
+}
+
+.text-right{
+  text-align: right !important;
+}
+
+.text-center{
+  text-align: center !important;
+}
+
+select:focus {
+  
+  outline: 2px solid #001996 !important ;
+}
+#floatingSelect.form-select:focus{
+  border:none !important;
+  box-shadow: none !important;
+}
+
+input[type='radio']:focus{
+  outline: 2px solid #0A38E6 !important ;
+}
+.a:focus{
+  outline: 2px solid #001996 !important ;
+}
+.form-control:focus {
+  border: none !important;
+  outline: 2px solid #0A38E6 !important;
+  box-shadow:  none !important;
+}
+::ng-deep.accordion-button:focus {
+  border: 2px solid #001996 !important;
+}
+
+a:focus{
+  outline: 2px solid #001996 !important;
+}
+
+input[type='checkbox']:focus{
+  outline: 2px solid #0A38E6 !important ;
+}
+
+
+ .button-card{
+  outline: none !important;
+  border:none !important
+ }
+
+ button:focus{
+  outline: 2px solid #00a9ce !important;
+  border: 2px !important;
+    box-shadow: none !important;
+ }
+
+ img:focus{
+  outline: 2px solid #001996 ;
+ }
+
+ .remove-btn:focus{
+  outline: 2px solid #00a9ce !important;
+  border-radius: 50% !important;
+ }
+ .btn-primary:focus {
+
+  outline: 4px solid #00A9CE !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.sec-btn:focus{
+  outline: 3px solid #001996;
+  background-color: #ffffff !important;
+  color: #001996 !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+.btn-border{
+  border: 1px solid #000000!important;
+
+}
+
+.h-56 {
+  height: 56px !important;
+}

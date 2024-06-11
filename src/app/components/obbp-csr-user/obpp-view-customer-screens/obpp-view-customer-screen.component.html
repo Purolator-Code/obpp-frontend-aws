@@ -1,0 +1,40 @@
+<ng-template #loading>
+  <div class="col-12 text-center">Loading...</div>
+</ng-template>
+<br />
+<div class="col-md-12 p-0">
+  <h2>{{'BILLING_CENTER' | translate}}</h2>
+  <form [formGroup]="viewCustomerScreenForm">
+    <div class="form-group input-group p-2 row">
+      <div class="input-group">
+        <div class="form-floating" style="width: 100%;">
+          <input type="email" (keyup)="onKeyUpEvent($event)" class="form-control"
+            formControlName="emailAddress_viewCustomerScreen" minlength="2" maxlength="100"
+            placeholder="{{ 'LOGIN_EMAIL_PLACEHOLDER_KEY' | translate }}">
+          <label for="email">{{'CUSTOMER_EMAIL' | translate}}</label>
+        </div>
+        <div class="w-100"
+          *ngIf="viewCustomerScreenForm.get('emailAddress_viewCustomerScreen')?.dirty && viewCustomerScreenForm.get('emailAddress_viewCustomerScreen')?.invalid">
+          <span class="error-block">{{'EMAIL_REQUIRED' | translate }}</span>
+        </div>
+        <div class="w-100"
+          *ngIf="isShowEmailIdNotFind && !viewCustomerScreenForm.get('emailAddress_viewCustomerScreen')?.invalid">
+          <span class="error-block">{{'USER_NOT_FOUND_IN_BILLING_CENTRE' | translate }}</span>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block primary-btn" (click)="onView($event)">{{'VIEW_LABEL'
+        | translate }} </button>
+    </div>
+  </form>
+</div>
+<br /> <br />
+<div class="clearfix"></div>
+
+<div class="m-0 col-md-12">
+  <div *ngIf="showCustomerScreen" class="p-0">
+    <obpp-view-userScreen-tabs></obpp-view-userScreen-tabs>
+    <div class="tab-content" id="myTabContent">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

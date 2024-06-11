@@ -1,0 +1,171 @@
+.container {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.chat-icon {
+  padding-right: 0.2em;
+  width: 1.5em;
+}
+
+.header-bg {
+  background-color: #ededed;
+  min-height: 100vh;
+}
+
+.header-title {
+  margin: 0 0 1em 0;
+}
+
+.navbar-top-container {
+  padding: 1.5em 0 0 0;
+}
+
+.title-row {
+  padding: 2em 0 0 0;
+  height: 20em;
+  
+}
+
+.card-title {
+  font-size: 24px;
+}
+
+.navbar-expand-lg .navbar-collapse {
+  display: flex !important;
+  flex-basis: auto;
+  flex-direction: row;
+  align-content: center;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.dropdown-toggle:after {
+  border: none;
+}
+.dropdown-menu[data-bs-popper] {
+  top: 100%;
+  right: 0;
+  margin-top: 0.125rem;
+}
+
+.navbar-height {
+  height: 62px;
+}
+
+.d-flex-custom {
+  align-content: flex-end;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.card-text {
+  color: #111;
+  font-size: 16px;
+  height: 8em;
+}
+
+.register {
+  display: flex;
+  align-items: flex-start;
+  padding: 1em;
+  flex-direction: column;
+  align-content: flex-start;
+  justify-content: flex-start;
+  height: 15em;
+}
+
+.enrol-icon {
+  width: 35px;
+}
+
+.img-div {
+  display: inline-block;
+  position: relative;
+}
+
+.card {
+  width: 319px;
+  height: 167px;
+  padding: 24px;
+  position: absolute;
+  justify-content: center;
+  gap: 16px;
+  box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.5);
+  right: 5rem;
+}
+
+.register-card {
+  top: 10rem;
+}
+
+
+.list-ul {
+  list-style: none;
+  padding: 0;
+}
+
+.list-li {
+  height: 45px;
+  cursor: pointer;
+  padding-left: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.list-li-active {
+  background: rgba(0, 162, 199, 0.35);
+  color: #001996;
+  transition: 0.5s;
+  width: 95%;
+}
+
+.list-li:hover {
+  background-color: rgba(0, 162, 199, 0.35);
+  width: 95%;
+}
+
+.list-span {
+  font-weight: 400;
+}
+
+.list-span-active {
+  font-weight: 700;
+  color: #001996;
+}
+
+.pr-5 {
+  padding-right: 5px;
+}
+
+.w-24 {
+  width: 24px;
+}
+
+.w-22 {
+  width: 22px;
+}
+
+.sidebar {
+  background-color: white;
+  width: 15%;
+  margin-right: 20px;
+  border-radius: 4px;
+}
+input:focus {
+  outline: none;
+  border: 2px solid #7B61FF !important;
+}
+
+a:focus {
+  outline: 2px solid #001996 !important;
+}
+
+
+li:focus{
+  background: lighten( #00a2c7,50%);
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}

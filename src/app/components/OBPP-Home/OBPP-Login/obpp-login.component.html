@@ -1,0 +1,51 @@
+<div class="card card-main">
+    <div class="card-header d-flex align-items-center justify-content-center card-head">
+        <label class="txt-puro-blue card-title text-center">{{'LOGIN_TO_YOUR_ACCOUNT_KEY' | translate}} </label>
+    </div>
+    <div class="card-body d-flex flex-column">
+        <form [formGroup]="LoginForm">
+            <div class="input-group">
+                <div class="form-floating user-input p-bottom-24">
+                    <input type="email" class="form-control" formControlName="email" id="email"
+                        placeholder="{{'LOGIN_EMAIL_PLACEHOLDER_KEY' | translate}}" required=true 
+                        aria-label="email" aria-describedby="basic-addon1" 
+                        [class]="LoginForm.get('email')?.invalid && (LoginForm.get('email')?.dirty
+                        || submitted) ? 'form-control is-invalid' : 'form-control'">
+                    <label for="email">{{'LOGIN_EMAIL_PLACEHOLDER_KEY' | translate}}</label>
+                    <div class="w-100" *ngIf="LoginForm.get('email')?.invalid && (LoginForm.get('email')?.dirty
+                        || submitted)">
+                        <span class="text-danger error-message">{{ 'EMAIL_VALID' | translate }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-floating user-input p-bottom-24">
+                <input type="password" class="form-control" formControlName="password" minlength="8" maxLength="25"
+                    placeholder="{{'LOGIN_PASSWORD_PLACEHOLDER_KEY' | translate}}" aria-label="Password" id="password"
+                    aria-describedby="basic-addon1" [class]="LoginForm.get('password')?.invalid && (LoginForm.get('password')?.dirty || submitted) 
+                    ? 'form-control is-invalid': 'form-control'">
+                <label for="password">{{'LOGIN_PASSWORD_PLACEHOLDER_KEY' | translate}}</label>
+                <div class="w-100"
+                    *ngIf="LoginForm.get('password')?.invalid && (LoginForm.get('password')?.dirty || submitted)">
+                    <span class="error-block">{{ 'VALID_PASSWORD_TEXT' | translate }}</span>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center p-bottom-24 align-items-center">
+                <label class="custom-control-label remember-size d-flex align-items-center ">
+                    <input type="checkbox"   formControlName="remember" tabindex="0" #myCheckbox (keydown.enter)="checkOnEnter($event)"> {{'REMEMBER_ME_TEXT' |
+                    translate}}
+                </label>
+                &nbsp;<img class="icon icon-tooltip" tabindex="0" alt="{{'LOGIN_REMEMBERME_TOOLTIP_TEXT' | translate}}" src="assets/images/icon-tooltip.svg"
+                    ngbTooltip="{{'LOGIN_REMEMBERME_TOOLTIP_TEXT' | translate}}">
+            </div>
+            <div class="d-flex justify-content-center p-bottom-24">
+                <button [disabled]="LoginForm.invalid && LoginForm.dirty" class="btn btn-primary btn-block primary-btn" 
+                    (click)="onSubmit()">{{'LOGIN_TEXT' | translate}}</button>
+            </div>
+            <div class="d-flex justify-content-center">
+                <a href="javascript:void(0)" class="forgot-pwd" (click)="forgotPassword()">{{'FORGOT_PSWD_TEXT' |
+                    translate}}</a>
+            </div>
+        </form>
+    </div>
+</div>

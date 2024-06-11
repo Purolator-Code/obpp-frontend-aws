@@ -1,0 +1,98 @@
+h3 {
+  color: #001996;
+}
+
+.th-thead {
+  background-color: #d3d3d3;
+  height: 55px;
+}
+
+.w-80 {
+  width: 80px;
+}
+
+.w-175 {
+  width: 175px;
+}
+
+::ng-deep .icon-tooltip {
+  width: 14px !important;
+  height: 14px !important;
+}
+
+.w-100 {
+  width: 100px !important;
+}
+
+.w-120 {
+  width: 120px;
+}
+
+td {
+  vertical-align: baseline;
+}
+
+.user-input {
+  height: 45px;
+}
+
+.h-100 {
+  height: 100px !important;
+}
+
+.input-group {
+    flex-wrap: nowrap;
+}
+
+img:focus{
+  outline: 2px solid #0A38E6;
+  border-radius: 50%;
+ }
+ img:hover{
+  outline: 2px solid #0A38E6;
+  border-radius: 50%;
+ }
+
+ .form-check-input:focus{
+  outline: 2px solid #001996;
+ }
+
+ .form-control:focus {
+  border: none !important;
+  outline: 2px solid #0A38E6 !important;
+}
+.input-group-new{
+  margin-left: -67px;
+}
+input[type="checkbox"]:focus {
+  outline: 2px solid #0A38E6; 
+}
+input[type="radio"]:focus {
+  outline: 2px solid #0A38E6; 
+}
+
+#accountAddAccess.form-select:focus{
+  border:none !important;
+  box-shadow: none !important;
+}
+
+select:focus {
+  outline: 2px solid #001996 !important ;
+}
+
+.btn-primary:focus{
+  border:none !important;
+  box-shadow: none !important;
+  
+}
+
+button:hover{
+  outline :1px solid #0a58ca !important;
+  border: 1px solid #0a58ca !important;
+}
+
+.btn-primary {
+  height: 68px !important;
+  padding: 5px;
+}
+

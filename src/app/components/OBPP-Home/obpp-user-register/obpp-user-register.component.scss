@@ -1,0 +1,84 @@
+.row {
+  margin-bottom: 1rem;
+}
+
+.card-title {
+  font-size: 36px;
+}
+
+.user-input-width {
+  width: 537px;
+}
+
+.accountNumber-width {
+  width: 385px;
+}
+
+.postalCode-width {
+  width: 250px;
+}
+
+.icon-tooltip {
+  margin-left: -15px !important;
+}
+
+.billing-width {
+  width: 300px;
+}
+
+.terms {
+  color: #001996 !important;
+  text-decoration: none;
+}
+
+
+.form-control:focus {
+  border: none !important;
+  outline: 2px solid #0A38E6 !important;
+}
+
+img:focus{
+  outline: 2px solid #0A38E6;
+  border-radius: 50%;
+ }
+
+
+ img:hover{
+   outline: 2px solid #001996 ;
+   border-radius: 50%;
+ }
+
+ #accessdrp.form-select:focus{
+  border:none !important;
+  box-shadow: none !important;
+}
+
+a:focus{
+  outline : 2px solid #001996 !important;
+}
+
+select:focus {
+  outline: 2px solid #001996 !important ;
+}
+
+input[type="checkbox"]:focus {
+  outline: 2px solid #0A38E6 !important; 
+  border: none !important;
+  box-shadow: none !important;
+}
+
+input[type="radio"]:focus {
+  outline: 2px solid #0A38E6 !important;
+
+}
+
+button:hover{
+  outline :1px solid #0a58ca !important;
+  border: 1px solid #0a58ca !important;
+}
+.terms-block{
+  margin-left: 129px!important;
+    margin-top: -24px;
+    font-weight: bold;
+    font-size: 16px;
+}

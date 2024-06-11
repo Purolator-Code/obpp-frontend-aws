@@ -1,0 +1,309 @@
+<h1 class="txt-puro-blue pull-left">
+    {{ "SIMPLIFY_BILLING_PROCESS_TEXT" | translate }}
+</h1>
+<div class="card">
+    <div *ngIf="!showNextPage && !declinedMessage && !paymentSuccessFlag">
+        <label class="form-heading text-center">{{'WEEKLY_CREDIT_CARD_PROGRAM_LABEL' | translate }}</label>
+        <hr />
+        <div class="d-flex flex-column p-120">
+            <p class="req-field-txt">{{"FIELDS_REQUIRED" | translate}}</p>
+            <form [formGroup]="enrollAutoPayForm" class="form-horizontal register-form" novalidate>
+                <div class="flex-row align-unset">
+                    <div class="w-50 mr-2">
+                        <div class="form-floating mb-2">
+                            <input type="email" name="email" formControlName="emailAddress" [class]="enrollAutoPayForm.get('emailAddress')?.invalid &&
+                             enrollAutoPayForm.get('emailAddress')?.dirty?'form-control is-invalid':'form-control'"
+                                maxlength="100" required="required" (focusout)="checkEmail($event)"
+                                placeholder="{{'EMAIL_USER_ID_TEXT' | translate}}">
+                            <label for="email">{{ 'EMAIL_USER_ID_TEXT' | translate}}*</label>
+                            <div
+                                *ngIf="enrollAutoPayForm.get('emailAddress')?.invalid && enrollAutoPayForm.get('emailAddress')?.dirty">
+                                <span class="error-block">{{'EMAIL_REQUIRED' | translate }}</span>
+                            </div>
+                        </div>
+                        <div class="form-floating mb-2">
+                            <input name="confirmEmailAddress" formControlName="confirmEmailAddress"
+                                [class]="enrollAutoPayForm.get('confirmEmailAddress')?.invalid &&
+                             enrollAutoPayForm.get('confirmEmailAddress')?.dirty?'form-control is-invalid':'form-control'" maxlength="100" required="required"
+                                (focusout)="checkMatching($event)" placeholder="{{'CONFIRM_EMAIL' | translate}}">
+                            <label for="confirmEmailAddress">{{'CONFIRM_EMAIL' | translate
+                                }}*</label>
+                            <div
+                                *ngIf="enrollAutoPayForm.get('confirmEmailAddress')?.invalid && enrollAutoPayForm.get('confirmEmailAddress')?.dirty">
+                                <span class="error-block">{{'EMAIL_REQUIRED' | translate }}</span>
+                            </div>
+                            <div *ngIf="isEmailMisMatch">
+                                <span class="error-block">{{'CONFIRM_EMAIL_TEXT' | translate }}</span>
+                            </div>
+                        </div>
+                        <div class="form-floating mb-2">
+                            <input name="firstName" formControlName="firstName" [class]="enrollAutoPayForm.get('firstName')?.invalid &&
+                             enrollAutoPayForm.get('firstName')?.dirty?'form-control is-invalid':'form-control'"
+                                maxlength="50" required="required" placeholder="{{'FIRST_NAME' | translate }}*">
+                            <label for="firstName">{{'FIRST_NAME' | translate }}*</label>
+                            <div
+                                *ngIf="enrollAutoPayForm.get('firstName')?.invalid && enrollAutoPayForm.get('firstName')?.dirty">
+                                <span class="error-block">{{'ERR_FIRST_NAME_INVALID' | translate }}</span>
+                            </div>
+                        </div>
+                        <div class="form-floating mb-2">
+                            <input name="lastName" formControlName="lastName" [class]="enrollAutoPayForm.get('lastName')?.invalid &&
+                             enrollAutoPayForm.get('lastName')?.dirty?'form-control is-invalid':'form-control'"
+                                maxlength="50" required="required" placeholder="{{'LAST_NAME' | translate }}*">
+                            <label for="lastName"> {{'LAST_NAME' | translate }}*</label>
+                            <div
+                                *ngIf="enrollAutoPayForm.get('lastName')?.invalid && enrollAutoPayForm.get('lastName')?.dirty">
+                                <span class="error-block">{{'ERR_LAST_NAME_INVALID' | translate }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-50 ml-2">
+                        <div class="form-floating mb-2">
+                            <input name="companyName" formControlName="companyName" [class]="enrollAutoPayForm.get('companyName')?.invalid &&
+                             enrollAutoPayForm.get('companyName')?.dirty?'form-control is-invalid':'form-control'"
+                                maxlength="50" required="required" placeholder="{{'COMPANY_NAME' | translate }}*">
+                            <label for="companyName">{{'COMPANY_NAME' | translate }}*</label>
+                            <div
+                                *ngIf="enrollAutoPayForm.get('companyName')?.invalid && enrollAutoPayForm.get('companyName')?.dirty">
+                                <span class="error-block">{{'ERR_COMPANY_NAME_INVALID' | translate }}</span>
+                            </div>
+                        </div>
+                        <div class="flex-row mb-2 align-items-start">
+                            <div class="form-floating w-60" style="padding-right:10px">
+                                <input [textMask]="{mask: phoneNumberMask}" name="phoneNumber"
+                                    formControlName="phoneNumber"
+                                    [class]="enrollAutoPayForm.get('phoneNumber')?.invalid &&
+                                    enrollAutoPayForm.get('phoneNumber')?.dirty?'form-control is-invalid':'form-control'" required="required"
+                                    placeholder="{{'PHONE' | translate }}*">
+                                <label for="phoneNumber">{{'PHONE' | translate }}*</label>
+                                <div
+                                    *ngIf="enrollAutoPayForm.get('phoneNumber')?.invalid && enrollAutoPayForm.get('phoneNumber')?.dirty">
+                                    <span class="error-block">{{'PHONE_NUM_TEXT' | translate }}</span>
+                                </div>
+                            </div>
+                            <div class="form-floating">
+                                <input name="phoneNumberExt" formControlName="phoneNumberExt" [class]="enrollAutoPayForm.get('phoneNumberExt')?.invalid &&
+                             enrollAutoPayForm.get('phoneNumberExt')?.dirty?'form-control is-invalid':'form-control'"
+                                    maxlength="6" placeholder="{{'EXTENSION' | translate }}">
+                                <label for="phoneNumberExt">{{'EXTENSION' | translate }}</label>
+                                <div
+                                    *ngIf="enrollAutoPayForm.get('phoneNumberExt')?.invalid && enrollAutoPayForm.get('phoneNumberExt')?.dirty">
+                                    <span class="error-block">{{'EXT_REQUIRED' | translate }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-md-4 mt-3" *ngIf="showRegisterOption">
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label>
+                                    <input name="registerCustomer" type="checkbox" formControlName="registerCustomer"
+                                        checked>
+                                    {{'REGISTER_FOR_BILLING_CENTRE_ACCOUNT' | translate }}
+                                    <img class="icon" src="assets/images/icon-tooltip.svg" alt="" tabindex="0" alt=""
+                                        tabindex="0"
+                                        ngbTooltip="{{'DESCRIPTION_CHECKBOX_UNAUTHORIZED_BOX' | translate}}">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <label class="form-normal">{{ 'SELECT_ENROL_ACCOUNT_TEXT'| translate }}</label>
+                <p class="req-field-txt">{{ 'MAX_5_ACCS' | translate }}</p>
+                <div class="form-group">
+                    <table class="w-full" aria-describedby="">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="w-22"></th>
+                                <th scope="col" class="w-22"></th>
+                                <th scope="col" class="w-15">
+                                    <label for="languagePref" class="heading-control-label">
+                                        {{'ACTIVATION_DATE_UPDATED_TEXT' | translate }}*
+                                        <img class="icon icon-position" src="assets/images/icon-tooltip.svg"
+                                            alt="{{'ACTIVATION_DATE_TOOLTIP_TEXT' | translate}}" tabindex="0"
+                                            ngbTooltip="{{'ACTIVATION_DATE_TOOLTIP_TEXT' | translate}}">
+                                    </label>
+                                </th>
+                                <th scope="col" class="w-15">
+                                    <label for="languagePref" class="heading-control-label">
+                                        {{'SEND_NOTIFICATION_FOR_SUCCESSFUL_TRANSACTIONS' | translate }}*
+                                        <img class="icon icon-position" src="assets/images/icon-tooltip.svg"
+                                            alt="{{'SEND_NOTIFICATION_TOOLTIP_TEXT' | translate}}" tabindex="0"
+                                            ngbTooltip="{{'SEND_NOTIFICATION_TOOLTIP_TEXT' | translate}}">
+                                    </label>
+                                </th>
+                                <th scope="col" class="w-22"></th>
+                                <th class="w-5"></th>
+                            </tr>
+                        </thead>
+                        <tbody formArrayName="accountDetails">
+                            <tr *ngFor="let accountDetail of accountDetails.controls; let i = index; trackBy:identify" [formGroupName]="i"
+                                class="vertical-top">
+                                <td>
+                                    <div class="mb-3">
+                                        <div class="flex-row justify-unset">
+                                            <div class="form-floating">
+                                                <input name="accountNumber" formControlName="accountNumber" [class]="(accountDetails.controls[i].get('accountNumber')?.invalid &&
+                                                    accountDetails.controls[i].get('accountNumber')?.dirty) || 
+                                                    (errorMap.get(this.i) === 'duperror') ?'form-control is-invalid':
+                                                    'form-control'" minlength="2" maxlength="12" required="required"
+                                                    (focusout)="checkAccountNumber(i)" placeholder="{{'ACCOUNT_NUMBER_TEXT'
+                                                    | translate}}*">
+                                                <label for="accountNumber">{{'ACCOUNT_NUMBER_TEXT'
+                                                    | translate}}*</label>
+                                            </div>
+                                            <img class="icon icon-tooltip ml-8p" src="assets/images/icon-tooltip.svg"
+                                                alt="{{'REGISTER_ACCOUNT_NUMBER_TOOLTIP_TEXT_UPDATED' | translate}}"
+                                                tabindex="0" *ngIf="i === 0"
+                                                ngbTooltip="{{'REGISTER_ACCOUNT_NUMBER_TOOLTIP_TEXT_UPDATED' | translate}}">
+                                        </div>
+                                        <div class="pr-2" *ngIf="accountDetails.controls[i].get('accountNumber')?.invalid &&
+                                             accountDetails.controls[i].get('accountNumber')?.dirty">
+                                            <span class="error-block">{{'ACCOUNT_NUMBER_REQUIRED' | translate }}</span>
+                                        </div>
+                                        <div class="pr-2" *ngIf="errorMap.get(this.i) === 'duperror'">
+                                            <span class="error-block">{{'ERR_DUPLICATE_ACCT' | translate }}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="flex-row justify-unset">
+                                        <div class="form-floating">
+                                            <input name="postalCode" formControlName="postalCode"
+                                                [class]="accountDetails.controls[i].get('isValidPostalCode')?.value?
+                                                'form-control':'form-control is-invalid'" minlength="4" maxlength="11"
+                                                required="required" (focusout)="checkPostalCode(i)"
+                                                placeholder="{{ 'POSTAL_CODE_TEXT' | translate }}" />
+                                            <label for="postalCode">{{'POSTAL_CODE_TEXT' |
+                                                translate}}*</label>
+                                        </div>
+                                        <img class="icon icon-tooltip ml-8p" *ngIf="i === 0"
+                                            src="assets/images/icon-tooltip.svg"
+                                            alt="{{'POSTALCODE_TOOLTIP_TEXT' | translate}}" tabindex="0"
+                                            ngbTooltip="{{'POSTALCODE_TOOLTIP_TEXT' | translate}}">
+                                    </div>
+                                    <div class="pr-2" *ngIf="accountDetails.controls[i].get('postalCode')?.invalid &&
+                                         accountDetails.controls[i].get('postalCode')?.dirty">
+                                        <span class="error-block">{{'POSTAL_CODE_REQUIRED' | translate }}</span>
+                                    </div>
+                                    <div class="pr-2"
+                                        *ngIf="!accountDetails.controls[i].get('isValidPostalCode')?.value">
+                                        <span class="error-block">{{
+                                            "POSTAL_CODE_ACCOUNT_NUMBER_COMBINATION" | translate
+                                            }}</span>
+                                    </div>
+                                </td>
+                                <td class="h-50">
+                                    <label class="tbl-label-pos">{{this.accountDetail.value.paymentDate}}</label>
+                                </td>
+                                <td>
+                                    <div class="flex-row justify-center h-50">
+                                        <input name="autoPayFlag" formControlName="autoPayFlag" class="form-check-input"
+                                            type="checkbox" />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-floating">
+                                        <input name="emailNotificationId" formControlName="emailNotificationId"
+                                            maxlength="100" [class]="accountDetails.controls[i].get('emailNotificationId')?.invalid &&
+                                             accountDetails.controls[i].get('emailNotificationId')?.dirty ? 'form-control is-invalid':
+                                             'form-control'" placeholder="{{'SEND_NOTIFICATION_COPY' |
+                                             translate }}*">
+                                        <label for="emailNotificationId">{{'SEND_NOTIFICATION_COPY' |
+                                            translate }}*</label>
+                                    </div>
+                                    <div
+                                        *ngIf="accountDetails.controls[i].get('emailNotificationId')?.invalid && accountDetails.controls[i].get('emailNotificationId')?.dirty">
+                                        <span class="error-block">{{'EMAIL_REQUIRED' | translate }}</span>
+                                    </div>
+                                </td>
+                                <td class="flex-row h-50 justify-center">
+                                    <img title="{{'REMOVE_ACCOUNT' | translate}}" class="icon"
+                                        style="margin: 16px auto;" src="assets/images/blueclose.svg" alt="Remove Access"
+                                        (click)="remove(i)">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button class="btn btn-primary cta-blue info-btn form-control" (click)="addAccount()">{{'ADD_LABEL'
+                        | translate}}</button>
+                    <hr />
+                    <div class="form-group">
+                        <div class="d-flex justify-flex-start">
+                            <button class="btn btn-primary btn-block primary-btn form-control" (click)="register()"
+                                style="margin-right: 5px">{{'NEXT' | translate}}</button>
+                            <button class="btn btn-primary cta-blue info-btn" (click)="redirectToHome()">{{'CANCEL'
+                                | translate}}</button>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div *ngIf="showNextPage" class="flex-row align-unset mt-4">
+        <div class="w-50 p-8  flex-col align-unset">
+            <div class="mb-2">
+                <ul class="req-field-txt">{{'AUTO_PAY_ACCOUNT_TEXT' | translate}}
+                    <li *ngFor="let accountDetail of accountDetails.controls">
+                        {{this.accountDetail.value.accountNumber}}
+                    </li>
+                </ul>
+            </div>
+            <button class="btn btn-primary btn-block primary-btn" (click)="showNextPageAction()">{{'GO_BACK_TEXT' |
+                translate}}</button>
+        </div>
+        <div class="w-50 p-8">
+            <div id="paymentModal" class="modal-payment mb-2">
+                <!-- Modal content -->
+                <div class="modal-payment-content">
+                    <div class="form-group">
+                        <div class="section req-field-txt" id="paymentContainer">
+                            {{'PAYMENT_IN_PROGRESS' | translate}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <form #init__payment ngNoForm name="init__payment" id="init__payment" novalidate="" action="{{paymentURL}}"
+                target="cpwa__frame" method="post">
+                <input name="p" id="payload" type="hidden" value="{{cpwaPayload}}" />
+            </form>
+            <div>
+                <iframe id="cpwa__frame" name="cpwa__frame" width="500" height="{{frameHeight}}" frameborder="0"
+                    scrolling="no"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="paymentSuccessFlag" class="tab-content">
+        <div class="row ">
+            <div class="col-md-8">
+                {{'ENROLMENT_USER_CONFIRM_TEXT' | translate}}
+                <br><br>
+            </div>
+        </div>
+        <div class="form-group no-print p-4">
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4 no-print"></div>
+                <div class="col-md-3 no-print">
+                    <a href="javascript:void(0)" (click)="returnToManageUsers()">{{ 'RETURN_TO_BILLING_CENTRE_TEXT' |
+                        translate
+                        }}</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div *ngIf="declinedMessage && !paymentSuccessFlag && !showNextPage">
+        <div class="row no-print">
+            <h2 class="col-md-12 txt-puro-red">{{'DECLINED_TRANSACTION_TEXT' | translate}}</h2>
+        </div>
+        <br />
+    </div>
+</div>

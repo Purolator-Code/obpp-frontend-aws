@@ -1,0 +1,15 @@
+<div class="row no-print" *ngIf="fieldErrorsObj && fieldErrorsObj.length > 0">
+  <div class="col-md-12 alert show alert-danger fade">
+    <ul>
+      <li *ngFor="let errMsg of fieldErrorsObj" tabindex="0" role="alert">
+        {{ errMsg["message"] | translate }}
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="d-flex justify-content-between no-print">
+  <obpp-login (updateErrorMessage)="updateErrorMessage($event)"></obpp-login>
+
+  <obpp-quick-pay-anonymous></obpp-quick-pay-anonymous>
+</div>
+<router-outlet></router-outlet>

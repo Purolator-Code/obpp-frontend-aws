@@ -1,0 +1,227 @@
+.t-inv-div {
+  border-radius: 10px !important;
+  background-color: #f2f2f2;
+  color: #666;
+  padding: 15px;
+}
+
+.t-inv > thead {
+  background-color: #f2f2f2;
+  color: #666;
+}
+
+.t-inv > tbody > tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.t-inv > tbody > tr:nth-child(odd) {
+  background-color: white;
+}
+
+.asc:before {
+  content: "\25B2";
+  color: #001996;
+  padding-right: 5px;
+}
+
+.desc:before {
+  content: "\25BC";
+  color: #001996;
+  padding-right: 5px;
+}
+
+.qpay-data-table-body {
+  height: 300px;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-left: 0px;
+}
+
+.col-wid-10 {
+  width: 10% !important;
+}
+
+th {
+  font-weight: 600;
+  font-size: 16px;
+  color: #111111;
+  width: 120px;
+  vertical-align: middle;
+}
+
+th > a {
+  font-weight: bold;
+  text-decoration: none;
+  color: #111;
+}
+
+.table > :not(:first-child) {
+  border-top: 1px solid currentColor;
+}
+
+.table > :not(caption) > * > * {
+  box-shadow: unset;
+}
+
+.table-scrollable {
+  display: block;
+  height: 350px;
+  overflow-x: auto;
+}
+
+.table-scrollable > thead {
+  position: sticky;
+  top: 0px;
+  background: #f5f6f6;
+  border: 1px solid #d3d3d3;
+  z-index: 1;
+  height: 55px;
+}
+
+td {
+  font-size: 16px;
+  height: 55px;
+}
+
+.form-radio-input {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.cen-align {
+  align-self: center;
+}
+
+.tot-pay-label {
+  font-size: 20px;
+  color: #001996;
+}
+
+.user-input-width {
+  width: 430px;
+}
+
+.payment-card {
+  height: 255px;
+  width: 520px;
+  margin: auto;
+}
+
+.amount-card {
+  height: 60px;
+  width: 455px;
+  margin: auto;
+  border: 1px solid #c0c0c0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.no-inv-label {
+  font-size: 16px;
+  color: #000;
+}
+
+.amount-name-card {
+  height: 20px;
+  width: 455px;
+  margin: auto;
+}
+
+.total-amt-font-focus {
+  font-size: 20px;
+  color: #001996;
+}
+
+.total-amt-font {
+  font-size: 20px;
+  color: #111;
+}
+
+.amount-card img {
+  margin-right: 12px;
+}
+
+.amount-card-focus {
+  background-color: #00a9ce33;
+  border: 1px solid #001996;
+}
+
+.amount-card:hover {
+  background-color: #00a9ce33;
+}
+
+.account-tab-header-checkbox {
+  width: 50px;
+}
+
+.w-160 {
+  width: 160px;
+}
+
+.w-200 {
+  width: 200px;
+}
+
+.td-focus {
+  background: #f5f6f6;
+}
+
+.td {
+  background: #fff;
+}
+
+.payment-iframe-card {
+  height: 150px;
+  width: 520px;
+}
+
+
+.form-control:focus {
+  background-color: #fff;
+  border: none !important;
+  outline: 2px solid #0A38E6 !important;
+}
+a:focus{
+  outline: 2px solid #001996
+}
+input[type='checkbox']:focus{
+  border: none !important;
+  outline: 2px solid #0A38E6 !important;
+}
+
+input[type='radio']:focus{
+  border: none !important;
+  outline: 2px solid #0A38E6 !important;
+}
+
+.sec-btn:focus{
+    outline: 3px solid #001996;
+    background-color: #ffffff !important;
+    color: #001996 !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+  .white-bg {
+    color: #001996;
+    background: #ffffff;
+    border: 1px solid #000000;
+    height: 50px;
+  }
+  
+  .btn-width{
+    width:158px !important;
+    height: 55px !important;
+   
+   }
+
+   .text-right{
+    text-align: right !important;
+  }
+
+  .text-center{
+    text-align: center !important;
+  }

@@ -1,0 +1,853 @@
+<div id="ngb-nav-0-panel">
+    <div class="container p-0" *ngIf="isUpdateInProgress">
+        <div class="row" *ngIf="errMsgFactory.length > 0">
+            <div class="col-md-12 error-block">
+                <ul>
+                    <li *ngFor="let errMsg of errMsgFactory">
+                        {{ errMsg.value | translate }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="displayBalDueErrMsg">
+            <div class="col-md-12 error-block">
+                <span class="error-block">{{
+                    "AMOUNT_MORE_THAN_BALANCE_DUE" | translate
+                    }}</span>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="validAmountErrMsg">
+            <div class="col-md-12 error-block">
+                <span class="error-block">{{ "VALID_AMOUNT_TEXT" | translate }}</span>
+            </div>
+        </div>
+
+        <div class="row account-row row-affix">
+            <div class="col-md-6">
+                <!-- Begin Message -->
+                <div class="account-info well">
+                    <img class="icon" src="../../../../assets/images/square-exclamation.svg" alt="clock-icon" />
+                    <label *ngIf="active == 'opened'">{{ "PLEASE_ALLOW_UPTO" | translate }}
+                        <span class="bold">{{ "ALLOWABLE_HOURS" | translate }}</span>
+                        {{ "REFLECTED_RECEIVED_PAYMENTS" | translate }}</label>
+                    <label *ngIf="active == 'closed'">{{
+                        "CLOSE_INOVICE_TEXT" | translate
+                        }}</label>
+                </div>
+
+                <div class="card total-accounts-dwnld">
+                    <div class="form-floating p-bottom-24" style="width: 100%;">
+                        <select #accountChange class="form-select" id="floatingSelect"
+                            [disabled]="allAccountsList.length === 1"
+                            (change)="selectAccountNumber(accountChange.value)">
+                            <option value="All Accounts">
+                                <span>{{ "ALL_ACCOUNTS" | translate }}</span>
+                                <span class=""> {{getTotalDueAmount() | currency }}
+                                </span>
+                            </option>
+                            <option [value]="[
+                            accountRow.accountName,
+                            accountRow.accountNumber,
+                            accountRow.totalAmountDue
+                        ]" *ngFor="let accountRow of allAccountsList">
+                                <span class="">{{ accountRow.accountName }} (A/C #{{
+                                    accountRow.accountNumber}})</span>
+                                <span class=""> {{accountRow.totalAmountDue |
+                                    currency }} </span>
+                            </option>
+                        </select>
+
+                        <label for="floatingSelect">{{ "ACCOUNT" | translate }}</label>
+                    </div>
+                    <!--<div class="d-flex justify-content-center">
+                        <button title="{{ 'DOWNLOAD_STMT' | translate }}" id="resetButton" type="button"
+                            class="btn btn-primary btn-block primary-btn download-stmt-btn"
+                            (click)="downloadStatement()">
+                            {{ "DOWNLOAD_STMT" | translate }}
+                        </button> 
+                    </div>-->
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card shadow payment-card">
+                    <div class="col-sm-12 amount-name-card d-flex align-items-center">
+                        <label class="tot-pay-label">{{
+                            "TOTAL_PAYMENT_KEY" | translate
+                            }}</label>
+                    </div>
+                    <div (click)="setPaymentCurrency('cad')" [class]="
+            paymentCurrency === 'CAD'
+              ? 'amount-card-focus amount-card shadow'
+              : 'amount-card'">
+
+                        <input class="form-radio-input" #cad type="radio" name="paymentCurrency" value="CAD" tabindex="0"
+                            [(ngModel)]="paymentCurrency" [ngModelOptions]="{ standalone: true }" aria-label="CAD" />
+                        <label [class]="
+              paymentCurrency === 'CAD'
+                ? 'total-amt-font-focus'
+                : 'total-amt-font'
+            ">{{ getSelectedCADTotal() | currency }} (CAD)</label>
+                        <img src="../../../../assets/images/CAN FLAG.svg" alt="flag" />
+                    </div>
+                    <div (click)="setPaymentCurrency('usd')" [class]="
+                    paymentCurrency === 'USD'
+                        ? 'amount-card-focus amount-card shadow'
+                        : 'amount-card'
+                    ">
+                        <input class="form-radio-input" #usd type="radio" name="paymentCurrency" value="USD" tabindex="0"
+                            [(ngModel)]="paymentCurrency" [ngModelOptions]="{ standalone: true }" aria-label="USD" />
+                        <label [class]="
+                        paymentCurrency === 'USD'
+                            ? 'total-amt-font-focus'
+                            : 'total-amt-font'
+                        ">
+                            {{ getSelectedUSDTotal() | currency }} (USD)</label>
+                        <img src="../../../../assets/images/US FLAG.svg" alt="flag" />
+                    </div>
+                    <div class="col-sm-12 d-flex align-items-center pay-card button-card" tabindex="0">
+                        <div class="col-sm-6">
+                            <label class="no-inv-label">{{ "QUICK_PAY_NUMBER_OF_INVOICES_TEXT" | translate }} :
+                                {{ getSelectedInvoiceLength() }}</label>
+                        </div>
+                        <div class="col-sm-6 d-flex justify-content-end">
+                            <button type="button" class="btn btn-primary pay-btn" (click)="viewCart()" [disabled]="
+                            getSelectedInvoiceLength() === 0 || paymentCurrency == '' " tabindex="0" (keydown.enter)="viewCart()">
+                                {{ "PAY_NOW" | translate }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 " role="tabpanel" aria-labelledby="account-panel">
+            <div role="tablist">
+                <span role="presentation">
+                    <a role="tab" [ngClass]="active == 'opened' ? 'active' : 'inactive'" tabindex="0"
+                        class="open-invoice" (click)="ChangeTab('opened')" style="width: auto;"
+                        href="javascript:void(0)">{{ "OPENED_INVOICES_TEXT" | translate }} ({{
+                        active == "opened"
+                        ? getInvlocesCount(accountsList)
+                        : getInvlocesCount(accountsListOpenedInvoices)
+                        }})</a>
+                    <a role="tab" [ngClass]="active == 'closed' ? 'active' : 'inactive'" tabindex="0"
+                        class="closed-invoice" (click)="ChangeTab('closed')" href="javascript:void(0)">{{
+                        "CLOSED_INVOICES_TEXT" | translate }} ({{
+                        active == "closed"
+                        ? getInvlocesCount(accountsList)
+                        : getInvlocesCount(accountsListClosedInvoices)
+                        }})</a>
+                </span>
+            </div>
+        </div>
+
+        <div class="col-md-12 filter-tab d-flex">
+            <div class="col-md-6 d-flex">
+                <div class="col-md-5 d-flex flex-column currency-check">
+                    <label style="font-size: 12px; padding-left: 10px;">{{'CURRENCY_TEXT' | translate}}</label>
+                    <div class="d-flex">
+                        <label class="radio-inline d-flex align-items-center">
+                            <input type="checkbox" [(ngModel)]="isCAD" [ngModelOptions]="{ standalone: true }"
+                                (change)="searchFunc(false)" #cadCheckbox (keydown.enter)="checkonCad($event)" />
+                            <span class="p-left-5 currency-font">CAD</span>
+                            <img alt="cad" class="flag-img margin-right-10"
+                                src="../../../../assets/images/CAN FLAG.svg" />
+                        </label>
+                        <label class="radio-inline d-flex align-items-center">
+                            <input type="checkbox" [(ngModel)]="isUSD" [ngModelOptions]="{ standalone: true }"
+                                (change)="searchFunc(false)" #usdCheckbox (keydown.enter)="checkonUsd($event)"/>
+                            <span class="p-left-5 currency-font">USD</span>
+                            <img alt="usd" class="flag-img p-left-5" src="../../../../assets/images/US FLAG.svg" />
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-4 d-flex align-items-center">
+                    <div class="form-floating" style="width: 100%">
+                        <select class="form-select date-select" id="floatingSelect" (click)="searchFunc(false)"
+                            [(ngModel)]="invoiceDateRange">
+                            <option value="0">{{ "All" | translate }}</option>
+                            <option value="1">{{ "PAST_MONTH" | translate }}</option>
+                            <option value="3">{{ "PAST_3_MONTH" | translate }}</option>
+                            <option value="6">{{ "PAST_6_MONTH" | translate }}</option>
+                            <option value="12">{{ "PAST_1_YEAR" | translate }}</option>
+                            <option value="24">{{ "PAST_2_YEAR" | translate }}</option>
+                        </select>
+
+                        <label for="floatingSelect">{{ "DATE_RANGE" | translate }}</label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 d-flex justify-content-end align-items-center">
+                <div class="form-group search-term">
+                    <div class="input-group">
+                        <div class="form-floating search-input margin-right-10">
+                            <input type="text" id="searchTerm" [(ngModel)]="searchField" class="form-control"
+                                placeholder="{{ 'ACNT_SMRY_PLACE_HOLDER_KEY' | translate }}" maxlength="50" />
+                            <label for="searchTerm">{{
+                                "ACNT_SMRY_PLACE_HOLDER_KEY" | translate
+                                }}</label>
+                        </div>
+                        <div class="input-group-addon searchButton margin-right-10" (click)="searchFunc(false)">
+                            <button type="button" class="btn btn-primary btn-block primary-btn searchbtn h-56">
+                                {{ "SEARCH_KEY" | translate }}
+                            </button>
+                        </div>
+                        <div class="input-group-addon searchButton margin-right-10"
+                            (click)="clearActnSmrySearchResult()">
+                            <button id="resetButton" type="button" class="btn blue-bg sec-btn btn-border h-56">
+                                {{ "RESET_KEY" | translate }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content acct-summy-tbl w-100 table-responsive">
+            <div class="account-header">
+                <label style="text-align: center; font-weight:700; font-size:18px; color:#111">{{'ACCOUNT_NAME' | translate}} - {{'ACCOUNT_TEXT_AUTOPAY' | translate}}</label>
+            </div>
+
+            <table *ngIf="active === 'closed'" class="table table-responsive table-striped w-100" aria-describedby="closed table"
+                role="table">
+                <thead>
+                    <tr>
+                        <th scope="col" sortable="invoiceNumber" (sort)="onSort($event)" class="wc-lob">
+                            <a href="javascript:void(0)" class="table-header-text">{{ "INVOICE_NUMBER" | translate
+                                }}</a>
+                        </th>
+                        <th scope="col" sortable="invoiceDate" (sort)="dateSort($event)" class="wc-invdate">
+                            <a href="javascript:void(0)" class="table-header-text">{{ "INVOICE_DATE" | translate }}</a>
+                        </th>
+                        <th scope="col" sortable="invoiceAmount" (sort)="onSort($event)" class="wc-invamt">
+                            <a href="javascript:void(0)" class="table-header-text">{{ "INVOICE_AMOUNT" | translate }}
+                            </a>
+                        </th>
+                        <th scope="col" sortable="currency" (sort)="onSort($event)" class="wc-crr">
+                            <a href="javascript:void(0)" class="table-header-text">{{ "CURRENCY_TEXT" | translate }}
+                            </a>
+                        </th>
+                        <th scope="col" sortable="invoiceStatus" (sort)="onSort($event)" class="wc-lob1">
+                            <a href="javascript:void(0)" class="table-header-text">{{ "STATUS" | translate }} </a>
+                        </th>
+                        <th class="wc-pdf">
+                            <a href="javascript:void(0)" class="table-header-text">{{ "VIEW_PRINT_KEY" | translate }}
+                            </a>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let name of accountName | paginate:
+                { itemsPerPage:5, currentPage: p} let i=index">
+                        <td colspan="13" class="padding-0">
+                            <ngb-accordion>
+                                <ngb-panel>
+                                    <ng-template ngbPanelTitle  style="outline: 2px;">
+                                        <label for="title" class="title-label-text">{{name[0]}}-{{name[1]}}</label>
+                                    </ng-template>
+                                    <ng-template ngbPanelContent  style="outline: 2px;">
+                                        <div *ngFor="let invoice of accountsList; index as i">
+                                            <div *ngIf="name[1] === invoice.accounts['accountNumber']">
+                                                <table class="table table-responsive w-100 inher" aria-describedby="closed table">
+                                                    <tr [class]="i%2 === 0 ? 'even-color' : 'odd-color'">
+                                                        <td class="wc-lob">
+                                                            {{ invoice["invoiceNumber"] }}
+                                                        </td>
+                                                        <td class="wc-invdate">
+                                                            {{ invoice.invoiceDate }}
+                                                        </td>
+                                                        <td class="wc-invamt">
+                                                            {{ invoice["invoiceAmount"] | currency }}
+                                                        </td>
+                                                        <td class="wc-crr">
+                                                            {{ invoice["currency"] }}
+                                                        </td>
+                                                        <td class="wc-lob1">
+                                                            {{ invoice['balanceDue'] > 0 ? (invoice['invoiceStatus'] == 'Partial Payment' ? ('PARTIAL_PAYMENT' | translate) : (invoice['invoiceStatus'] == 'Open' ? ('OPEN' | translate) : 'CLOSED' | translate)) : 'CLOSED' | translate }}
+                                                        </td>
+                                                        <td class="wc-pdf">
+                                                            <img alt="pdf" src="assets/images/icon-pdf-red.png" tabIndex="0"
+                                                                class="m-right-10" title="PDF" (click)="
+                                                                    $event.stopPropagation();
+                                                                    getInvoicePDF(invoice['invoiceNumber'])
+                                                                    " (keydown.enter)="
+                                                                    $event.stopPropagation();
+                                                                    getInvoicePDF(invoice['invoiceNumber'])"/>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </ng-template>
+                                </ngb-panel>
+                            </ngb-accordion>
+                        </td>
+                    </tr>
+                    <tr *ngIf="accountName.length === 0">
+                        <td colspan="13" class="text-center">
+                            <span class="txt-puro-red">{{
+                                "NO_CLOSED_INVOICES_TEXT" | translate
+                                }}</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+
+            <table *ngIf="active === 'opened'" class="table table-responsive table-striped w-100" aria-describedby="open invoice table"
+                role="table">
+                <thead>
+                    <tr>
+                        <th scope="col" class="w-checkb">
+                            <input type="checkbox" [(ngModel)]="checkAllInvoices"
+                                [ngModelOptions]="{ standalone: true }" (change)="selctAllInvoices($event)"
+                                (keydown.enter)="selectCheckBox($event)"
+                                [ngbTooltip]="checkAllInvoices ? ( 'REMOVE_ALL_INVOICES_TO_CART' | translate ) : ( 'ADD_ALL_INVOICES_TO_CART' | translate )" aria-label="invoice" />
+                        </th>
+                        <th scope="col" sortable="invoiceNumber" (sort)="onSort($event)" class="w-lob">
+                            <a href="javascript:void(0)" class="table-header-text">{{ "INVOICE_NUMBER" | translate
+                                }}</a>
+                        </th>
+                        <th scope="col" sortable="invoiceDate" (sort)="dateSort($event)" class="w-invdate">
+                            <a href="javascript:void(0)" class="table-header-text">{{ "INVOICE_DATE" | translate }}</a>
+                        </th>
+                        <th scope="col" sortable="dueDate" (sort)="dateSort($event)" class="w-duedate">
+                            <a href="javascript:void(0)" class="table-header-text">{{ "DUE_DATE" | translate }}</a>
+                        </th>
+                        <th scope="col" sortable="invoiceAmount" (sort)="onSort($event)" class="w-invamt text-right">
+                            <a href="javascript:void(0)" class="table-header-text">{{ "INVOICE_AMOUNT" | translate }}
+                            </a>
+                        </th>
+                        <th scope="col" sortable="balanceDue" (sort)="onSort($event)" class="w-baldue text-right">
+                            <a href="javascript:void(0)" class="table-header-text">{{ "BALANCE_DUE" | translate }} </a>
+                        </th>
+                        <th scope="col" class="w-paymntamnt text-right">
+                            <a href="javascript:void(0)" class="table-header-text">{{ "TL_PAYAMNT" | translate }} </a>
+                        </th>
+                        <th scope="col" sortable="currency" (sort)="onSort($event)" class="w-crr text-center">
+                            <a href="javascript:void(0)" class="table-header-text">{{ "CURRENCY_TEXT" | translate }}
+                            </a>
+                        </th>
+                        <th scope="col" sortable="invoiceStatus" (sort)="onSort($event)" class="w-lob1">
+                            <a href="javascript:void(0)" class="table-header-text">{{ "STATUS" | translate }} </a>
+                        </th>
+                        <th class="w-pdf">
+                            <a href="javascript:void(0)" class="table-header-text">{{ "VIEW_PRINT_KEY" | translate }}
+                            </a>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let name of accountName | paginate:
+                    { itemsPerPage: 5, currentPage: p} let i=index">
+                        <td colspan="10" class="padding-0">
+                            <ngb-accordion>
+                                <ngb-panel>
+                                    <ng-template ngbPanelTitle>
+                                        <label class="title-label-text">{{ name[0] }} - {{ name[1] }}</label>
+                                    </ng-template>
+                                    <ng-template ngbPanelContent>
+                                        <div *ngFor="let invoice of accountsList; index as i">
+                                            <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0"
+                                                *ngIf="name[1] === invoice.accounts['accountNumber']">
+                                                <ngb-panel class="acct-summy-pnl">
+                                                    <ng-template ngbPanelTitle tabindex="0">
+                                                        <div class="w-100">
+                                                            <table class="table table-responsive w-100 inher" aria-describedby="open">
+                                                                <tr [class]="i%2 === 0 ? 'even-color' : 'odd-color'">
+                                                                    <td class="w-checkb" *ngIf="active == 'opened' &&
+                                                                    invoice.pins.length > 0">
+                                                                        <input class="checkb-input" type="checkbox"
+                                                                            (click)="$event.stopPropagation()"
+                                                                            (keydown.enter)="selectCheckBox($event)"
+                                                                            (change)="selctAllPins(invoice);updateSelectionInv()"
+                                                                            [(ngModel)]="invoice.isChecked"
+                                                                            [ngModelOptions]="{ standalone: true }" tabindex="0"
+                                                                            [ngbTooltip]="invoice.isChecked ? ('REMOVE_INVOICE_FROM_CART' | translate) : ( 'ADD_INVOICE_TO_CART' | translate )" />
+                                                                    </td>
+                                                                    <td [class]="active == 'opened' ? 'w-lob':'wc-lob'">
+                                                                        {{ invoice["invoiceNumber"] }}
+                                                                    </td>
+                                                                    <td
+                                                                        [class]="active == 'opened' ? 'w-invdate':'wc-invdate'">
+                                                                        {{ invoice.invoiceDate }}
+                                                                    </td>
+                                                                    <td *ngIf="active == 'opened'" class="w-duedate">{{
+                                                                        invoice.dueDate }}</td>
+
+                                                                    <td
+                                                                        [class]="active == 'opened' ? 'w-invamt text-right':'wc-invamt text-right'">
+                                                                        {{ invoice["invoiceAmount"] | currency }}
+                                                                    </td>
+                                                                    <td *ngIf="active == 'opened'" class="w-baldue text-right">
+                                                                        {{ invoice["balanceDue"] | currency }}
+                                                                    </td>
+                                                                    <td *ngIf="active == 'opened'" class="w-paymntamnt text-right">
+                                                                        {{ invoice["payAmount"] | currency }}
+                                                                    </td>
+                                                                    <td [class]="active == 'opened' ? 'w-crr text-center':'wc-crr text-center'">
+                                                                        {{ invoice["currency"] }}
+                                                                    </td>
+                                                                    <td
+                                                                        [class]="active == 'opened' ? 'w-lob1':'wc-lob1'">
+                                                                        {{ invoice['balanceDue'] > 0 ? (invoice['invoiceStatus'] == 'Partial Payment' ? ('PARTIAL_PAYMENT' | translate) : (invoice['invoiceStatus'] == 'Open' ? ('OPEN' | translate) : 'CLOSED' | translate)) : 'CLOSED' | translate }}
+                                                                    </td>
+                                                                    <td [class]="active == 'opened' ? 'w-pdf':'wc-pdf'">
+
+                                                                        <!--  <img alt="pdf" src="assets/images/icon-pdf-red.png"
+                                                                        class="m-right-10" title="PDF" (click)="
+                                                                        $event.stopPropagation();
+                                                                        getInvoicePDF(invoice['invoiceNumber'])
+                                                                        "  /> -->
+                                                                        <button
+                                                                            attr.aria-label="PDF Invoice {{invoice['invoiceNumber']}}"
+                                                                            class="btn btn-primary white-bg text-bold-14  pdf-button"
+                                                                            (click)="$event.stopPropagation();getInvoicePDF(invoice['invoiceNumber'])"
+                                                                            aria-label="pdf-download-icon" tabindex="-1">
+                                                                            <span
+                                                                                class="sr-only">{{invoice['invoiceNumber']}}
+                                                                            </span>
+                                                                            <img src="assets/images/icon-pdf-red.png"
+                                                                                alt="" class="m-right-10 p-left-2"
+                                                                                title="PDF" tabindex="0">
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                        <div></div>
+                                                    </ng-template>
+                                                    <ng-template ngbPanelContent>
+                                                        <div class="table-scrollable" (scroll)="divScroll($event)">
+                                                            <table class="table table-striped" class="pin-table"
+                                                                aria-describedby="open">
+                                                                <thead class="pin-thead">
+                                                                    <th *ngIf="active == 'opened'"></th>
+                                                                    <th scope="col" sortable="service"
+                                                                        (sort)="onSortPIN($event, invoice)"
+                                                                        class="th-center">
+                                                                        <a href="javascript:void(0)" class="a-table">{{
+                                                                            'SERVICE_AVAILABILITY'
+                                                                            | translate}}</a>
+                                                                    </th>
+                                                                    <th scope="col" sortable="itemNumber"
+                                                                        (sort)="onSortPIN($event, invoice)"
+                                                                        class="th-center">
+                                                                        <a href="javascript:void(0)" class="a-table">{{
+                                                                            "ITEM_NUMBER" | translate
+                                                                            }}</a>
+                                                                    </th>
+                                                                    <th scope="col" sortable="pinNumber"
+                                                                        (sort)="onSortPIN($event, invoice)">
+                                                                        <a href="javascript:void(0)" class="a-table">{{
+                                                                            "PIN_NUMBER" | translate
+                                                                            }}</a>
+                                                                    </th>
+                                                                    <th scope="col" sortable="totalCharges" class="text-right"
+                                                                        (sort)="onSortPIN($event, invoice)">
+                                                                        <a href="javascript:void(0)" class="a-table">{{
+                                                                            "PIN_AMOUNT" | translate
+                                                                            }}</a>
+                                                                    </th>
+                                                                    <th scope="col" sortable="balanceDue" class="text-right"
+                                                                        (sort)="onSortPIN($event, invoice)">
+                                                                        <a href="javascript:void(0)" class="a-table">{{
+                                                                            "BALANCE_DUE" | translate
+                                                                            }}</a>
+                                                                    </th>
+                                                                    <th *ngIf="active == 'opened'" class="text-center">
+                                                                        <a href="javascript:void(0)" class="a-table">{{
+                                                                            "TL_PAYAMNT" | translate
+                                                                            }}</a>
+                                                                    </th>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr *ngFor="let pin of getVisiblePins(invoice); index as j">
+                                                                        <td class="invoice-quickPaycheckboxCell"
+                                                                            style="width: 50px;"
+                                                                            *ngIf="active == 'opened'"
+                                                                            [class]="j%2 === 0 ? 'even-color': 'odd-color'">
+                                                                            <input type="checkbox"
+                                                                                class="form-check-input"
+                                                                                (change)="updateSelectionPIN(invoice, pin)"
+                                                                                (keydown.enter)="selectCheckBox($event)"
+                                                                                [(ngModel)]="pin.isChecked"
+                                                                                [ngModelOptions]="{ standalone: true }"
+                                                                                [ngbTooltip]="pin.isChecked ? ('REMOVE_SHIPMENT_FROM_CART' | translate) : ( 'ADD_SHIPMENT_TO_CART' | translate )"
+                                                                                tabindex="0" />
+                                                                        </td>
+                                                                        <td class="invoice-invoiceNumberCell"
+                                                                            [class]="j%2 === 0 ? 'even-color': 'odd-color'"
+                                                                            style="width: 120px;">
+                                                                            {{ pin.service | translate }}
+                                                                        </td>
+                                                                        <td class="invoice-invoiceNumberCell"
+                                                                            [class]="j%2 === 0 ? 'even-color': 'odd-color'"
+                                                                            style="width: 80px;">
+                                                                            {{ pin.itemNumber }}
+                                                                        </td>
+                                                                        <td class="invoice-accountNumberCell"
+                                                                            [class]="j%2 === 0 ? 'even-color': 'odd-color'"
+                                                                            style="width: 100px;">
+                                                                            <a title="{{ invoice.accountName }}"
+                                                                                [routerLink]=""
+                                                                                (click)="getShipmentTrackingURL(pin, invoice)" tabindex="0"
+                                                                                (keydown.enter)="getShipmentTrackingURL(pin, invoice)">
+                                                                                {{ pin.pinNumber }}</a>
+                                                                        </td>
+                                                                        <td class="invoice-amountDueCell text-right"
+                                                                            [class]="j%2 === 0 ? 'even-color': 'odd-color'"
+                                                                            style="width: 120px;">
+                                                                            {{ pin.totalCharges | currency }}
+                                                                        </td>
+                                                                        <td class="invoice-balanceDueCellqp text-right"
+                                                                            [class]="j%2 === 0 ? 'even-color': 'odd-color'"
+                                                                            style="width: 120px;">
+                                                                            {{ pin.balanceDue | currency }}
+                                                                        </td>
+
+                                                                        <td class="invoice-paymentAmountCell"
+                                                                            *ngIf="active == 'opened'"
+                                                                            [class]="j%2 === 0 ? 'even-color': 'odd-color'"
+                                                                            style="width: 145px;">
+                                                                            <input
+                                                                                class="form-control align-right currency pin-amount-width"
+                                                                                [disabled]="!pin.isChecked"
+                                                                                [(ngModel)]="pin.paymentAmount"
+                                                                                [ngModelOptions]="{ standalone: true }"
+                                                                                type="text"
+                                                                                (keyup)="updateOnlyInvPayment(invoice)"
+                                                                                obppTwoDigitDecimaNumber />
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr *ngIf="invoice?.pins?.length <= 0">
+                                                                        <td colspan="13">
+                                                                            <span class="txt-puro-red">{{
+                                                                                "NO_OPEN_INVOICES_TEXT" | translate
+                                                                                }}</span>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </ng-template>
+                                                </ngb-panel>
+                                            </ngb-accordion>
+                                        </div>
+                                    </ng-template>
+                                </ngb-panel>
+                            </ngb-accordion>
+                        </td>
+                    </tr>
+                    <tr *ngIf="accountsList.length <= 0">
+                        <td colspan="13" class="text-center">
+                            <span class="txt-puro-red">{{
+                                "NO_OPEN_INVOICES_TEXT" | translate
+                                }}</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <pagination-controls 
+            (pageChange)="p = $event"
+            class="text-center"
+            [previousLabel]="'PREVIOUS' | translate"
+            [nextLabel]="'NEXT' | translate">
+        </pagination-controls>
+    </div>
+
+    <div class="container" *ngIf="!isUpdateInProgress && !paymentSuccessFlag">
+        <div *ngIf="displayOtherPymntSuccess">
+            <div class="row">
+                <h2 class="col-md-12">{{ "THANK_YOU_TEXT" | translate }}</h2>
+            </div>
+        </div>
+        <div *ngIf="displayEftPymntSuccess">
+            <div class="row">
+                <h2 class="col-md-12">{{ "THANK_YOU_TEXT_EFT" | translate }}</h2>
+            </div>
+        </div>
+
+        <div role="tabpanel" class="tab-pane" id="accountsummary">
+            <div class="row">
+                <div class="col-md-12 d-flex">
+                    <div class="col-md-6">
+                        <!-- Begin Message -->
+                        <div class="account-info well">
+                            <img class="icon" src="../../../../assets/images/square-exclamation.svg" alt="clock-icon" />
+                            <label *ngIf="active == 'opened'">{{ "PLEASE_ALLOW_UPTO" | translate }}
+                                <span class="bold">{{ "ALLOWABLE_HOURS" | translate }}</span>
+                                {{ "REFLECTED_RECEIVED_PAYMENTS" | translate }}</label>
+                            <label *ngIf="active == 'closed'">{{
+                                "CLOSE_INOVICE_TEXT" | translate
+                                }}</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card shadow payment-card payment-amount">
+                            <div class="amount-name-card m-0">
+                                <label class="tot-pay-label">{{
+                                    "TOTAL_PAYMENT_KEY" | translate
+                                    }}</label>
+                            </div>
+                            <div class="col-md-12 amount-card-focus amount-card shadow m-0">
+                                <label class="col-md-10 total-amt-font-focus text-center">
+                                    {{ getCartTotal() | currency }} ({{ paymentCurrency }})</label>
+                                <img class="m-auto"
+                                    [src]="paymentCurrency === 'CAD' ? '/../../assets/images/CAN FLAG.svg' : '/../../assets/images/US FLAG.svg'"
+                                    alt="flag" />
+                            </div>
+                            <label class="text-center">
+                                <input type="checkbox" class="form-check-input m-0" [(ngModel)]="isEmailRequired"
+                                    (keydown.enter)="selectCheckBox($event)" [ngModelOptions]="{ standalone: true }" />
+                                {{ "ALTERNATE_EMAIL_AT_TEXT" | translate }}
+                            </label>
+                            <div *ngIf="isEmailRequired">
+                                <input type="email" class="form-control emailField" email="true"
+                                    [(ngModel)]="notifyEmail" [ngModelOptions]="{ standalone: true }"
+                                    placeholder="{{'LOGIN_EMAIL_PLACEHOLDER_KEY' | translate}}"
+                                    [class]="(!isValidEmail(notifyEmail) && isEmailRequired)?' is-invalid':''" />
+                                <div *ngIf="!isValidEmail(notifyEmail) && isEmailRequired">
+                                    <span class="error-block">{{
+                                        "EMAIL_REQUIRED" | translate
+                                        }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group text-center">
+                                <button class="btn btn-primary btn-block primary-btn"
+                                    [disabled]="isUpdateInProgress || isViewOnly" (click)="loadIFrame()" role="presentation"
+                                    tabindex="0" (keydown.enter)="loadIFrame()">
+                                    {{ "INITIATE_PAYMENT" | translate }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Invoice Section -->
+                <div class="col-md-12">
+                    <div class="row col-md-12">
+                        <label class="txt-puro-blue f-20">
+                            {{ "INVOICES_IN_CART" | translate }}
+                        </label>
+                    </div>
+
+                    <!-- Invoice, Freight and International table -->
+                    <div class="col-md-12">
+                        <div class="panel-body bg-gray panel-body-invoicesummary">
+                            <table class="table table-striped t-inv" aria-describedby="panel">
+                                <thead class="h-30">
+                                    <th scope="col">{{ "ACCOUNT_NUMBER_TEXT" | translate }}</th>
+                                    <th scope="col">{{ "INVOICE_NUMBER_TEXT" | translate }}</th>
+                                    <th scope="col" class="text-right">{{ "BALANCE_DUE" | translate }}</th>
+                                    <th scope="col" class="text-right">{{ "TL_PAYAMNT" | translate }}</th>
+                                    <th scope="col" class="text-center">{{ "CURRENCY_TEXT" | translate }}</th>
+                                    <th scope="col">{{ "REMOVE_KEY" | translate }}</th>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let invoice of accountsList" class="tr-table">
+                                        <td>{{ invoice.accounts.accountNumber }}</td>
+                                        <td>{{ invoice.invoiceNumber }}</td>
+                                        <td *ngIf="!(invoice.balanceDue == 0.0)" class="text-right">
+                                            {{ invoice.balanceDue | currency }}
+                                        </td>
+                                        <td *ngIf="invoice.balanceDue == 0.0" class="text-right"></td>
+                                        <td class="text-right">{{ invoice.paymentAmount | currency }}</td>
+                                        <td class="text-center">{{ invoice.currency }}</td>
+                                        <td>
+                                                <img title="{{ 'REMOVE_KEY' | translate }}"
+                                                    class="cursor-pointer icon icon-cart-remove remove-btn"
+                                                    src="assets/images/blueclose.svg"
+                                                    alt="{{ 'REMOVE_KEY' | translate }}"
+                                                    (click)="removeInvoice(invoice)" tabindex="0" 
+                                                    (keydown.enter)="removeInvoice(invoice)"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-5 form-group addAnotherInvoiceCartPage">
+                            <button class="btn  cta-blue info-btn sec-btn w-auto" (click)="goBackSummaryPage()">
+                                {{ "ADD_ADDNTIONAL_INVOICES_TO_CART_KEY" | translate }}
+                            </button>
+                        </div>
+                    </div>
+
+                    <div *ngIf="declinedMessage && !paymentSuccessFlag && !showIFrame">
+                        <div class="row col-md-12">
+                            <label class="txt-puro-red f-20">
+                                {{ "DECLINED_TRANSACTION_TEXT" | translate }}
+                            </label>
+                        </div>
+                    </div>
+                    <div *ngIf="showCustomerCareMessage">
+                        <label class="txt-puro-red f-20">
+                            You have made a large request, Please contact Purolator for your payment processing status /
+                            details
+                        </label>
+                    </div>
+                </div>
+
+                <div class="card ifrmae-card" *ngIf="showIFrame">
+                    <!-- Begin IFrame call  -->
+                    <div>
+                        <div id="paymentModal" class="modal-payment">
+                            <!-- Modal content -->
+                            <div class="modal-payment-content">
+                                <div class="form-group">
+                                    <div class="section" id="paymentContainer" #paymentIFrame tabindex="0">
+                                        {{ "PAYMENT_IN_PROGRESS" | translate }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <form #init__payment ngNoForm name="init__payment" id="init__payment" novalidate=""
+                            action="{{ paymentURL }}" target="cpwa__frame" method="post">
+                            <input name="p" id="payload" type="hidden" value="{{ cpwaPayload }}" />
+                        </form>
+                        <div>
+                            <iframe id="cpwa__frame" title="payment" name="cpwa__frame" width="100%" height="800">
+                            </iframe>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="container" *ngIf="paymentSuccessFlag">
+        <div class="row col-md-12">
+            <h2>{{ "THANK_YOU_TEXT" | translate }}</h2>
+        </div>
+        <br /><br />
+        <div class="form-horizontal quickpay-form p-4">
+            <div class="row p-bottom-dp no-print">
+                <div class="form-group col-md-3">
+                    <label class="control-label">{{ "PAYMENT_RECEIPT_TEXT" | translate }}
+                    </label>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-primary btn-block primary-btn" (click)="printPage()">
+                        {{ "PRINT_TEXT" | translate }}
+                    </button>
+                </div>
+            </div>
+
+            <!-- Pay Amount -->
+            <div class="row">
+                <div class="form-group col-md-3">
+                    <label class="control-label">{{ "PAYMENT_AMT_TEXT" | translate }}
+                    </label>
+                </div>
+                <div class="col-md-3">
+                    <label name="qp-invoiceNumber" class="control-label currency">{{ paymentInformation.totalPayAmount |
+                        currency }}
+                        {{ paymentCurrency }}</label>
+                </div>
+            </div>
+            <!-- End Pay Amount -->
+            <!-- Card Number-->
+
+            <div class="row">
+                <div class="form-group col-md-3">
+                    <label class="control-label">{{ "CARD_NUMBER_TEXT" | translate }}
+                    </label>
+                </div>
+                <div class="col-md-4">
+                    <label name="qp-invoiceNumber" class="control-label">{{
+                        paymentInformation?.payment?.ccLastDigits
+                        }}</label>
+                    <span>
+                        <img *ngIf="paymentInformation?.payment?.cardType == 'Visa'"
+                            src="assets/images/icon-cc-visa.png" alt="Visa" />
+                        <img *ngIf="paymentInformation?.payment?.cardType == 'Master'"
+                            src="assets/images/icon-cc-mastercard.png" alt="MasterCard" />
+                        <img *ngIf="paymentInformation?.payment?.cardType == 'Amex'"
+                            src="assets/images/icon-cc-amex.png" alt="American Express" />
+                    </span>
+                </div>
+            </div>
+            <!-- End Card Number -->
+            <!-- Invoice Date -->
+            <div class="row">
+                <div class="form-group col-md-3">
+                    <label class="control-label">{{ "DATE_TEXT" | translate }} </label>
+                </div>
+                <div class="col-md-3">
+                    <label name="qp-InvoiceDate" class="control-label">{{paymentDate}}</label>
+                </div>
+            </div>
+            <!-- End Invoice Date -->
+            <!-- Reference Number -->
+            <div class="row">
+                <div class="form-group col-md-3">
+                    <label class="control-label">{{ "CONFIRMATION_NUMBER_TEXT" | translate }}
+                    </label>
+                </div>
+                <div class="col-md-3">
+                    <label name="qp-InvoiceDate" class="control-label">{{
+                        paymentInformation?.payment?.confirmationNumber
+                        }}</label>
+                </div>
+            </div>
+            <!-- End Reference Number -->
+            <!-- Receipt Email -->
+            <div class="row p-bottom-dp" *ngIf="
+        paymentInformation.additionalEmailId != '' &&
+        paymentInformation.additionalEmailId != null
+      ">
+                <div class="form-group col-md-3">
+                    <label class="control-label">{{ "QUICKPAY_ALERT_TEXT" | translate }}
+                    </label>
+                </div>
+                <div class="col-md-3">
+                    <label name="qp-InvoiceDate" class="control-label">{{
+                        getEmailReceivers(paymentInformation)
+                        }}</label>
+                </div>
+            </div>
+            <!-- End Receipt Email -->
+
+            <div class="row col-md-8 t-inv-div">
+                <table class="table table-striped t-inv" aria-describedby="card">
+                    <thead>
+                        <th scope="col">{{ "ACCOUNT_NUMBER_TEXT" | translate }}</th>
+                        <th scope="col">{{ "INVOICE_NUMBER_TEXT" | translate }}</th>
+                        <th scope="col" class="text-right">{{ "BALANCE_DUE" | translate }}</th>
+                        <th scope="col" class="text-right">{{ "TL_PAYAMNT" | translate }}</th>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let invoice of accountsList">
+                            <td>{{ invoice.accountNumber }}</td>
+                            <td>{{ invoice.invoiceNumber }}</td>
+                            <td *ngIf="!(invoice.balanceDue == 0.0)" class="text-right">
+                                {{ invoice.balanceDue | currency }}
+                            </td>
+                            <td *ngIf="invoice.balanceDue == 0.0" class="text-right"></td>
+                            <td class="text-right">{{ invoice.paymentAmount | currency }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- Message -->
+        <div class="form-group p-4 no-print">
+            <div class="row col-md-12">
+                <div class="col-md-4">
+                    <button class="btn btn-primary btn-block" (click)="ngOnInit()" tabindex="0" (keydown.enter)="ngOnInit()">
+                        {{ "RET_ACCT_SUMMARY_TEXT" | translate }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

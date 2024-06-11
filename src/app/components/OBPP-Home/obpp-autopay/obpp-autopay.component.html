@@ -1,0 +1,285 @@
+<div id="ngb-nav-3-panel">
+<div>
+    <div class="tab-content">
+        <div class="row panel-table">
+            <div class="col-md-2">
+                <label for="languagePref" class="control-label">
+                    {{'CREDIT_CARD' | translate}}
+                </label>
+
+            </div>
+            <div class="col-md-2">
+                <label for="languagePref" class="control-label">
+                    {{'ACCOUNT_TEXT_AUTOPAY' | translate}}
+                </label>
+            </div>
+
+            <div class="col-md-2">
+                <label for="languagePref" class="control-label">
+                    {{'STATUS_TEXT' | translate}}
+                    <img tabindex="0" class="icon" src="assets/images/icon-tooltip.svg"
+                        alt="{{'AUTOPAY_STATUS_TOOLTIP_TEXT' | translate}}"
+                        ngbTooltip="{{'AUTOPAY_STATUS_TOOLTIP_TEXT' | translate}}">
+                </label>
+            </div>
+
+            <div class="col-md-2">
+                <label for="languagePref" class="control-label">
+                    {{'ACTIVATION_DATE_UPDATED_TEXT' | translate }}
+                    <img tabindex="0" class="icon" src="assets/images/icon-tooltip.svg"
+                        alt="{{'ACTIVATION_DATE_TOOLTIP_TEXT' | translate}}"
+                        ngbTooltip="{{'ACTIVATION_DATE_TOOLTIP_TEXT' | translate}}">
+                </label>
+            </div>
+
+            <div class="col-md-1">
+                <label for="languagePref" class="control-label">
+                    {{'SEND_NOTIFICATION_FOR_SUCCESSFUL_TRANSACTIONS' | translate }}
+                    <img tabindex="0" class="icon" src="assets/images/icon-tooltip.svg" alt=""
+                        ngbTooltip="{{'ACTIVATION_DATE_TOOLTIP_TEXT' | translate}}">
+                </label>
+            </div>
+
+            <div class="col-md-2">
+                <label for="languagePref" class="control-label">
+                    {{'SEND_NOTIFICATION_COPY' | translate }}
+                </label>
+            </div>
+
+            <div class="col-md-1">
+                <label for="languagePref" class="control-label">
+                    {{'REMOVE_KEY' | translate }}
+                </label>
+            </div>
+        </div>
+
+        <div *ngFor="let creditcard of creditCardList;">
+            <div class="row panel-table-content">
+                <div class="col-md-3">
+                    <span style="display: flex; text-align:center;">
+                        <label for="languagePref" class="control-label"><span class="txt-puro-red">*</span>
+                            <a href="javascript:void(0)" class="anchor-content"
+                                (click)="creditCardLoad(creditcard.creditCardId)">{{creditcard.ccType}}{{creditcard.ccMask}}</a>
+                        </label>
+                    </span>
+                </div>
+                <div class="col-md-8">
+
+                </div>
+                <div class="col-md-1">
+                    <span class="remove-account">
+                        <img tabindex="0" title="{{'REMOVE_ACCOUNT' | translate}}" class="icon"
+                            src="assets/images/blueclose.svg" alt="Remove Access"
+                            (click)="this.removeAutoPayAccount(creditcard.creditCardId, '-1')"></span>
+                </div>
+            </div>
+            <div *ngFor="let autopayaccount of autopayList;">
+                <div *ngIf="autopayaccount.creditcardid === creditcard.creditCardId">
+                    <div class="row panel-table-content">
+                        <div class="col-md-2">
+                        </div>
+                        <div class="col-md-2">
+                            <div>
+                                <span style="display: flex; text-align:center;">
+                                    <a href="javascript:void(0)" class="anchor-content"
+                                        (click)="accountNumberLoad(autopayaccount.accountNumber)">{{autopayaccount.accountNumber}}</a>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div>
+                                <span style="display: flex; text-align:center;">
+                                    {{getDisplayobppAutoPayAccountStatus(autopayaccount.obppAutoPayAccountStatus) |
+                                    translate }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div>
+                                <span style="display: flex; text-align:center;">
+                                    {{autopayaccount.targetActionDateFrontEnd}}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div>
+                                <span style="display: flex; text-align:center;">
+                                    <input name="autoPayFlag" type="checkbox"
+                                    
+                                        checked="{{autopayaccount.sendSuccessfullNotificationInd}}" disabled />
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div>
+                                <span style="display: flex; text-align:center;">
+                                    {{autopayaccount.carbonCopyEmailAddress}}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <span class="remove-account">
+                                <img tabindex="0" title="{{'REMOVE_ACCOUNT' | translate}}" class="icon"
+                                    src="assets/images/blueclose.svg" alt="Remove Access"
+                                    (click)="this.removeAutoPayAccount(creditcard.creditCardId, autopayaccount.accountNumber)"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div *ngIf="showNextPage">
+    <div class="mt-5">
+        <div class="row">
+            <div class="col-md-7">
+                <div class="row">
+                    <div class="col-md-1">
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-primary btn-block form-control"
+                            (click)="showNextPageAction()">{{'GO_BACK_TEXT' | translate}}</button>
+                    </div>
+                    <div class="col-md-8">
+                        <ul>{{'AUTO_PAY_ACCOUNT_TEXT' | translate}}
+                            <li *ngFor="let accountDetail of accountDetails.controls">
+                                {{this.accountDetail.value.accountNumber}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="!showNextPage">
+    <div class="tab-content">
+        <span class="txt-puro-black text-left fw-bold login-header">{{'SELECT_ENROL_ACCOUNT_TEXT'| translate }}</span>
+        <p class="col-md-12">{{'FIELDS_REQUIRED' | translate }}</p>
+        <div class="form-group">
+            <div class="row panel-table">
+                <div class="col-md-2">
+                    <label for="languagePref" class="control-label"><span class="txt-puro-red">*</span>
+                        {{'ACCOUNT_NUMBER_TEXT' | translate }}
+                        <img tabindex="0" class="icon" src="assets/images/icon-tooltip.svg"
+                            alt="{{'REGISTER_ACCOUNT_NUMBER_TOOLTIP_TEXT_UPDATED' | translate}}"
+                            ngbTooltip="{{'REGISTER_ACCOUNT_NUMBER_TOOLTIP_TEXT_UPDATED' | translate}}">
+                    </label>
+
+                </div>
+                <div class="col-md-2">
+                    <label for="languagePref" class="control-label"><span class="txt-puro-red">*</span>
+                        {{'POSTAL_CODE_TEXT'
+                        | translate }}
+                        <img tabindex="0" class="icon" src="assets/images/icon-tooltip.svg"
+                            alt="{{'POSTALCODE_TOOLTIP_TEXT' | translate}}"
+                            ngbTooltip="{{'POSTALCODE_TOOLTIP_TEXT' | translate}}">
+                    </label>
+                </div>
+
+                <div class="col-md-2">
+                    <label for="languagePref" class="control-label"><span class="txt-puro-red">*</span>
+                        {{'ACTIVATION_DATE_UPDATED_TEXT' | translate }}
+                        <img tabindex="0" class="icon" src="assets/images/icon-tooltip.svg"
+                            alt="{{'ACTIVATION_DATE_TOOLTIP_TEXT' | translate}}"
+                            ngbTooltip="{{'ACTIVATION_DATE_TOOLTIP_TEXT' | translate}}">
+                    </label>
+                </div>
+                <div class="col-md-2">
+                    <label for="languagePref" class="control-label"><span class="txt-puro-red">*</span>
+                        {{'SEND_NOTIFICATION_FOR_SUCCESSFUL_TRANSACTIONS' | translate }}
+                        <img tabindex="0" class="icon" src="assets/images/icon-tooltip.svg"
+                            alt="{{'SEND_NOTIFICATION_TOOLTIP_TEXT' | translate}}"
+                            ngbTooltip="{{'SEND_NOTIFICATION_TOOLTIP_TEXT' | translate}}">
+                    </label>
+                </div>
+                <div class="col-md-3">
+                    <label for="languagePref" class="control-label"><span class="txt-puro-red">*</span>
+                        {{'SEND_NOTIFICATION_COPY' | translate }}
+                        <img tabindex="0" class="icon" src="assets/images/icon-tooltip.svg"
+                            alt="{{'CONFIRMATION_MAIL_TOOLTIP_TEXT' | translate}}"
+                            ngbTooltip="{{'CONFIRMATION_MAIL_TOOLTIP_TEXT' | translate}}">
+                    </label>
+                </div>
+            </div>
+
+            <form [formGroup]="enrollAutoPayForm" class="form-horizontal register-form" novalidate>
+                <div class="form-group">
+                    <div formArrayName="accountDetails">
+                        <div *ngFor="let accountDetail of accountDetails.controls; let i = index">
+                            <div [formGroupName]="i" class="row panel-table-content">
+                                <div class="col-md-2">
+                                    <div>
+                                        <span style="display: flex; text-align:center;">
+                                            <input name="accountNumber" formControlName="accountNumber"
+                                                class="form-control" minlength="2" maxlength="10" required="required"
+                                                (focusout)="checkAccountNumber(i)"
+                                                [readonly]="this.disableAddAccount" />
+                                        </span>
+                                    </div>
+                                    <div
+                                        *ngIf="accountDetails.controls[i].get('accountNumber')?.invalid && accountDetails.controls[i].get('accountNumber')?.dirty">
+                                        <span class="error-block">{{'ACCOUNT_NUMBER_REQUIRED' | translate }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <input name="postalCode" formControlName="postalCode" class="form-control"
+                                        [readonly]="accountDetail.value.isPostalCodeDisabled" />
+                                    <div
+                                        *ngIf="accountDetails.controls[i].get('postalCode')?.invalid && accountDetails.controls[i].get('postalCode')?.dirty">
+                                        <span class="error-block">{{'POSTAL_CODE_REQUIRED' | translate }}</span>
+                                    </div>
+                                    {{accountDetails.controls[i].get('expectedPostalCode')?.value}}
+                                    {{accountDetails.controls[i].get('postalCode')?.value.toLowerCase()}}
+                                    <div
+                                        *ngIf="accountDetails.controls[i].get('postalCode')?.valid && accountDetails.controls[i].get('postalCode')?.dirty && accountDetails.controls[i].get('expectedPostalCode')?.value
+                                        && accountDetails.controls[i].get('expectedPostalCode')?.value != accountDetails.controls[i].get('postalCode')?.value.toLowerCase()">
+                                        <span class="error-block">{{'POSTAL_CODE_ACCOUNT_NUMBER_COMBINATION' | translate
+                                            }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <label>{{this.accountDetail.value.paymentDate}}</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="autoPayFlag" formControlName="autoPayFlag"  (keydown.enter)="selectCheckBox($event)" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <input name="emailNotificationId" formControlName="emailNotificationId"
+                                        maxlength="100" email="true" class="form-control" />
+                                </div>
+                                <div class="col-md-1">
+                                    <span class="remove-account"
+                                        *ngIf="accountDetails.controls[i].get('accountNumber')?.valid">
+                                        <img tabindex="0" title="{{'REMOVE_ACCOUNT' | translate}}" class="icon"
+                                            src="assets/images/blueclose.svg" alt="Remove Access"
+                                            (click)="remove(i)"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="row p-top-10 text-center">
+
+            <div class="col-md-2 px-2">
+                <button class="btn btn-primary cta-blue info-btn form-control" (click)="addAccount()" (keydown.enter)="addAccount()"
+                    [disabled]="this.disableAddAccount">{{'ADD_LABEL' | translate}}</button>
+            </div>
+            <div class="col-md-1 px-1">
+                <button class="btn btn-primary btn-xs btnbtn-block form-control" (click)="register()">{{'NEXT' |
+                    translate}}</button>
+            </div>
+
+            <div class="col-md-3"></div>
+            <div class="col-md-3"></div>
+        </div>
+    </div>
+</div>
+</div>

@@ -1,0 +1,44 @@
+// @import url(../../../../styles.scss);
+
+ul {
+    white-space: nowrap !important;
+    flex-direction:row !important;
+}
+
+.font-weight-bold {
+    font-weight: 700 !important;
+}
+
+.footer {
+    background-color: #d3d3d3;
+}
+
+.navbar>.container, .navbar>.container-fluid, .navbar>.container-lg, .navbar>.container-md, .navbar>.container-sm, .navbar>.container-xl, .navbar>.container-xxl {
+    flex: row;
+}
+
+.font-color {
+    color: #111111;
+}
+
+a {
+    text-decoration: none;
+}
+
+.language-font {
+    font-size: 16px;
+}
+
+.navbar .dropdown-item:focus, .dropdown-item:hover {
+    color: #1e2125;
+    background-color: unset;
+    text-decoration: underline;
+}
+
+a:focus {
+    outline: 2px solid #001996 !important;
+  }
+  
+  a:hover {
+    outline: 2px solid #0A38E6 !important;
+  }

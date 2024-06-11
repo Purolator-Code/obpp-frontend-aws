@@ -1,0 +1,20 @@
+<div class="container-fluid p-0">
+  <div class="row" *ngIf="fieldErrorsObj && fieldErrorsObj.length > 0">
+    <div class="col-md-12 error-block error-block-outline">
+      <ul>
+        <li *ngFor="let errMsg of fieldErrorsObj">
+          {{errMsg['message'] | translate}}
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container">
+    <obpp-user-tabs></obpp-user-tabs>
+  </div>
+
+
+  <div class="tab-content" id="myTabContent">
+    <router-outlet></router-outlet>
+  </div>
+</div>

@@ -1,0 +1,70 @@
+.error {
+  background-color: #001996;
+  color: white;
+  font-weight: bold !important;
+}
+
+::ng-deep .warning {
+  background-color: #001996;
+  color: white;
+  font-weight: bold !important;
+}
+
+.success {
+  background-color: green;
+  color: white;
+  font-weight: bold !important;
+}
+
+.modal-body {
+  white-space: pre-wrap;
+  text-align: center;
+  font-size: 16px;
+}
+
+.modal-footer {
+  text-align: center;
+  display: inherit;
+  border: none;
+  outline: none;
+}
+
+.modal-title {
+  font-weight: bold !important;
+  color: #fff;
+}
+
+.modal-content {
+  max-width: 300px !important;
+}
+
+.modal-header {
+  margin: auto;
+  font-size: 20px;
+}
+
+.centered-list {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.border-blue{
+  border: 1px solid #001996 !important;
+  background-color: #ffffff;
+  color: #001996;
+  font-size: 16px;
+}
+
+
+.sec-btn:focus{
+  outline: 3px solid #001996;
+  background-color: #ffffff !important;
+  color: #001996 !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.primary-btn, .info-btn {
+  height: 68px !important;
+}

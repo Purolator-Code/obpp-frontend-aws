@@ -1,0 +1,217 @@
+<div class="card p-30">
+    <div *ngIf="showLooseBills">
+        <h2>{{'LOOSE_BILLS_TEXT' | translate }}</h2>
+        <div class="row mt-2">
+            <div class="col-md-1">
+
+            </div>
+            <div class="col-md-11">
+                <h4 class="panel-title text-center ">
+                    {{ 'NOTE_TEXT' | translate }}
+                </h4>
+            </div>
+        </div>
+        <form [formGroup]="quickPayForm" class="form-horizontal register-form" novalidate>
+            <div class="col-md-12">
+                <div class="col-md-6 d-flex">
+                    <div class="col-md-4 input-group">
+                        <div class="form-floating user-input p-bottom-24">
+                            <input name="amount" formControlName="amount" type="text"
+                                [class]="quickPayForm.get('amount')?.invalid && (quickPayForm.get('amount')?.dirty  ||  submitted)? 'form-control is-invalid':'form-control' "
+                                obppTwoDigitDecimaNumber (blur)="transformTotal($event)"
+                                placeholder="{{'AMOUNT_TEXT' | translate}}" />
+                            <label for="amount">{{'AMOUNT_TEXT' | translate}}</label>
+                            <div
+                                *ngIf="quickPayForm.get('amount')?.invalid && (quickPayForm.get('amount')?.dirty ||  submitted)">
+                                <span class="error-block">{{
+                                    'INVALID_PAY_AMOUNT_TEXT' | translate }}</span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-2">
+                        <img class="img-padding" src="../../../../assets/images/CAN FLAG.svg">
+                    </div>
+                </div>
+
+
+                <div class="col-md-4 input-group w-50">
+                    <div class="form-floating user-input p-bottom-24">
+                        <input name="shipment" formControlName="shipmentPin" type="text"
+                            [class]="quickPayForm.get('shipmentPin')?.invalid && (quickPayForm.get('shipmentPin')?.dirty ||  submitted) ? 'form-control is-invalid':'form-control' "
+                            maxLength="12" placeholder="{{'SHIPMENT_PIN_TEXT' | translate}}" />
+                        <label for="shipment">{{'SHIPMENT_PIN_TEXT' | translate}}</label>
+                        <div
+                            *ngIf="quickPayForm.get('shipmentPin')?.invalid && (quickPayForm.get('shipmentPin')?.dirty ||  submitted)">
+                            <span class="error-block">{{
+                                'SHIPMENT_PIN_INVALID_TEXT' | translate }}</span>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-4 input-group w-50">
+                    <div class="form-floating user-input p-bottom-24">
+                        <input name="amount_label" formControlName="accountNumber" type="text"
+                            [class]="quickPayForm.get('accountNumber')?.invalid && (quickPayForm.get('accountNumber')?.dirty ||  submitted)? 'form-control is-invalid':'form-control' "
+                            maxlength="12" placeholder="{{'ACCOUNT_LABEL' | translate}}" />
+                        <label for="amount_label">{{'ACCOUNT_LABEL' | translate}}</label>
+                        <div
+                            *ngIf="quickPayForm.get('accountNumber')?.invalid && (quickPayForm.get('accountNumber')?.dirty ||  submitted)">
+                            <span class="error-block">{{
+                                'ACCOUNT_INVALID_TEXT' | translate }}</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="w-50 d-flex justify-content-between">
+                <button class="btn btn-primary cta-blue info-btn cta-blue info-btn">
+                    {{'CANCEL' | translate }}
+                </button>
+                <button class="btn btn-primary primary-btn" (click)="onNext()">
+                    {{'NEXT' | translate }}
+                </button>
+                <button class="btn btn-primary cta-blue info-btn cta-blue info-btn" (click)="reset()">
+                    {{ 'RESET_KEY' | translate }}
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div *ngIf="showIFrame" class="tab-content">
+        <div id="paymentModal" class="modal-payment">
+            <!-- Modal content -->
+            <div class="modal-payment-content">
+                <div class="form-group">
+                    <div class="section" id="paymentContainer">
+                        {{'PAYMENT_IN_PROGRESS' | translate}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <form #init__payment ngNoForm name="init__payment" id="init__payment" novalidate="" action="{{paymentURL}}"
+            target="cpwa__frame" method="post">
+            <input name="p" id="payload" type="hidden" value="{{cpwaPayload}}" />
+        </form>
+        <div>
+            <iframe id="cpwa__frame" name="cpwa__frame" width="600" height="675" frameborder="0" scrolling="no">
+            </iframe>
+        </div>
+    </div>
+
+    <div *ngIf="paymentSuccessFlag" class="tab-content">
+        <h1 style="color:red">{{paymentInfo}}</h1>
+        <div class="row no-print col-md-12">
+            <h2>{{'THANK_YOU_TEXT' | translate}}</h2>
+        </div><br /><br />
+        <div class="form-horizontal quickpay-form p-4">
+            <div class="row p-2">
+                <div class="form-group col-md-3">
+                    <label class="control-label">{{'PAYMENT_RECEIPT_TEXT' | translate}}
+                    </label>
+                </div>
+                <div class="col-md-3 no-print">
+                    <button class="btn btn-primary form-control primary-btn" (click)="printPage()">{{'PRINT_TEXT' |
+                        translate}}</button>
+                </div>
+            </div>
+
+            <!-- Pay Amount -->
+            <div class="row p-2">
+                <div class="form-group col-md-3">
+                    <label class="control-label">{{'PAYMENT_AMT_TEXT' | translate}}
+                    </label>
+                </div>
+                <div class="col-md-3">
+                    <label name="qp-invoiceNumber" class="control-label currency">{{paymentInformation.paymentAmount|
+                        currency}} {{ 'CAD_TEXT' | translate}}</label>
+                </div>
+            </div>
+            <!-- End Pay Amount -->
+            <!-- Card Number-->
+
+            <div class="row p-2">
+                <div class="form-group col-md-3">
+                    <label class="control-label">{{'CARD_NUMBER_TEXT' | translate}}
+                    </label>
+                </div>
+                <div class="col-md-3">
+                    <label name="qp-invoiceNumber" class="control-label">{{paymentInformation.cardNumber}}</label>
+                    <span>
+                        <img *ngIf="paymentInformation.paymentType == 'Visa'" src="assets/images/icon-cc-visa.png"
+                            alt="Visa">
+                        <img *ngIf="paymentInformation.paymentType == 'Master'"
+                            src="assets/images/icon-cc-mastercard.png" alt="MasterCard">
+                        <img *ngIf="paymentInformation.paymentType == 'Amex'" src="assets/images/icon-cc-amex.png"
+                            alt="American Express">
+                    </span>
+                </div>
+            </div>
+            <!-- End Card Number -->
+            <!-- Invoice Date -->
+            <div class="row p-2">
+                <div class="form-group col-md-3">
+                    <label class="control-label">{{'DATE_TEXT' | translate}}
+                    </label>
+                </div>
+                <div class="col-md-3">
+                    <label name="qp-InvoiceDate" class="control-label">{{paymentInformation.paymentDateTime }}</label>
+                </div>
+            </div>
+            <!-- End Invoice Date -->
+            <!-- Reference Number -->
+            <div class="row p-2">
+                <div class="form-group col-md-3">
+                    <label class="control-label">{{'CONFIRMATION_NUMBER_TEXT' | translate}}
+                    </label>
+                </div>
+                <div class="col-md-3">
+                    <label name="qp-InvoiceDate" class="control-label">{{paymentInformation.referenceNumber }}</label>
+                </div>
+            </div>
+            <!-- End Reference Number -->
+            <div class="row col-md-8 t-inv-div">
+                <table class="table table-striped t-inv" aria-describedby="">
+                    <thead>
+                        <th scope="col">{{'ACCOUNT' | translate}}</th>
+                        <th scope="col">{{'SHIPMENT_PIN_TEXT' | translate }}</th>
+                        <th scope="col">{{'PAYMENT_AMT_TEXT' | translate }}</th>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let invoice of cpwaQuickPayData?.invoiceList">
+                            <td>{{invoice.accountNumber}}</td>
+                            <td>{{invoice.obppInvoiceShipments[0].shipmentPin}}</td>
+                            <td>{{invoice.paymentAmount|currency}}{{ 'CAD_TEXT' | translate}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- Message -->
+        <div class="form-group no-print p-4">
+            <div class="row col-md-12">
+                <div class="col-md-4">
+
+                </div>
+
+                <div class="col-md-4 no-print">
+
+                </div>
+                <div class="col-md-3 no-print">
+                    <a href="javascript:void(0)" (click)="returnToManageUsers()">{{ 'RETURN_TO_BILLING_CENTRE_TEXT' |
+                        translate
+                        }}</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div *ngIf="declinedMessage && !paymentSuccessFlag && !showIFrame">
+        <div class="row no-print">
+            <h2 class="col-md-12 txt-puro-red">{{'DECLINED_TRANSACTION_TEXT' | translate}}</h2>
+        </div>
+        <br />
+    </div>
+</div>

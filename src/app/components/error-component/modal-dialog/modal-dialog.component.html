@@ -1,0 +1,15 @@
+<div *ngIf="my_modal_title" class="modal-header d-flex justify-content-center" [ngClass]="modalType == 'error' ? 'error' : modalType == 'warning' ? 'warning' : 'success'">
+  <h3 class="modal-title">{{my_modal_title | translate}}</h3>
+</div>
+<div class="modal-body">
+  <p> {{my_modal_content | translate}} </p>
+  <ul class="centered-list" *ngIf="my_model_additional_content">
+    <li *ngFor="let accountNumber of my_model_additional_content">
+      {{ accountNumber }}
+    </li>
+  </ul>
+</div>
+<div class="modal-footer d-flex justify-content-center" tabindex="0">
+  <button type="button" *ngIf="firstButtonLabel" class="btn btn-primary btn-block primary-btn" (click)="successActionFunc()">{{firstButtonLabel | translate}}</button>
+  <button type="button" *ngIf="secondButtonLabel" class="btn  cta-blue info-btn sec-btn" (click)="cancelActionFunc()">{{secondButtonLabel | translate}}</button>
+</div>

@@ -1,0 +1,7 @@
+<div class="acct-summ-tbl col-md-12" >
+    <ul ngbNav class="nav nav-tabs no-print" [activeId]="activeIdString" role="tablist">
+        <li class="nav-item mx-1 float-end tab-width" [class.tab-width]="link.title !== 'DISPUTE' && link.title !== 'PROFILE'" [class.tab-width-2]="link.title === 'DISPUTE' || link.title === 'PROFILE'" [ngbNavItem]="link.fragment" *ngFor="let link of links" let i = index role="tab" [attr.aria-selected]="activeIdString === link.fragment ? 'true' : 'false'" [attr.id]="'tab-' + link.fragment" [attr.aria-controls]="'panel-' + link.fragment">
+            <a ngbNavLink class="nav-link" (click)="updateActiveId(link.fragment)" routerLink="{{link.fragment}}" role="presentation">{{ link.title | translate }}</a>
+        </li>
+    </ul>
+</div>

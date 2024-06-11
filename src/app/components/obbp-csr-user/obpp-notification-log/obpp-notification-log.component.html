@@ -1,0 +1,268 @@
+<ng-template #loading>
+    <div class="col-12 text-center">Loading...</div>
+</ng-template>
+<div *ngIf="$notificationLogMetaData | async as notificationData ; else loading">
+    <div class="row">
+        <label class="panel-title">{{ 'NOTIFICATION_SEARCH_TEXT' | translate }}</label>
+    </div>
+    <div class="card main-card">
+        <div>
+            <form [formGroup]="notificationLogSearchForm" class="form-horizontal register-form" novalidate>
+
+                <div *ngIf="showZeroResultsMessage" class="row">
+                    <div class="col-xs-12 error-block">
+                        <span class="error-block">{{ 'NO_NOTIFICATIONS_FOUND' | translate }}</span>
+                    </div>
+                </div>
+                <div *ngIf="showZeroFieldsError" class="row">
+                    <div class="col-xs-12 error-block">
+                        <span class="error-block">{{ 'TL_ONE_OF_THE_FIELDS_MANDATORY' | translate }}</span>
+                    </div>
+                </div>
+                <div>
+                    <label class="search-title pb-20">{{'SEARCH'|translate}}</label>
+                    <div class="card inner-card">
+                        <label class="pb-20 fw-bold">{{ 'SOME_MANDATORY_FIELD' | translate }}</label>
+                        <div class="col-md-12 d-flex">
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <div class="form-floating user-input p-bottom-24">
+                                        <input type="email" name="emailAddress" formControlName="emailAddress" [class]="notificationLogSearchForm.get('emailAddress')?.invalid &&
+                                            (notificationLogSearchForm.get('emailAddress')?.dirty || submitted) ?
+                                             'form-control is-invalid':'form-control' " maxlength="50"
+                                            placeholder="{{'NOTIFICATION_EMAIL_PRIMARY_RECIPIENT' | translate}}">
+                                        <label for="email">{{'NOTIFICATION_EMAIL_PRIMARY_RECIPIENT' |
+                                            translate}}</label>
+                                        <div *ngIf="notificationLogSearchForm.get('emailAddress')?.invalid && 
+                                            (notificationLogSearchForm.get('emailAddress')?.dirty || submitted)"><span
+                                                class="error-block">{{ 'EMAIL_REQUIRED' | translate }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <div class="form-floating user-input-height billing-width p-bottom-24">
+                                        <select class="form-select" name="accessdrp" id="accessdrp" #notification
+                                            (change)="changeNotificationTypeValue(notification.value)">
+                                            <option *ngFor="let notiType of notificationData"
+                                                [value]="[notiType.templateID, notiType.templateTypeName]">
+                                                <a>{{ notiType.templateTypeName.split(' ').join('') | translate }}</a>
+                                            </option>
+                                        </select>
+                                        <label for="accessdrp">{{'NOTIFICATION_TYPE_TEXT' | translate }}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 d-flex">
+                            <div class="col-md-6 d-flex align-items-start">
+                                <div class="col-md-4 mt-20">
+                                    <label for="notificationSentDate">
+                                        {{'NOTIFICATION_SENT_DATE_TEXT' | translate }}*</label>
+                                </div>
+                                <div class="col-md-8 d-flex align-items-center">
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="form-floating  w-65">
+                                                <input class="form-control" formControlName="dateFrom" name="dateFrom"
+                                                    [(ngModel)]="model" ngbDatepicker #a="ngbDatepicker"
+                                                    [maxDate]="maxDate" [minDate]="minDate" [autoClose]="true" 
+                                                    [footerTemplate]='fromDateTemplate'
+                                                    placeholder="{{'TL_FROM_LABEL' | translate}}">
+                                                <label for="dateFrom">{{'TL_FROM_LABEL' | translate}}</label>
+                                            </div>
+                                            &nbsp;
+                                            <img class="icon icon-cart-datepicker  ms-1 data-icon"
+                                                src="../../../../assets/images/icon-date.svg" alt="calendar icon" tabindex="0" (keydown.enter)="a.toggle()"
+                                                (click)="a.toggle()" />
+                                        </div>
+                                        <ng-template #fromDateTemplate>
+                                            <div class="d-flex justify-content-around mb-5" role="group">
+                                                <button class="btn btn-primary btn-sm me-2 ms-2"
+                                                    (click)="model = today; a.close()">{{'TODAY_TEXT' | translate}}</button>
+                                                <button class="btn btn-primary cta-blue me-2" (click)="model = undefined">{{
+                                                    'CLEAR_TEXT' | translate
+                                                    }}</button>
+                                                <button class="btn btn-primary btn-sm me-2" (click)="a.close()">{{
+                                                    'EFT_GUIDELINES_CLOSE' | translate
+                                                    }}</button>
+                                            </div>
+
+                                        </ng-template>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <div class="form-floating  w-65">
+                                                <input class="form-control" formControlName="dateTo" name="dateTo"
+                                                    [(ngModel)]="modelTo" ngbDatepicker #b="ngbDatepicker"
+                                                    [maxDate]="maxDate" [minDate]="minDate" [autoClose]="true" 
+                                                    [footerTemplate]='t' placeholder="{{'TL_TO_LABEL' | translate}}">
+                                                <label for="dateFrom">{{'TL_TO_LABEL' | translate}}</label>
+                                            </div>
+                                            &nbsp;
+                                            <img class="icon icon-cart-datepicker ms-1 data-icon" tabindex="0" (keydown.enter)="a.toggle()"
+                                                src="../../../../assets/images/icon-date.svg" alt="calendar icon"
+                                                (click)="b.toggle()">
+                                        </div>
+                                        <ng-template #t>
+                                            <div class="d-flex justify-content-around mb-5" role="group">
+                                                <button class="btn btn-primary btn-sm me-2 ms-2"
+                                                    (click)="modelTo = today; b.close()">{{'TODAY_TEXT' | translate}}</button>
+                                                <button class="btn btn-primary cta-blue me-2"
+                                                    (click)="modelTo = undefined">{{
+                                                    'CLEAR_TEXT' | translate }}</button>
+                                                <button class="btn btn-primary btn-sm me-2" (click)="b.close()">{{
+                                                    'EFT_GUIDELINES_CLOSE' | translate }}</button>
+                                            </div>
+                                        </ng-template>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <div class="form-floating user-input p-bottom-24">
+                                        <input name="notificationKeyword" formControlName="notificationKeyword"
+                                            type="text" class="form-control" maxlength="100"
+                                            placeholder="{{'KEYWORD_IN_EMAIL_BODY_TEXT' | translate}}">
+                                        <label for="notificationKeyword">{{'KEYWORD_IN_EMAIL_BODY_TEXT' |
+                                            translate}}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="error-block" *ngIf="(notificationLogSearchForm.get('dateTo')?.invalid && 
+                        (notificationLogSearchForm.get('dateTo')?.dirty || submitted)) && 
+                        (notificationLogSearchForm.get('dateFrom')?.invalid && 
+                        (notificationLogSearchForm.get('dateFrom')?.dirty || submitted))">
+                            {{"FROM_TO_DATE_ERROR" | translate}}</div>
+                        <div class="col-md-12 d-flex">
+                            <div class="col-md-6"></div>
+                            <div class="col-md-6 d-flex justify-content-end" style="width: 47%;">
+                                <button type="submit" class="btn btn-primary btn-block primary-btn"
+                                    style="margin-right:10px;" (click)="performSearch()">{{
+                                    'SEARCH_KEY' | translate }}</button>
+                                <button (click)="resetForm()" class="btn white-bg  sec-btn btn-width">{{
+                                    'RESET_KEY' | translate }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <br />
+        <div *ngIf="isSuccessfulSearch">
+            <form [formGroup]="notificationLogArrayForm" class="form-horizontal register-form" novalidate>
+                <div formArrayName="notificationLogArrayDetails">
+                    <div class="col-md-12 d-flex align-items-center" style="margin-bottom: 10px;">
+                        <div class="col-md-2">{{ 'NOTIFICATION_TYPE_TEXT' | translate }} :</div>
+                        <div class="col-md-2"><strong>{{notificationTypeDefaultValue.split(' ').join('') |
+                                translate}}</strong></div>
+                        <div class="col-md-2">
+                            <div class="input-group ms-2">
+                                <div class="form-floating user-input-height billing-width p-bottom-24">
+                                    <select class="form-select" name="accessdrp" id="accessdrp" #notification
+                                        (change)="filterNotificationTypeValue(notification.value)">
+                                        <option *ngFor="let notificationType of notificationTypes"
+                                            [value]="notificationType.name">
+                                            {{notificationType.name | translate}}
+                                        </option>
+                                    </select>
+                                    <label for="accessdrp">{{'NOTIFICATION_STATUS' | translate }}</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="button" class="btn white-bg  sec-btn btn-width right-align"
+                                (click)="resendNotificationMail()">
+                                {{'RESEND_TEXT' | translate }}
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div *ngIf="showEmptyCheckBoxError"><span class="error-block">{{ 'EMPTY_CHECKBOX' |
+                                translate }}</span></div>
+                        <div *ngIf="showInvalidEmailAddress"><span class="error-block">{{ 'EMAIL_VALID' |
+                                translate }}</span></div>
+                        <div *ngIf="showInvalidEmailAddressCount"><span class="error-block">{{
+                                'NOTIFICATION_TOOLTIP_TEXT' |
+                                translate }}</span></div>
+                    </div>
+                    <table class="table table-striped table-scrollable" aria-describedby="">
+                        <thead>
+                            <tr>
+                                <th class="accountquickPay-tab-header account-tab-accNoqp" scope="col">
+                                    <input type="checkbox" title="select all" aria-label="select all" aria-labelledby="select all"
+                                        label="select all" (change)="markAllNotificationsSelection($event)" tabindex="0"
+                                        #markAll (keydown.enter)="markAllNotifications($event)">
+                                </th>
+                                <th class="accountquickPay-tab-header account-tab-accNoqp" scope="col">
+                                    {{'NOTIFICATION_SEARCH_ORIG_ADD_TEXT' |
+                                    translate }}</th>
+                                <th class="accountquickPay-tab-header account-tab-accNoqp" scope="col">
+                                    {{'NOTIFICATION_SEARCH_NEW_ADD_TEXT' |
+                                    translate }}<img alt="{{'NOTIFICATION_TOOLTIP_TEXT' | translate}}" tabindex="0"
+                                        class="icon" src="assets/images/icon-tooltip.svg"
+                                        ngbTooltip="{{'NOTIFICATION_TOOLTIP_TEXT' | translate}}"></th>
+                                <th class="accountquickPay-tab-header account-tab-accNoqp" scope="col">
+                                    {{'NOTIFICATION_SEARCH_EMAIL_PARAMETER_BODY' |
+                                    translate
+                                    }}</th>
+                                <th class="accountquickPay-tab-header account-tab-accNoqp" scope="col">
+                                    {{'NOTIFICATION_STATUS' |
+                                    translate
+                                    }}
+                                </th>
+                                <th class="accountquickPay-tab-header account-tab-accNoqp" scope="col"
+                                    sortable="createDateTime" (sort)="onSort($event)"><a [attr.aria-label]="sortDirection" href="javascript:void(0)"
+                                        class="notification_a">{{'NOTIFICATION_CREATED_DATE_TIME'
+                                        | translate
+                                        }} </a>
+                                </th>
+
+                                <th class="accountquickPay-tab-header account-tab-accNoqp" scope="col"
+                                    sortable="sentDateTime" (sort)="onSort($event)"><a class="notification_a"
+                                        href="javascript:void(0)">{{'NOTIFICATION_SENT_DATE_TIME' |
+                                        translate
+                                        }}</a>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let notificationEntry of notificationEditFormGroup.controls; index as i"
+                                [formGroupName]="i">
+                                <td>
+                                    <input type="checkbox" formControlName="isSelected" aria-label="select one"
+                                        aria-labelledby="select one" label="select one" title="select one" 
+                                        (change)="markNotificationItemSelection(i,$event)" tabindex="0" #markNotificationItem
+                                        (keydown.enter)="markNotificationItemSelectiononEnter(i,$event)">
+                                </td>
+                                <td style="word-break:break-all;">{{notifications[i].recipientEmailAddress}}</td>
+                                <td>
+                                    <textarea id="data" rows="5" cols="20" formControlName="recipientEmailAddresses"
+                                        maxlength="250" maxlength="250"></textarea>
+                                    <div
+                                        *ngIf="notificationEditFormGroup.controls[i].get('recipientEmailAddresses')?.invalid && notificationEditFormGroup.controls[i].get('recipientEmailAddresses')?.dirty">
+                                        <span class="error-block">{{'EMAIL_VALID' | translate }}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    {{notifications[i].parameter}}</td>
+                                <td class="align-right">
+                                    {{notifications[i].status | translate}}</td>
+                                <td class="invoice-createDateTimeCell align-left td-date">
+                                    {{ convertStringDateTime(notifications[i].createDateTime) | date:'yyyy-MM-dd
+                                    HH:mm:ss'}}
+                                </td>
+                                <td class="invoice-sentDateTimeCell align-left td-date">
+                                    {{ convertStringDateTime(notifications[i].sentDateTime) | date:'yyyy-MM-dd
+                                    HH:mm:ss'}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

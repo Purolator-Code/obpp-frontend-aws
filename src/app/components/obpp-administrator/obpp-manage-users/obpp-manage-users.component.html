@@ -1,0 +1,1432 @@
+<div class="row">
+    <span *ngIf="!setFlagOnForViewCustomer">
+        <h2 class="col-sm-12 text-blue">{{ "MANAGE_USERS_TEXT" | translate }}</h2>
+        <div class="white-background-box">
+            <div class="find-register-form-box">
+                <p class="head-description-text">{{ "MANAGE_USERS_ADDITIONAL_INFO_TEXT" | translate }}</p>
+                <form name="searchUserForm" [formGroup]="searchUserForm" class="form-group" novalidate>
+                    <!--- Adding radio-button for Account Number ,Email Adress and Phone Number-->
+                    <div class="radio-btn-row">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="userSearch" id="accountNumber"
+                                value="accountNumber" (change)="searchUserFormChange('account')" checked
+                                placeholder="{{'ACCOUNT_NUMBER_TEXT' | translate}}" tabindex="0"/>
+                            <label class="form-check-label" for="accountNumber">{{
+                                "ACCOUNT_NUMBER_TEXT" | translate
+                                }}</label>
+
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="userSearch" id="email" value="email"
+                                (change)="searchUserFormChange('email')" placeholder="{{'EMAIL' | translate}}" tabindex="0" />
+                            <label class="form-check-label" for="email">{{
+                                "EMAIL" | translate
+                                }}</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="userSearch" id="phoneNumber"
+                                value="phoneNumber" (change)="searchUserFormChange('phone')"
+                                placeholder="{{'PHONE_NUM_TEXT' | translate}}" />
+                            <label class="form-check-label" for="phoneNumber">{{
+                                "PHONE_NUM_TEXT" | translate
+                                }}</label>
+                        </div>
+                    </div>
+                    <div class="text-btn-row">
+                        <div class="form-group manageUser-searchContainer w-55">
+                            <span *ngIf="email" class="user-input">
+                                <div class="form-floating">
+                                    <input name="email" formControlName="emailSearch" maxlength="100"
+                                        [(ngModel)]="searchUser.emailSearch" placeholder="LOGIN_EMAIL_PLACEHOLDER_KEY"
+                                        [class]="searchUserForm.get('emailSearch')?.invalid &&
+                                        searchUserForm.get('emailSearch')?.dirty?'text-input form-control is-invalid':
+                                        'text-input form-control'" type="text"/>
+                                    <label for="" class="control-label">{{ 'LOGIN_EMAIL_PLACEHOLDER_KEY' | translate
+                                        }}</label>
+                                    <div class="w-100" *ngIf="
+                                        searchUserForm.get('emailSearch')?.invalid &&
+                                        searchUserForm.get('emailSearch')?.dirty">
+                                        <span class="error-block">{{
+                                            "EMAIL_VALID_TEXT" | translate
+                                            }}</span>
+                                    </div>
+                                </div>
+                            </span>
+                            <span *ngIf="phoneNumber" class="user-input">
+                                <div class="form-floating">
+                                    <input name="phone" type="text" [textMask]="{mask: phoneNumberMask}"
+                                        formControlName="phoneNumberSearch" [(ngModel)]="searchUser.phoneNumberSearch"
+                                        placeholder="###-###-####" [class]="searchUserForm.get('phoneNumberSearch')?.invalid &&
+                                        searchUserForm.get('phoneNumberSearch')?.dirty?'text-input form-control is-invalid':
+                                        'text-input form-control'" />
+                                    <label for="" class="control-label">###-###-####</label>
+                                    <div class="w-100" *ngIf="
+                                        searchUserForm.get('phoneNumberSearch')?.invalid &&
+                                        searchUserForm.get('phoneNumberSearch')?.dirty
+                                                  ">
+                                        <span class="error-block">{{
+                                            "MANDATORY_ACC_NUMBER" | translate
+                                            }}</span>
+                                    </div>
+                                </div>
+                            </span>
+                            <span *ngIf="accountNumber" class="user-input">
+                                <div class="form-floating">
+                                    <input name="accountNumber" type="text" minlength="2" maxlength="14"
+                                        formControlName="accountNumberSearch"
+                                        [(ngModel)]="searchUser.accountNumberSearch"
+                                        [class]="searchUserForm.get('accountNumberSearch')?.invalid &&
+                                        searchUserForm.get('accountNumberSearch')?.dirty?'user-input form-control is-invalid':'user-input form-control'"
+                                        placeholder="{{'ACCOUNT_NUMBER_TEXT' | translate}}" />
+                                    <label for="" class="control-label">{{'ACCOUNT_NUMBER_TEXT' | translate}}</label>
+                                    <div class="w-100" *ngIf="
+                                    searchUserForm.get('accountNumberSearch')?.invalid &&
+                                    searchUserForm.get('accountNumberSearch')?.dirty
+                                              ">
+                                        <span class="error-block">{{
+                                            "PHONE_REQUIRED" | translate
+                                            }}</span>
+                                    </div>
+                                </div>
+                            </span>
+
+                            <button type="submit" name="find" (click)="searchRequiredUser()" class="btn btn-sm cta-blue info-btn sec-btn btn-width">
+                                {{ "FIND_TEXT" | translate }}
+                            </button>
+                        </div>
+                        <div class="flex-row justify-end w-45">
+                            <button class="btn btn-primary btn-block btn-register" name="register"
+                                (click)="registerBillingCenterAccount()">
+                                {{ "REGISTER_TO_BILLING_CENTER_TEXT" | translate }}
+                            </button>
+                            <!-- <button class="btn manageUserEnrolButton" name="enroll" (click)="enrolUser()">
+                                {{ "ENROL_MANAGE_USER_TEXT" | translate }}
+                            </button> -->
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Application Error  display -->
+            <div class="row" *ngIf="errMsg">
+                <div class="col-sm-12 error-block"><br>
+                    <ul>
+                        <li>{{errMsg | translate}}</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div *ngIf="showSearchInfo && !noUserExist && !showCreateUpdate" class="mt-6 text-large">
+                <strong>{{'SEARCH_MANAGE_USER_TEXT' | translate }}</strong>
+                {{choice}}
+                <!----------For Table Header --->
+            </div>
+            <!----------For Table Header --->
+            <div *ngIf="showSearchInfo && !noUserExist && !showCreateUpdate" class="w-full mt-2">
+                <form name="addAccountForm" novalidate>
+                    <table class="search-result-table" aria-describedby="">
+                        <thead class="table-header">
+                            <tr>
+                                <th class="pl-4" scope="col" *ngIf="choice !== 'account'">{{'ACCOUNT_NUMBER_TEXT' |
+                                    translate}}</th>
+                                <th scope="col" [ngClass]="{'pl-4': choice === 'account'}">{{'TL_NAME_LABEL' |
+                                    translate}}</th>
+                                <th scope="col ">{{'EMAIL_USER_ID_TEXT' | translate}}</th>
+                                <th scope="col">{{'PHONE_NUM_TEXT' | translate}}</th>
+                                <th scope="col" class="w-180-p">{{'BILLING_CENTER_PROFILE_STATUS' | translate}}</th>
+                                <td></td>
+                            </tr>
+                        </thead>
+                        <tbody class="table-content">
+                            <tr *ngFor="let val of userDetails | paginate: { itemsPerPage:10, currentPage: p} let i=index">
+                                <!-- Account Number Index  -->
+                                <td class="pl-4" *ngIf="choice !== 'account'">
+                                    <div>
+                                        <span *ngFor="let act of val.accounts; let i = index; let last = last;"><span
+                                                *ngIf="i < 3">{{act.accountNumber}}<span
+                                                    *ngIf="!last && i < 2">,</span><span
+                                                    *ngIf="!last && i == 2"><b>...</b></span></span></span>
+                                    </div>
+                                </td>
+                                <td [ngClass]="{'pl-4': choice === 'account'}">
+                                    <div>{{val.firstName}} {{val.lastName}}</div>
+                                </td>
+                                <td>
+                                    <div >{{val.userName}}</div>
+                                </td>
+                                <td>
+                                    <div>{{val.phoneNumber}}</div>
+                                </td>
+                                <td>
+                                    <div [ngSwitch]='val.status'>
+                                        <div>
+                                            <div *ngSwitchCase="'A'"><img src="assets/images/active-indicator.png"
+                                                    alt="approve"><span class="status-text">{{'ACTIVE' | translate
+                                                    }}</span></div>
+                                            <div *ngSwitchCase="'I'"><img src="assets/images/red-indiactor.png"
+                                                    alt="approve"><span class="status-text">{{'INACTIVE' | translate
+                                                    }}</span></div>
+                                            <div *ngSwitchCase="'P'"><img src="assets/images/orange-indicator.png"
+                                                    alt="approve"><span class="status-text">{{'PENDING' | translate
+                                                    }}</span></div>
+                                            <div *ngSwitchCase="'AP'"><img src="assets/images/active-indicator.png"
+                                                    alt="approve"><span class="status-text">{{'APPROVED' | translate
+                                                    }}</span></div>
+                                            <div *ngSwitchCase="'R'"><img src="assets/images/yellow-indicator.png"
+                                                    alt="approve"><span class="status-text">{{'RESETPASSWORD' |
+                                                    translate }}</span></div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><a href="javascript:void(0)" class="text-blue"
+                                        (click)="navigateToUpdateUser(val.userName);checkEAPUAPuser(val.userName);" (keydown.enter)="navigateToUpdateUser(val.userName);checkEAPUAPuser(val.userName);">{{'VIEW_DETAILS_TEXT'
+                                        | translate }}</a></td>
+                                <!-- End Account Number Index -->
+                                <!-- Account Number -->
+                            </tr>
+                        </tbody>
+                        <tr *ngIf="userDetails.length===0">
+                            <td>No Record Found</td>
+                        </tr>
+                    </table>
+
+                    <br/>
+            <div *ngIf="userDetails.length>0" class="align-items-end">
+                <pagination-controls
+                    (pageChange)="p = $event"
+                    class="text-center"
+                    [previousLabel]="'PREVIOUS' | translate"
+                    [nextLabel]="'NEXT' | translate">
+                </pagination-controls>
+            </div>
+                </form>
+
+                
+                <!--<div *ngIf="totalPages > 1" class="pagination-row">
+                    <div>{{currentFirstEntry}}-{{currentLastEntry}} of {{this.userDetails.length}}</div>
+                    <button class="pagination-btn" (click)="jumpToPage(0)" [disabled]="currentPage === 0"><span
+                            class="fa fa-angle-double-left fa-lg"></span></button>
+                    <button class="pagination-btn" (click)="previousPage()" [disabled]="currentPage === 0"><span
+                            class="fa fa-angle-left fa-lg"></span></button>
+                    <button class="pagination-btn" (click)="nextPage()"
+                        [disabled]="totalPages === (currentPage + 1)"><span
+                            class="fa fa-angle-right fa-lg"></span></button>
+                    <button class="pagination-btn" (click)="jumpToPage(totalPages -1)"
+                        [disabled]="totalPages === (currentPage + 1)"><span
+                            class="fa fa-angle-double-right fa-lg"></span></button>
+                </div>-->
+            </div>
+            
+            <!-- End table headers -->
+            <!-- Table Body Content-->
+
+
+            <span *ngIf="showCreateUpdate || emailCreateForm ">
+                <div class="row">
+                    <div class="flex-row justify-unset"
+                        [ngClass]="{'border-b mt-4 mb-2' : showUpdateUser || showApproveRejectUser}">
+                        <p class="col-sm-3 manageUser-searchMessage userStatus">
+                            <span
+                                *ngIf="showCreateUser || showUpdateUser || showApproveRejectUser || showCreatedUser || showSearchedUser "><br>
+                                <span *ngIf="!deletedFlag">
+                                    <b>{{userDisplayText | translate}}</b>
+                                </span>
+                            </span>
+                            <span id=manageUsersMsg></span>
+                        </p>
+                        
+                        <button
+                            *ngIf="(user.status == 'A' || user.status == 'AP' || user.status == 'P') && showSearchedUser"
+                            class="btn btn-sm cta-blue info-btn sec-btn primary-btn-width" (click)="userSearchTrigger(user.userName)"
+                            [disabled]="flagEAPUAPuser">{{
+                            'VIEW_CUSTOMER_SCREENS' | translate }}</button>
+                        <div class="col-sm-4 sendTempPassword">
+                            <button
+                                *ngIf="((roleName == 'Administrator' || roleName == 'CSR Supervisor') && (user.status == 'AP') && showTempPwdButton && showSearchedUser)"
+                                class="btn btn-primary btn-block primary-btn" (click)="sendTempPassword()"
+                                [disabled]="flagEAPUAPuser" style="width:80% !important">{{'TEMP_PWD_BUTTON_TEXT'
+                                | translate }}</button>
+                        </div>
+                    </div>
+                    <!-- Begin Create User Form -->
+                    <div *ngIf="showCreateUser || showUpdateUser || showApproveRejectUser || showCreatedUser"
+                        class="user-create-form">
+                        <h3 *ngIf="showCreateUser && !showCreatedUser" class="form-heading">{{'CREATE_USRER_TEXT' |
+                            translate }}</h3>
+                        <h3 *ngIf="showUpdateUser && !showCreatedUser" class="form-heading">{{'UPDATE_USER_INFO_TEXT' |
+                            translate }}</h3>
+                        <p *ngIf="!showCreatedUser" class="req-field-txt">{{'ALL_FIELDS_TEXT' | translate }}</p>
+                        <form name="addUserForm" [formGroup]="addUserForm" novalidate>
+                            <div class="flex-row align-unset">
+                                <div class="w-50 mr-2 flex-col">
+                                    <div>
+                                        <div class="form-floating">
+                                            <input
+                                                [readonly]="showUpdateUser || showCreatedUser || showApproveRejectUser"
+                                                *ngIf="!showEnteredEmail" name="emailAddress" id="emailAddress" type="text"
+                                                [ngClass]="addUserForm.get('emailAddress')?.invalid && addUserForm.get('emailAddress')?.dirty?'form-control input-box is-invalid':'form-control input-box'"
+                                                (keyup)="validateEmail($event)" maxlength="100"
+                                                formControlName="emailAddress" [(ngModel)]="user.emailAddress"
+                                                required="required" placeholder="{{ 'EMAIL_USER_ID_TEXT' | translate
+                                            }}">
+                                            <label for="emailAddress" class="control-label">{{ 'EMAIL_USER_ID_TEXT' |
+                                                translate
+                                                }}<span>*</span></label>
+                                            <div
+                                                *ngIf="addUserForm.get('emailAddress')?.invalid && addUserForm.get('emailAddress')?.dirty">
+                                                <span class="error-block">{{'EMAIL_VALID_TEXT' | translate
+                                                    }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-floating mt-3 mb-2">
+                                            <input
+                                                [readonly]="showCreatedUser || showApproveRejectUser || (!formEditEnable.firstName && !showCreateUser)"
+                                                name="firstName" type="text"
+                                                [ngClass]="addUserForm.get('firstName')?.invalid && addUserForm.get('firstName')?.dirty?'form-control input-box is-invalid':'form-control input-box'"
+                                                required="required" [(ngModel)]="user.firstName"
+                                                formControlName="firstName" maxlength="50"
+                                                placeholder="{{ 'FIRST_NAME' | translate }}"
+                                                id="firstName" />
+                                            <label for="" class="control-label">{{ 'FIRST_NAME' | translate
+                                                }}<span>*</span></label>
+                                            <div *ngIf=" (showUpdateUser || showApproveRejectUser)"
+                                                (click)="enableEditField('firstName')" class="edit-icon" tabindex="0" (keydown.enter)="enableEditField('firstName')">
+                                                <span class="fa fa-pen fa-lg"></span>
+                                            </div>
+                                            <div
+                                                *ngIf="addUserForm.get('firstName')?.invalid && addUserForm.get('firstName')?.dirty">
+                                                <span class="error-block">{{'ERR_FIRST_NAME_INVALID'
+                                                    | translate }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-floating">
+                                            <input
+                                                [readonly]="showCreatedUser || showApproveRejectUser || (!formEditEnable.lastName && !showCreateUser)"
+                                                name="lastName" type="text"
+                                                [ngClass]="addUserForm.get('lastName')?.invalid && addUserForm.get('lastName')?.dirty?'form-control input-box is-invalid':'form-control input-box'"
+                                                [(ngModel)]="user.lastName" required="required" maxlength="50"
+                                                formControlName="lastName"
+                                                placeholder="{{ 'LAST_NAME' | translate }}"
+                                                id="lastName" />
+                                            <label for="" class="control-label">{{ 'LAST_NAME' | translate
+                                                }}<span>*</span></label>
+                                            <div (click)="enableEditField('lastName')"
+                                                *ngIf="(showUpdateUser || showApproveRejectUser)  " class="edit-icon" tabindex="0" (keydown.enter)="enableEditField('lastName')">
+                                                <span class="fa fa-pen  fa-lg"></span>
+                                            </div>
+                                            <div
+                                                *ngIf="addUserForm.get('lastName')?.invalid && addUserForm.get('lastName')?.dirty">
+                                                <span class="error-block">{{'ERR_LAST_NAME_INVALID'
+                                                    | translate }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div *ngIf="showCreatedUser" class="flex-row justify-unset">
+                                            <label class="dark-label">{{'USER_ROLE_TEXT'| translate }}: </label>
+                                            <label class="light-label ml-3">
+                                                <div [ngSwitch]='user.roleDto.roleName'>
+                                                    <div *ngSwitchCase="'Customer'">{{'CUSTOMER_TEXT' |
+                                                        translate }}</div>
+                                                    <div *ngSwitchCase="'CSR'">{{'CSR_USER_TEXT' | translate }}</div>
+                                                    <div *ngSwitchCase="'CSR Supervisor'">{{'CSR_ADMIN_TEXT' |
+                                                        translate }}</div>
+                                                    <div *ngSwitchCase="'Administrator'">{{'ADMIN' | translate
+                                                        }}</div>
+                                                </div>
+                                            </label>
+                                        </div>
+                                        <label *ngIf="!showCreatedUser" class="radio-heading">{{'USER_ROLE_TEXT'|
+                                            translate }}</label>
+                                        <!-- Show roles based on User Role Hierarchy -->
+                                        <div *ngIf="!showCreatedUser && !showSearchedUser" class="radio-button-row">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="userRole"
+                                                    id="Customer" value="Customer"
+                                                    (change)="showAccounts = true;onCreateUserRoleChange('Customer')"
+                                                    [checked]="userRole === 'Customer'" tabindex="0">
+                                                <label class="form-check-label" for="Customer">{{'CUSTOMER_TEXT' |
+                                                    translate }}</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="userRole" id="CSR"
+                                                    value="CSR"
+                                                    (change)="showAccounts = false;onCreateUserRoleChange('CSR')"
+                                                    [checked]="userRole === 'CSR'" tabindex="0">
+                                                <label class="form-check-label" for="CSR">{{'CSR_USER_TEXT' |
+                                                    translate }}</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <fieldset [disabled]="viewRole === 'CSR'">
+                                                    <input class="form-check-input" type="radio" name="userRole"
+                                                        id="CSR Supervisor" value="CSR Supervisor"
+                                                        (change)="showAccounts = false;onCreateUserRoleChange('CSR Supervisor')"
+                                                        [checked]="userRole === 'CSR Supervisor'" tabindex="0">
+                                                    <label class="form-check-label"
+                                                        for="CSR Supervisor">{{'CSR_ADMIN_TEXT' |
+                                                        translate }}</label>
+                                                </fieldset>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <fieldset
+                                                    [disabled]="viewRole === 'CSR' || viewRole === 'CSR Supervisor'">
+                                                    <input class="form-check-input" type="radio" name="userRole"
+                                                        id="Administrator" value="Administrator"
+                                                        (change)="showAccounts = false;onCreateUserRoleChange('Administrator')"
+                                                        [checked]="userRole === 'Administrator'">
+                                                    <label class="form-check-label" for="Administrator" tabindex="0">{{'ADMIN' |
+                                                        translate }}</label>
+                                                </fieldset>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="!showCreatedUser && showSearchedUser" class="radio-button-row">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="userRole"
+                                                    id="Customer" value="Customer"
+                                                    (change)="showAccounts = true;onCreateUserRoleChange('Customer')"
+                                                    [checked]="viewRole === 'Customer'" tabindex="0">
+                                                <label class="form-check-label" for="Customer">{{'CUSTOMER_TEXT' |
+                                                    translate }}</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="userRole" id="CSR"
+                                                    value="CSR"
+                                                    (change)="showAccounts = false;onCreateUserRoleChange('CSR')"
+                                                    [checked]="viewRole === 'CSR'" tabindex="0">
+                                                <label class="form-check-label" for="CSR">{{'CSR_USER_TEXT' |
+                                                    translate }}</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <fieldset [disabled]="viewRole === 'CSR'">
+                                                    <input class="form-check-input" type="radio" name="userRole"
+                                                        id="CSR Supervisor" value="CSR Supervisor"
+                                                        (change)="showAccounts = false;onCreateUserRoleChange('CSR Supervisor')"
+                                                        [checked]="viewRole === 'CSR Supervisor'" tabindex="0">
+                                                    <label class="form-check-label"
+                                                        for="CSR Supervisor">{{'CSR_ADMIN_TEXT' |
+                                                        translate }}</label>
+                                                </fieldset>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <fieldset
+                                                    [disabled]="viewRole === 'CSR' || viewRole === 'CSR Supervisor'">
+                                                    <input class="form-check-input" type="radio" name="userRole"
+                                                        id="Administrator" value="Administrator"
+                                                        (change)="showAccounts = false;onCreateUserRoleChange('Administrator')"
+                                                        [checked]="viewRole === 'Administrator'" tabindex="0">
+                                                    <label class="form-check-label" for="Administrator">{{'ADMIN' |
+                                                        translate }}</label>
+                                                </fieldset>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="w-50 ml-2">
+                                    <div class="flex-row mb-2">
+                                        <div class="form-floating w-60">
+                                            <input
+                                                [readonly]="showCreatedUser || showApproveRejectUser || (!formEditEnable.phoneNumber && !showCreateUser)"
+                                                name="phone" type="text"
+                                                placeholder="{{ 'PHONE_NUM_TEXT' | translate }}"
+                                                [ngClass]="addUserForm.get('phoneNumber')?.invalid && addUserForm.get('phoneNumber')?.dirty?'form-control input-box is-invalid':'form-control input-box'"
+                                                formControlName="phoneNumber" required="required"
+                                                [textMask]="{mask: phoneNumberMask}" [(ngModel)]="user.phoneNumber"
+                                                id="phoneNumber"/>
+                                            <label for="" class="control-label">{{ 'PHONE_NUM_TEXT' | translate
+                                                }}<span>###-###-####*</span></label>
+                                            <div (click)="enableEditField('phoneNumber')"
+                                                *ngIf="(showUpdateUser || showApproveRejectUser)" class="edit-icon" tabindex="0" (keydown.enter)="enableEditField('phoneNumber')">
+                                                <span class="fa fa-pen  fa-lg"></span>
+                                            </div>
+                                            <div
+                                                *ngIf="addUserForm.get('phoneNumber')?.invalid && addUserForm.get('phoneNumber')?.dirty">
+                                                <span class="error-block">{{'ERR_PHONE_MSG'
+                                                    | translate }}</span>
+                                            </div>
+                                            <div
+                                            *ngIf="isPhoneNumberValid">
+                                            <span class="error-block">{{'ERR_PHONE_MSG'
+                                                | translate }}</span>
+                                        </div>
+                                        </div>
+                                        <div class="form-floating">
+                                            <input
+                                                [readonly]="showCreatedUser || showApproveRejectUser || (!formEditEnable.phoneNumberExt && !showCreateUser)"
+                                                name="phoneNumberExt" type="text" [(ngModel)]="user.phoneNumberExt"
+                                                formControlName="phoneNumberExt"
+                                                placeholder="{{ 'EXTENSION' | translate }}"
+                                                [ngClass]="addUserForm.get('phoneNumberExt')?.invalid && addUserForm.get('phoneNumberExt')?.dirty?'form-control input-box is-invalid':'form-control input-box'"
+                                                maxlength="6" 
+                                                id="phoneNumberExt"/>
+                                            <label for="" class="control-label">{{ 'EXTENSION' | translate
+                                                }}<span>*</span></label>
+                                            <div (click)="enableEditField('phoneNumberExt')"
+                                                *ngIf="(showUpdateUser || showApproveRejectUser)" class="edit-icon" tabindex="0" (keydown.enter)="enableEditField('phoneNumberExt')">
+                                                <span class="fa fa-pen  fa-lg"></span>
+                                            </div>
+                                            <div
+                                                *ngIf="addUserForm.get('phoneNumberExt')?.invalid && addUserForm.get('phoneNumberExt')?.dirty">
+                                                <span class="error-block">{{'ERR_PHONE_EXT_MSG'
+                                                    | translate }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-floating">
+                                        <input
+                                            [readonly]="showCreatedUser || showApproveRejectUser || (!formEditEnable.companyName&& !showCreateUser)"
+                                            type="text" required="required"
+                                            placeholder="{{ 'COMPANY_NAME' | translate }}"
+                                            [ngClass]="addUserForm.get('companyName')?.invalid && addUserForm.get('companyName')?.dirty?'form-control input-box is-invalid':'form-control input-box'"
+                                            [(ngModel)]="user.companyName" formControlName="companyName"
+                                            maxlength="40" 
+                                            id="companyName"/>
+                                        <label for="" class="control-label">{{ 'COMPANY_NAME' | translate
+                                            }}<span>*</span></label>
+                                        <div (click)="enableEditField('companyName')"
+                                            *ngIf="(showUpdateUser || showApproveRejectUser)" class="edit-icon" tabindex="0" (keydown.enter)="enableEditField('companyName')">
+                                            <span class="fa fa-pen  fa-lg"></span>
+                                        </div>
+                                        <div
+                                            *ngIf="addUserForm.get('companyName')?.invalid && addUserForm.get('companyName')?.dirty">
+                                            <span class="error-block">{{'ERR_COMPANY_NAME_INVALID'
+                                                | translate }}</span>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="showCreatedUser" class="flex-row justify-unset mt-2">
+                                        <label for="languagePref" class="dark-label">
+                                            {{'LANGUAGE_PREFERENCE' | translate }}*
+                                            <img class="icon-tooltip-blue" src="assets/images/icon-tooltip-blue.png"
+                                                alt="tooltip"
+                                                ngbTooltip="{{'MANAGEUSERS_LANGUAGE_TOOLTIP_TEXT' | translate}}">
+                                        </label>
+                                        <label class="light-label ml-3"> <span *ngIf="user.language ==='EN'">{{'EN' |
+                                                translate}}
+                                            </span> <span *ngIf="user.language ==='FR'">{{'FR' | translate}} </span>
+                                        </label>
+                                    </div>
+                                    <label *ngIf="!showCreatedUser" for="languagePref" class="radio-heading">
+                                        {{'LANGUAGE_PREFERENCE' | translate }}*
+
+                                        <img class="icon-tooltip-blue" src="assets/images/icon-tooltip-blue.png"
+                                            alt="tooltip"
+                                            ngbTooltip="{{'MANAGEUSERS_LANGUAGE_TOOLTIP_TEXT' | translate}}" tabindex="0">
+
+                                    </label>
+                                    <div *ngIf="!showCreatedUser" class="radio-button-row">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="language" id="EN"
+                                                value="EN" checked=true tabindex="0">
+                                            <label class="form-check-label" for="EN">{{'EN'
+                                                | translate }}</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="language" id="FR"
+                                                value="FR" tabindex="0">
+                                            <label class="form-check-label" for="FR">{{'FR'
+                                                | translate }}</label>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="showCreatedUser" class="flex-row justify-unset mt-2">
+                                        <label class="dark-label">{{'EMAIL_NOTIFICATION_TEXT' |
+                                            translate }}:</label><span class="light-label ml-3"
+                                            *ngIf="user.userPreferenceDto[0].preferenceName === 'Invoice Notification'">
+                                            <label *ngIf="user.userPreferenceDto[0].preferenceValue">{{'YES'
+                                                | translate }}</label> <label
+                                                *ngIf="!user.userPreferenceDto[0].preferenceValue">{{'NO'
+                                                | translate }}</label>
+                                        </span> <span class="light-label ml-3"
+                                            *ngIf="user.userPreferenceDto[1].preferenceName === 'Invoice Notification'">
+                                            <label *ngIf="user.userPreferenceDto[1].preferenceValue">{{'YES'
+                                                | translate }}</label> <label
+                                                *ngIf="!user.userPreferenceDto[1].preferenceValue">{{'NO'
+                                                | translate }}</label>
+                                        </span>
+                                    </div>
+                                    <div *ngIf="showCreatedUser" class="flex-row justify-unset align-unset mt-2">
+                                        <label class="dark-label">{{'EMAIL_PAY_REMMITANCE_TEXT'
+                                            | translate }}:</label><span class="light-label ml-3"
+                                            *ngIf="user.userPreferenceDto[1].preferenceName === 'Payment Notification'">
+                                            <label *ngIf="user.userPreferenceDto[1].preferenceValue">{{'YES'
+                                                | translate }}</label> <label
+                                                *ngIf="!user.userPreferenceDto[1].preferenceValue">{{'NO'
+                                                | translate }}</label>
+                                        </span> <span class="light-label"
+                                            *ngIf="user.userPreferenceDto[0].preferenceName === 'Payment Notification'">
+                                            <label *ngIf="user.userPreferenceDto[0].preferenceValue">{{'YES'
+                                                | translate }}</label> <label
+                                                *ngIf="!user.userPreferenceDto[0].preferenceValue">{{'NO'
+                                                | translate }}</label>
+                                        </span>
+                                    </div>
+                                    <div *ngIf="!showCreatedUser">
+                                        <div class="checkbox ">
+                                            <span
+                                                *ngIf="user.userPreferenceDto[0].preferenceName === 'Invoice Notification'">
+                                                <div class="form-check form-check-inline mt-4">
+                                                    <input class="form-check-input" type="checkbox" id="email_remitance"  tabindex="0"
+                                                        name="acceptTerms" [checked]="user.userPreferenceDto[0].preferenceValue" #emailRemit
+                                                        (keydown.enter)="emailRemitance($event)"
+                                                    (change)="selectInvoiceNotification($event)" 
+                                                >
+                                                    <label class="form-check-label"
+                                                        for="email_remitance">{{'EMAIL_REMITANCE_TEXT'
+                                                        | translate }}</label>
+                                                </div>
+                                                <div class="form-check form-check-inline mt-3">
+                                                    <input class="form-check-input" type="checkbox" id="email_pay" tabindex="0"
+                                                        name="acceptTerms" [checked]="user.userPreferenceDto[1].preferenceValue" #paymentNotification
+                                                        (keydown.enter)="paymentInvoiceNotify($event)"
+                                                        (change)="selectPaymentInvoiceNotification($event)" 
+                                                         >
+                                                    <label class="form-check-label"
+                                                        for="email_pay">{{'EMAIL_PAY_REMMITANCE_TEXT'
+                                                        | translate }}</label>
+                                                </div>
+                                            </span>
+                                        </div>
+                                        <div class="checkbox">
+                                            <span
+                                                *ngIf="user.userPreferenceDto[1].preferenceName === 'Invoice Notification'">
+                                                <div class="form-check form-check-inline mt-4">
+                                                    <input class="form-check-input" type="checkbox" id="email_remitance" #invoiceCheckbox tabindex="0" (keydown.enter)="selectInvoice($event)"
+                                                        name="acceptTerms" [checked]="user.userPreferenceDto[1].preferenceValue" (change)="selectInvoiceNotification($event)">
+                                                    <label class="form-check-label"
+                                                        for="email_remitance">{{'EMAIL_REMITANCE_TEXT'
+                                                        | translate }}</label>
+                                                </div>
+                                                <div class="form-check form-check-inline mt-3">
+                                                    <input class="form-check-input" type="checkbox" id="email_pay" #paymentCheckbox tabindex="0" (keydown.enter)="selectPayment($event)"
+                                                        name="acceptTerms" [checked]="user.userPreferenceDto[0].preferenceValue" (change)="selectPaymentInvoiceNotification($event)">
+                                                    <label class="form-check-label"
+                                                        for="email_pay">{{'EMAIL_PAY_REMMITANCE_TEXT'
+                                                        | translate }}</label>
+                                                </div>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="account-box" *ngIf="showAccounts">
+                                <div
+                                    [ngClass]="{'create-user-account': showCreateUser, 'update-user-account': showUpdateUser || showApproveRejectUser  || showCreatedUser}">
+                                    <div *ngIf="showCreateUser" class="create-user-account-head">
+                                        <div class="w-26 text-start heading">{{'ACCOUNT_NUMBER_TEXT' | translate }}
+                                        </div>
+                                        <div class="w-37 text-start heading">{{'BILLING_CENTRE_ACCESS' | translate }}
+                                        </div>
+                                        <div class="w-37 text-start heading">{{'AUTO_PAY_STATUS' | translate }}</div>
+                                    </div>
+                                    <div *ngIf="showUpdateUser || showApproveRejectUser  || showCreatedUser"
+                                        class="update-user-account-head">
+                                        <div class="w-20 text-center heading">{{'ACCOUNT_NUMBER_TEXT' | translate }}
+                                        </div>
+                                        <div class="w-20 text-center heading">{{'STATUS_TEXT' | translate }}</div>
+                                        <div class="w-30 text-center heading">{{'BILLING_CENTRE_ACCESS' | translate }}
+                                        </div>
+                                        <div class="w-30 text-center heading">{{'AUTO_PAY_STATUS' | translate }}</div>
+                                    </div>
+                                    <div class="table-scroll">
+                                        <table class="mt-3 w-full table-scroll" *ngIf="showCreateUser"
+                                            aria-describedby="">
+                                            <th></th>
+                                            <tbody formArrayName="accounts">
+                                                <tr class="flex-row align-unset justify-unset" [formGroupName]="index"
+                                                    *ngFor="let account of userAccounts().controls; let index = index">
+                                                    <td class="w-25">
+                                                        <div *ngIf="account.get('status')?.value ==='R' || account.get('status')?.value ==='P'"
+                                                            class="form-floating">
+                                                            <input name="accountNumber" type="text"
+                                                                formControlName="accountNumber"
+                                                                class="text-input form-control" minlength="2"
+                                                                maxlength="12"
+                                                                placeholder="{{ 'ACCOUNT_NUMBER_TEXT' | translate }}"
+                                                                (blur)="checkAccountNumber(index, account)" />
+                                                            <label for="" class="control-label">{{'ACCOUNT_NUMBER_TEXT'
+                                                                | translate }}</label>
+                                                        </div>
+                                                        <div *ngIf="account.get('status')?.value === 'AP' && !account.get('accoundId')?.value"
+                                                            class="form-floating">
+                                                            <input name="accountNumber" type="text"
+                                                                formControlName="accountNumber"
+                                                                placeholder="{{ 'ACCOUNT_NUMBER_TEXT' | translate }}"
+                                                                [ngClass]="((!account.get('accoundId')?.value && showCreateUser) && addAccountError[index].isAccountNumberInvalid)
+                                                                || ((!account.get('accoundId')?.value && showCreateUser) && addAccountError[index].isAccountNumberPresent)?
+                                                                'text-input form-control is-invalid':'text-input form-control'"
+                                                                class="text-input form-control" minlength="2"
+                                                                maxlength="12"
+                                                                (blur)="checkAccountNumber(index, account)" />
+                                                            <label for="" class="control-label">{{'ACCOUNT_NUMBER_TEXT'
+                                                                | translate }}</label>
+                                                        </div>
+                                                        <div *ngIf="!account.get('accoundId')?.value && showCreateUser">
+                                                            <span *ngIf="addAccountError[index].isAccountNumberInvalid"
+                                                                class="error-block error-accountNumber1">{{'ERR_ACCT_MSG'
+                                                                | translate }}</span>
+                                                        </div>
+                                                        <div *ngIf="!account.get('accoundId')?.value && showCreateUser">
+                                                            <span *ngIf="addAccountError[index].isAccountNumberPresent"
+                                                                class="error-block error-accountNumber1">{{'ERR_ACCT_PRESENT_MSG'
+                                                                | translate }}</span>
+                                                        </div>
+                                                    </td>
+                                                    <td class="w-36 ml-8p">
+                                                        <div>
+                                                            <span class="form-floating mb-2"
+                                                                *ngIf="(account.get('access')?.value == 'Full Access' && account.get('status')?.value != 'Not Enrolled' ) ">
+                                                                <select class="form-select custom-select"
+                                                                    name="accessdrp" formControlName="access"
+                                                                    id="floatingSelect">
+                                                                    <option
+                                                                        *ngFor="let accesst of accessdataValues.availableOptions"
+                                                                        value="{{accesst.name | translate}}">
+                                                                        {{accesst.name |
+                                                                        translate}}</option>
+                                                                </select>
+                                                                <label for=""
+                                                                    class=" control-label">Access<span>*</span></label>
+                                                            </span>
+                                                            <span class="form-floating mb-2"
+                                                                *ngIf="(account.get('access')?.value == 'View Only' && account.get('status')?.value != 'Not Enrolled' )">
+                                                                <select class="form-select custom-select"
+                                                                    name="accessdrp" formControlName="access"
+                                                                    id="floatingSelect">
+                                                                    <option
+                                                                        *ngFor="let accesst of accessdataValues.availableOptions"
+                                                                        selected="{{accesst.name=='viewOnly'}}"
+                                                                        value="{{accesst.name| translate}}">
+                                                                        {{accesst.name |
+                                                                        translate}}</option>
+                                                                </select>
+                                                                <label for=""
+                                                                    class=" control-label">Access<span>*</span></label>
+                                                            </span>
+                                                            <span class="form-floating mb-2"
+                                                                *ngIf="(account.get('access')?.value == 'No Access' && account.get('status')?.value != 'Not Enrolled' )">
+                                                                <select class="form-select custom-select"
+                                                                    name="accessdrp" formControlName="access"
+                                                                    id="floatingSelect">
+                                                                    <option
+                                                                        *ngFor="let accesst of accessdataValues.availableOptions"
+                                                                        selected="{{accesst.name=='NoAccess'}}"
+                                                                        value="{{accesst.name| translate}}">
+                                                                        {{accesst.name |
+                                                                        translate}}</option>
+                                                                </select>
+                                                                <label for=""
+                                                                    class=" control-label">Access<span>*</span></label>
+                                                            </span>
+                                                            <span class="form-floating mb-2"
+                                                                *ngIf="(account.get('access')?.value != 'Full Access' && account.get('access')?.value != 'View Only' && account.get('access')?.value != 'No Access' && account.get('status')?.value != 'Not Enrolled')">
+                                                                <select class="form-select custom-select"
+                                                                    name="accessdrp" formControlName="access"
+                                                                    id="floatingSelect">
+                                                                    <option
+                                                                        *ngFor="let accesst of accessdataValues.availableOptions"
+                                                                        value="{{accesst.name| translate}}">
+                                                                        {{accesst.name |
+                                                                        translate}}</option>
+                                                                </select>
+                                                                <label for=""
+                                                                    class=" control-label">Access<span>*</span></label>
+                                                            </span>
+                                                            <span class="form-floating mb-2"
+                                                                *ngIf="account.get('status')?.value == 'Not Enrolled' && user.obppUserType == 'STD'">
+                                                                <select class="form-select custom-select"
+                                                                    name="accessdrp" formControlName="access"
+                                                                    id="floatingSelect">
+                                                                    <option
+                                                                        *ngFor="let accesst of accessdataValues.availableOptions"
+                                                                        selected="{{accesst.name=='NoAccess'}}"
+                                                                        value="{{accesst.name| translate}}">
+                                                                        {{accesst.name |
+                                                                        translate}}</option>
+                                                                </select>
+                                                                <label for=""
+                                                                    class=" control-label">Access<span>*</span></label>
+                                                            </span>
+                                                            <span class="form-floating mb-2"
+                                                                *ngIf="account.get('status')?.value == 'Not Enrolled' && user.obppUserType != 'STD'">
+                                                                <select class="form-select custom-select"
+                                                                    name="accessdrp" formControlName="access"
+                                                                    id="floatingSelect">
+                                                                    <option
+                                                                        *ngFor="let accesst of accessdataValuesForNotEnrolled.availableOptions"
+                                                                        selected="{{accesst.name=='NoAccess'}}"
+                                                                        value="{{accesst.name| translate}}">
+                                                                        {{accesst.name |
+                                                                        translate}}</option>
+                                                                </select>
+                                                                <label for=""
+                                                                    class=" control-label">Access<span>*</span></label>
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                    <td class="w-36 ml-8p">
+                                                        <div>
+                                                            <span class="form-floating mb-2"
+                                                                *ngIf="(account.get('obppAutoPayAccountStatus')?.value == 'notenrolled' || account.get('obppAutoPayAccountStatus')?.value == 'Not Enrolled')">
+                                                                <select class="form-select custom-select"
+                                                                    formControlName="status" name="statusdrp"
+                                                                    id="statusdrp" tabindex="0">
+                                                                    <option
+                                                                        value="{{account.get('obppAutoPayAccountStatus')?.value}}"
+                                                                        selected="{{account.get('obppAutoPayAccountStatus')?.value=='notenrolled'}}">
+                                                                        {{account.get('obppAutoPayAccountStatus')?.value|translate}}
+                                                                    </option>
+
+                                                                </select>
+                                                                <label for=""
+                                                                    class=" control-label">Status<span>*</span></label>
+                                                            </span> <span class="form-floating mb-2"
+                                                                *ngIf="(account.get('obppAutoPayAccountStatus')?.value == 'lockedforprocessing' || account.get('obppAutoPayAccountStatus')?.value == 'LOCKEDFORPROCESSING' || account.get('obppAutoPayAccountStatus')?.value == 'Locked for Processing')">
+                                                                <select class="form-select custom-select"
+                                                                    formControlName="status" name="statusdrp"
+                                                                    id="statusdrp">
+                                                                    <option
+                                                                        value="{{account.get('obppAutoPayAccountStatus')?.value}}"
+                                                                        selected="{{account.get('obppAutoPayAccountStatus')?.value=='lockedforprocessing' || account.get('obppAutoPayAccountStatus')?.value=='LOCKEDFORPROCESSING'}}">
+                                                                        {{'lockedforprocessing'|translate}}</option>
+
+                                                                </select>
+                                                                <label for=""
+                                                                    class=" control-label">Status<span>*</span></label>
+                                                            </span> <span class="form-floating mb-2"
+                                                                *ngIf="(account.get('obppAutoPayAccountStatus')?.value == 'enrolledbyanotheruser' || account.get('obppAutoPayAccountStatus')?.value == 'Enrolled By Another User')">
+                                                                <select class="form-select custom-select"
+                                                                    formControlName="status" name="statusdrp"
+                                                                    id="statusdrp">
+                                                                    <option
+                                                                        value="{{account.get('obppAutoPayAccountStatus')?.value}}"
+                                                                        selected="{{account.get('obppAutoPayAccountStatus')?.value=='enrolledbyanotheruser'}}">
+                                                                        {{account.get('obppAutoPayAccountStatus')?.value|translate}}
+                                                                    </option>
+
+                                                                </select>
+                                                                <label for=""
+                                                                    class=" control-label">Status<span>*</span></label>
+
+                                                            </span> <span class="form-floating mb-2"
+                                                                *ngIf="(account.get('obppAutoPayAccountStatus')?.value == 'Enrolled' || account.get('obppAutoPayAccountStatus')?.value == 'ENROLLED' || account.get('obppAutoPayAccountStatus')?.value == 'enrolled')">
+                                                                <select class="form-select custom-select"
+                                                                    formControlName="status" name="statusdrp"
+                                                                    id="statusdrp">
+                                                                    <option
+                                                                        *ngFor="let apstatus of autoPaystatus_enrolled.availableOptions"
+                                                                        value="{{apstatus.name}}"
+                                                                        selected="{{apstatus.name=='enrolled'}}">
+                                                                        {{apstatus.name|translate}}</option>
+
+                                                                </select>
+                                                                <label for=""
+                                                                    class=" control-label">Status<span>*</span></label>
+
+                                                            </span> <span class="form-floating mb-2"
+                                                                *ngIf="(account.get('obppAutoPayAccountStatus')?.value == 'Suspended' || account.get('obppAutoPayAccountStatus')?.value == 'SUSPENDED' || account.get('obppAutoPayAccountStatus')?.value == 'suspended')">
+                                                                <select class="form-select custom-select"
+                                                                    formControlName="status" name="statusdrp"
+                                                                    id="statusdrp">
+                                                                    <option
+                                                                        *ngFor="let apstatus of autoPaystatus_suspended.availableOptions"
+                                                                        value="{{apstatus.name}}"
+                                                                        selected="{{apstatus.name=='suspended'}}">
+                                                                        {{apstatus.name|translate}}</option>
+
+                                                                </select>
+                                                                <label for=""
+                                                                    class=" control-label">Status<span>*</span></label>
+                                                            </span> <span class="form-floating mb-2"
+                                                                *ngIf="(account.get('obppAutoPayAccountStatus')?.value == 'Pending - Removal' || account.get('obppAutoPayAccountStatus')?.value == 'PendingRemoval'
+                                                                                                                        || account.get('obppAutoPayAccountStatus')?.value == 'PENDINGREMOVAL'
+                                                                                                                        || account.get('obppAutoPayAccountStatus')?.value == 'pendingremoval')">
+                                                                <select class="form-select custom-select"
+                                                                    formControlName="status" name="statusdrp"
+                                                                    id="statusdrp">
+                                                                    <option
+                                                                        *ngFor="let apstatus of autopaystatus_enrol.availableOptions"
+                                                                        value="{{apstatus.name}}"
+                                                                        selected="{{apstatus.name=='pendingremoval'}}">
+                                                                        {{apstatus.name|translate}}</option>
+
+                                                                </select>
+                                                                <label for=""
+                                                                    class=" control-label">Status<span>*</span></label>
+
+                                                            </span>
+                                                            <span class="form-floating mb-2"
+                                                                *ngIf="(account.get('obppAutoPayAccountStatus')?.value == 'Pending - Activation' || account.get('obppAutoPayAccountStatus')?.value == 'PendingActivation'
+                                                                                                                        || account.get('obppAutoPayAccountStatus')?.value == 'PENDINGACTIVATION'
+                                                                                                                        || account.get('obppAutoPayAccountStatus')?.value == 'pendingactivation')">
+                                                                <select class="form-select custom-select"
+                                                                    formControlName="status" name="statusdrp"
+                                                                    id="statusdrp">
+
+                                                                    <option
+                                                                        *ngFor="let apstatus of autopaystatus_removePendingAct.availableOptions"
+                                                                        value="{{apstatus.name}}"
+                                                                        selected="{{apstatus.name=='pendingactivation'}}">
+                                                                        {{apstatus.name|translate}}</option>
+
+                                                                </select>
+                                                                <label for=""
+                                                                    class=" control-label">Status<span>*</span></label>
+                                                            </span>
+                                                            <span class="form-floating mb-2"
+                                                                *ngIf="(account.get('obppAutoPayAccountStatus')?.value == 'Pending – Acceptance'
+                                                                                                                                || account.get('obppAutoPayAccountStatus')?.value == 'PendingAcceptance' || account.get('obppAutoPayAccountStatus')?.value == 'PENDINGACCEPTANCE'
+                                                                                                                                || account.get('obppAutoPayAccountStatus')?.value == 'pendingacceptance')">
+                                                                <select class="form-select custom-select"
+                                                                    formControlName="status" name="statusdrp"
+                                                                    id="statusdrp">
+
+                                                                    <option
+                                                                        *ngFor="let apstatus of autopaystatus_removePendingAcc.availableOptions"
+                                                                        value="{{apstatus.name}}"
+                                                                        selected="{{apstatus.name=='pendingacceptance'}}">
+                                                                        {{
+                                                                        apstatus.name }}
+                                                                    </option>
+
+                                                                </select>
+                                                                <label for=""
+                                                                    class=" control-label">Status<span>*</span></label>
+                                                            </span> <span class="form-floating mb-2"
+                                                                *ngIf="(account.get('obppAutoPayAccountStatus')?.value != 'Pending – Acceptance' && account.get('obppAutoPayAccountStatus')?.value != 'PendingRemoval' && account.get('obppAutoPayAccountStatus')?.value != 'PendingAcceptance' && account.get('obppAutoPayAccountStatus')?.value != 'PendingActivation' && account.get('obppAutoPayAccountStatus')?.value != 'Pending - Activation' && account.get('obppAutoPayAccountStatus')?.value != 'Enrolled' && account.get('obppAutoPayAccountStatus')?.value != 'enrolledbyanotheruser' && account.get('obppAutoPayAccountStatus')?.value != 'Locked for Processing' && account.get('obppAutoPayAccountStatus')?.value != 'Suspended' && account.get('obppAutoPayAccountStatus')?.value != 'Pending - Removal' && account.get('obppAutoPayAccountStatus')?.value!='Not Enrolled' && account.get('obppAutoPayAccountStatus')?.value!='Suspend' && account.get('obppAutoPayAccountStatus')?.value!='Remove' && account.get('obppAutoPayAccountStatus')?.value != 'PENDINGACCEPTANCE'
+                                                                    && account.get('obppAutoPayAccountStatus')?.value != 'SUSPENDED'
+                                                                    && account.get('obppAutoPayAccountStatus')?.value != 'ENROLLED'
+                                                                    && account.get('obppAutoPayAccountStatus')?.value != 'suspended'
+                                                                    && account.get('obppAutoPayAccountStatus')?.value != 'enrolled'
+                                                                    && account.get('obppAutoPayAccountStatus')?.value != 'pendingactivation'
+                                                                    && account.get('obppAutoPayAccountStatus')?.value != 'pendingacceptance'
+                                                                    && account.get('obppAutoPayAccountStatus')?.value != 'PENDINGACTIVATION'
+                                                                    && account.get('obppAutoPayAccountStatus')?.value != 'PENDINGREMOVAL'
+                                                                    && account.get('obppAutoPayAccountStatus')?.value != 'pendingremoval'
+                                                                    && account.get('obppAutoPayAccountStatus')?.value != 'lockedforprocessing'
+                                                                    && account.get('obppAutoPayAccountStatus')?.value != 'LOCKEDFORPROCESSING'
+                                                                    && account.get('obppAutoPayAccountStatus')?.value!='notenrolled')">
+                                                                <select class="form-select custom-select"
+                                                                    formControlName="status" name="statusdrp"
+                                                                    id="statusdrp">
+                                                                    <option
+                                                                        *ngFor="let apstatus of autopaystatusnotenrol.availableOptions"
+                                                                        value="{{apstatus.name}}"
+                                                                        selected="{{apstatus.name=='notenrolled'}}">
+                                                                        {{apstatus.name|translate}}</option>
+
+                                                                </select>
+                                                                <label for=""
+                                                                    class=" control-label">Status<span>*</span></label>
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <table class="w-full table-scroll"
+                                            *ngIf="showUpdateUser || showApproveRejectUser  || showCreatedUser">
+                                            <tbody formArrayName="accounts">
+                                                <tr [formGroupName]="index"
+                                                    *ngFor="let account of userAccounts().controls; let index = index">
+                                                    <td class="w-20 text-center acc-text">
+                                                        <div *ngIf="showAccountNumberField(index)">
+                                                            <div
+                                                                *ngIf="account.get('status')?.value ==='AP' && account.get('accoundId')?.value">
+                                                                {{account.get('accountNumber')?.value}}</div>
+                                                            <div
+                                                                *ngIf="account.get('status')?.value ==='Not Enrolled' && account.get('accoundId')?.value">
+                                                                {{account.get('accountNumber')?.value}}</div>
+                                                            <div>
+                                                                <div
+                                                                    *ngIf="account.get('status')?.value === 'AP' && !account.get('accoundId')?.value">
+                                                                    <div class="input-group justify-content-center">
+                                                                        <div class="form-floating">
+                                                                            <input name="accountNumber" type="text"
+                                                                                formControlName="accountNumber"
+                                                                                placeholder="{{ 'ACCOUNT_NUMBER_TEXT' | translate }}"
+                                                                                class="text-input form-control"
+                                                                                minlength="2" maxlength="12"
+                                                                                (blur)="checkAccountNumber(index, account)" />
+                                                                            <label for="accountNumber"
+                                                                                class="control-label">{{'ACCOUNT_NUMBER_TEXT'
+                                                                                | translate }}</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div
+                                                                    *ngIf="account.get('status')?.value ==='R' || account.get('status')?.value ==='P'">
+                                                                    {{account.get('accountNumber')?.value}}
+                                                                </div>
+                                                            </div>
+                                                            <div
+                                                                *ngIf="!account.get('accoundId')?.value && showUpdateUser">
+                                                                <span
+                                                                    *ngIf="addAccountError[index].isAccountNumberInvalid"
+                                                                    class="error-block error-accountNumber1">{{'ERR_ACCT_MSG'
+                                                                    | translate }}</span>
+                                                            </div>
+                                                            <div
+                                                                *ngIf="!account.get('accoundId')?.value && showUpdateUser">
+                                                                <span
+                                                                    *ngIf="addAccountError[index].isAccountNumberPresent"
+                                                                    class="error-block error-accountNumber1">{{'ERR_ACCT_PRESENT_MSG'
+                                                                    | translate }}</span>
+                                                            </div>
+                                                        </div>
+                                                        <span
+                                                            *ngIf="!showAccountNumberField(index)">{{account.get('accountNumber')?.value}}</span>
+                                                    </td>
+                                                    <td class="w-20 text-center acc-text"
+                                                        *ngIf="showCreatedUser || showUpdateUser || showApproveRejectUser">
+                                                        <div *ngIf='account.status'>
+                                                            <span
+                                                                [ngClass]="{'txt-puro-red':account.get('status')?.value==='P'}">
+                                                                <div *ngIf="account.get('status')?.value==='P'">
+                                                                    {{'PENDING' | translate }}
+                                                                </div>
+                                                            </span>
+                                                            <div *ngIf="account.get('status')?.value==='AP'">
+                                                                {{'APPROVED' | translate }}</div>
+                                                            <div *ngIf="account.get('status')?.value==='Not Enrolled' || account.get('status')?.value==='R'">
+                                                                {{'NOT_REGISTERED_TEXT' | translate }}</div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="w-30 px-3">
+                                                        <div>
+                                                            <span class="form-floating mb-2 text-right"
+                                                                *ngIf="(account.get('access')?.value == 'Full Access' && account.get('status')?.value != 'Not Enrolled' ) ">
+                                                                <select class="form-select custom-select"
+                                                                    name="accessdrp" formControlName="access"
+                                                                    id="floatingSelect">
+                                                                    <option
+                                                                        *ngFor="let accesst of accessdataValues.availableOptions"
+                                                                        value="{{accesst.name | translate}}">
+                                                                        {{accesst.name |
+                                                                        translate}}</option>
+                                                                </select>
+                                                                <label for=""
+                                                                    class=" control-label">Access<span>*</span></label>
+                                                            </span>
+                                                            <span class="form-floating mb-2 text-right"
+                                                                *ngIf="(account.get('access')?.value == 'View Only' && account.get('status')?.value != 'Not Enrolled' )">
+                                                                <select class="form-select custom-select"
+                                                                    name="accessdrp" formControlName="access"
+                                                                    id="floatingSelect">
+                                                                    <option
+                                                                        *ngFor="let accesst of accessdataValues.availableOptions"
+                                                                        selected="{{accesst.name=='viewOnly'}}"
+                                                                        value="{{accesst.name| translate}}">
+                                                                        {{accesst.name |
+                                                                        translate}}</option>
+                                                                </select>
+                                                                <label for=""
+                                                                    class=" control-label">Access<span>*</span></label>
+                                                            </span>
+                                                            <span class="form-floating mb-2 text-right"
+                                                                *ngIf="(account.get('access')?.value == 'No Access' && account.get('status')?.value != 'Not Enrolled' )">
+                                                                <select class="form-select custom-select"
+                                                                    name="accessdrp" formControlName="access"
+                                                                    id="floatingSelect">
+                                                                    <option
+                                                                        *ngFor="let accesst of accessdataValues.availableOptions"
+                                                                        selected="{{accesst.name=='NoAccess'}}"
+                                                                        value="{{accesst.name| translate}}">
+                                                                        {{accesst.name |
+                                                                        translate}}</option>
+                                                                </select>
+                                                                <label for=""
+                                                                    class=" control-label">Access<span>*</span></label>
+                                                            </span>
+                                                            <span class="form-floating mb-2 text-right"
+                                                                *ngIf="(account.get('access')?.value != 'Full Access' && account.get('access')?.value != 'View Only' && account.get('access')?.value != 'No Access' && account.get('status')?.value != 'Not Enrolled')">
+                                                                <select class="form-select custom-select"
+                                                                    name="accessdrp" formControlName="access"
+                                                                    id="floatingSelect">
+                                                                    <option
+                                                                        *ngFor="let accesst of accessdataValues.availableOptions"
+                                                                        value="{{accesst.name| translate}}">
+                                                                        {{accesst.name |
+                                                                        translate}}</option>
+                                                                </select>
+                                                                <label for=""
+                                                                    class=" control-label">Access<span>*</span></label>
+                                                            </span>
+                                                            <span class="form-floating mb-2 text-right"
+                                                                *ngIf="account.get('status')?.value == 'Not Enrolled' && user.obppUserType == 'STD'">
+                                                                <select class="form-select custom-select"
+                                                                    name="accessdrp" formControlName="access"
+                                                                    id="floatingSelect">
+                                                                    <option
+                                                                        *ngFor="let accesst of accessdataValues.availableOptions"
+                                                                        [selected]="accesst.name === 'NoAccess'"
+                                                                        value="{{accesst.name| translate}}">
+                                                                        {{accesst.name |
+                                                                        translate}}</option>
+                                                                </select>
+                                                                <label for=""
+                                                                    class=" control-label">Access<span>*</span></label>
+                                                            </span>
+                                                            <span class="form-floating mb-2 text-right"
+                                                                *ngIf="account.get('status')?.value == 'Not Enrolled' && user.obppUserType != 'STD'">
+                                                                <select class="form-select custom-select"
+                                                                    name="accessdrp" formControlName="access"
+                                                                    id="floatingSelect">
+                                                                    <option
+                                                                        *ngFor="let accesst of accessdataValuesForNotEnrolled.availableOptions"
+                                                                        selected="{{accesst.name=='NoAccess'}}"
+                                                                        value="{{accesst.name| translate}}">
+                                                                        {{accesst.name |
+                                                                        translate}}</option>
+                                                                </select>
+                                                                <label for=""
+                                                                    class=" control-label">Access<span>*</span></label>
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                    <td class="w-30">
+                                                        <div>
+                                                            <span class="form-floating mb-2"
+                                                                *ngIf="(account.get('obppAutoPayAccountStatus')?.value == 'remove' || account.get('obppAutoPayAccountStatus')?.value == 'REMOVE' || account.get('obppAutoPayAccountStatus')?.value == 'Remove')">
+                                                                <select class="form-select custom-select"
+                                                                    formControlName="obppAutoPayAccountStatus" name="statusdrp"
+                                                                    id="statusdrp">
+                                                                    <option
+                                                                        *ngFor="let apstatus of autoPaystatus_remove.availableOptions"
+                                                                        value="{{apstatus.name}}"
+                                                                        selected="{{apstatus.name=='remove'}}">
+                                                                        {{apstatus.name|translate}}</option>
+
+                                                                </select>
+                                                                <label for=""
+                                                                    class=" control-label">Status<span>*</span></label>
+                                                            </span>
+                                                            <span class="form-floating mb-2"
+                                                                *ngIf="(account.get('obppAutoPayAccountStatus')?.value == 'suspend' || account.get('obppAutoPayAccountStatus')?.value == 'SUSPEND' || account.get('obppAutoPayAccountStatus')?.value == 'Suspend')">
+                                                                <select class="form-select custom-select"
+                                                                    formControlName="obppAutoPayAccountStatus" name="statusdrp"
+                                                                    id="statusdrp">
+                                                                    <option
+                                                                        *ngFor="let apstatus of autoPaystatus_suspend.availableOptions"
+                                                                        value="{{apstatus.name}}"
+                                                                        selected="{{apstatus.name=='suspend'}}">
+                                                                        {{apstatus.name|translate}}</option>
+
+                                                                </select>
+                                                                <label for=""
+                                                                    class=" control-label">Status<span>*</span></label>
+                                                            </span>
+                                                            <span class="form-floating mb-2"
+                                                                *ngIf="(account.get('obppAutoPayAccountStatus')?.value == 'notenrolled' || account.get('obppAutoPayAccountStatus')?.value == 'Not Enrolled')">
+                                                                <select class="form-select custom-select"
+                                                                    formControlName="obppAutoPayAccountStatus" name="statusdrp"
+                                                                    id="statusdrp">
+                                                                    <option
+                                                                        value="{{account.get('obppAutoPayAccountStatus')?.value}}"
+                                                                        selected="{{account.get('obppAutoPayAccountStatus')?.value=='notenrolled'}}">
+                                                                        {{account.get('obppAutoPayAccountStatus')?.value|translate}}
+                                                                    </option>
+
+                                                                </select>
+                                                                <label for=""
+                                                                    class=" control-label">Status<span>*</span></label>
+                                                            </span> <span class="form-floating mb-2"
+                                                                *ngIf="(account.get('obppAutoPayAccountStatus')?.value == 'lockedforprocessing' || account.get('obppAutoPayAccountStatus')?.value == 'LOCKEDFORPROCESSING' || account.get('obppAutoPayAccountStatus')?.value == 'Locked for Processing')">
+                                                                <select class="form-select custom-select"
+                                                                    formControlName="obppAutoPayAccountStatus" name="statusdrp"
+                                                                    id="statusdrp">
+                                                                    <option
+                                                                        value="{{account.get('obppAutoPayAccountStatus')?.value}}"
+                                                                        selected="{{account.get('obppAutoPayAccountStatus')?.value=='lockedforprocessing' || account.get('obppAutoPayAccountStatus')?.value=='LOCKEDFORPROCESSING'}}">
+                                                                        {{'lockedforprocessing'|translate}}</option>
+
+                                                                </select>
+                                                                <label for=""
+                                                                    class=" control-label">Status<span>*</span></label>
+                                                            </span> <span class="form-floating mb-2"
+                                                                *ngIf="(account.get('obppAutoPayAccountStatus')?.value == 'enrolledbyanotheruser' || account.get('obppAutoPayAccountStatus')?.value == 'Enrolled By Another User')">
+                                                                <select class="form-select custom-select"
+                                                                    formControlName="obppAutoPayAccountStatus" name="statusdrp"
+                                                                    id="statusdrp">
+                                                                    <option
+                                                                        value="{{account.get('obppAutoPayAccountStatus')?.value}}"
+                                                                        selected="{{account.get('obppAutoPayAccountStatus')?.value=='enrolledbyanotheruser'}}">
+                                                                        {{account.get('obppAutoPayAccountStatus')?.value|translate}}
+                                                                    </option>
+
+                                                                </select>
+                                                                <label for=""
+                                                                    class=" control-label">Status<span>*</span></label>
+
+                                                            </span> <span class="form-floating mb-2"
+                                                                *ngIf="(account.get('obppAutoPayAccountStatus')?.value == 'Enrolled' || account.get('obppAutoPayAccountStatus')?.value == 'ENROLLED' || account.get('obppAutoPayAccountStatus')?.value == 'enrolled')">
+                                                                <select class="form-select custom-select"
+                                                                    formControlName="obppAutoPayAccountStatus" name="statusdrp"
+                                                                    id="statusdrp">
+                                                                    <option
+                                                                        *ngFor="let apstatus of autoPaystatus_enrolled.availableOptions"
+                                                                        value="{{apstatus.name}}"
+                                                                        selected="{{apstatus.name=='enrolled'}}">
+                                                                        {{apstatus.name|translate}}</option>
+
+                                                                </select>
+                                                                <label for=""
+                                                                    class=" control-label">Status<span>*</span></label>
+
+                                                            </span> <span class="form-floating mb-2"
+                                                                *ngIf="(account.get('obppAutoPayAccountStatus')?.value == 'Suspended' || account.get('obppAutoPayAccountStatus')?.value == 'SUSPENDED' || account.get('obppAutoPayAccountStatus')?.value == 'suspended')">
+                                                                <select class="form-select custom-select"
+                                                                    formControlName="obppAutoPayAccountStatus" name="statusdrp"
+                                                                    id="statusdrp">
+                                                                    <option
+                                                                        *ngFor="let apstatus of autoPaystatus_suspended.availableOptions"
+                                                                        value="{{apstatus.name}}"
+                                                                        selected="{{apstatus.name=='suspended'}}">
+                                                                        {{apstatus.name|translate}}</option>
+
+                                                                </select>
+                                                                <label for=""
+                                                                    class=" control-label">Status<span>*</span></label>
+                                                            </span>
+                                                            <span class="form-floating mb-2"
+                                                                *ngIf="(account.get('obppAutoPayAccountStatus')?.value == 'Pending - Removal' || account.get('obppAutoPayAccountStatus')?.value == 'PendingRemoval'
+                                                                || account.get('obppAutoPayAccountStatus')?.value == 'PENDINGREMOVAL'
+                                                                || account.get('obppAutoPayAccountStatus')?.value == 'pendingremoval')">
+                                                                <select class="form-select custom-select"
+                                                                    formControlName="obppAutoPayAccountStatus" name="statusdrp"
+                                                                    id="statusdrp">
+                                                                    <option
+                                                                        *ngFor="let apstatus of autopaystatus_enrol.availableOptions"
+                                                                        value="{{apstatus.name}}"
+                                                                        selected="{{apstatus.name=='pendingremoval'}}">
+                                                                        {{apstatus.name|translate}}</option>
+
+                                                                </select>
+                                                                <label for=""
+                                                                    class=" control-label">Status<span>*</span></label>
+
+                                                            </span>
+                                                            <span class="form-floating mb-2"
+                                                                *ngIf="(account.get('obppAutoPayAccountStatus')?.value == 'Pending - Activation' || account.get('obppAutoPayAccountStatus')?.value == 'PendingActivation'
+                                                                 || account.get('obppAutoPayAccountStatus')?.value == 'PENDINGACTIVATION'
+                                                                 || account.get('obppAutoPayAccountStatus')?.value == 'pendingactivation')">
+                                                                <select class="form-select custom-select"
+                                                                    formControlName="obppAutoPayAccountStatus" name="statusdrp"
+                                                                    id="statusdrp">
+
+                                                                    <option
+                                                                        *ngFor="let apstatus of autopaystatus_removePendingAct.availableOptions"
+                                                                        value="{{apstatus.name}}"
+                                                                        selected="{{apstatus.name=='pendingactivation'}}">
+                                                                        {{apstatus.name|translate}}</option>
+
+                                                                </select>
+                                                                <label for=""
+                                                                    class=" control-label">Status<span>*</span></label>
+                                                            </span>
+                                                            <span class="form-floating mb-2"
+                                                                *ngIf="(account.get('obppAutoPayAccountStatus')?.value == 'Pending – Acceptance'
+                                                                 || account.get('obppAutoPayAccountStatus')?.value == 'PendingAcceptance' || account.get('obppAutoPayAccountStatus')?.value == 'PENDINGACCEPTANCE'
+                                                                 || account.get('obppAutoPayAccountStatus')?.value == 'pendingacceptance')">
+                                                                <select class="form-select custom-select"
+                                                                    formControlName="obppAutoPayAccountStatus" name="statusdrp"
+                                                                    id="statusdrp">
+
+                                                                    <option
+                                                                        *ngFor="let apstatus of autopaystatus_removePendingAcc.availableOptions"
+                                                                        value="{{apstatus.name}}"
+                                                                        selected="{{apstatus.name=='pendingacceptance'}}">
+                                                                        {{
+                                                                        apstatus.name }}
+                                                                    </option>
+
+                                                                </select>
+                                                                <label for=""
+                                                                    class=" control-label">Status<span>*</span></label>
+                                                            </span> <span class="form-floating mb-2"
+                                                                *ngIf="(account.get('obppAutoPayAccountStatus')?.value != 'Pending – Acceptance'
+                                                                        && account.get('obppAutoPayAccountStatus')?.value != 'PendingRemoval'
+                                                                        && account.get('obppAutoPayAccountStatus')?.value != 'PendingAcceptance'
+                                                                        && account.get('obppAutoPayAccountStatus')?.value != 'PendingActivation'
+                                                                        && account.get('obppAutoPayAccountStatus')?.value != 'Pending - Activation'
+                                                                        && account.get('obppAutoPayAccountStatus')?.value != 'Enrolled'
+                                                                        && account.get('obppAutoPayAccountStatus')?.value != 'enrolledbyanotheruser'
+                                                                        && account.get('obppAutoPayAccountStatus')?.value != 'Locked for Processing'
+                                                                        && account.get('obppAutoPayAccountStatus')?.value != 'Suspended'
+                                                                        && account.get('obppAutoPayAccountStatus')?.value != 'Pending - Removal'
+                                                                        && account.get('obppAutoPayAccountStatus')?.value!='Not Enrolled'
+                                                                        && account.get('obppAutoPayAccountStatus')?.value!='Suspend'
+                                                                        && account.get('obppAutoPayAccountStatus')?.value!='Remove'
+                                                                        && account.get('obppAutoPayAccountStatus')?.value != 'PENDINGACCEPTANCE'
+                                                                        && account.get('obppAutoPayAccountStatus')?.value != 'SUSPENDED'
+                                                                        && account.get('obppAutoPayAccountStatus')?.value != 'ENROLLED'
+                                                                        && account.get('obppAutoPayAccountStatus')?.value != 'suspended'
+                                                                        && account.get('obppAutoPayAccountStatus')?.value != 'enrolled'
+                                                                        && account.get('obppAutoPayAccountStatus')?.value != 'pendingactivation'
+                                                                        && account.get('obppAutoPayAccountStatus')?.value != 'pendingacceptance'
+                                                                        && account.get('obppAutoPayAccountStatus')?.value != 'PENDINGACTIVATION'
+                                                                        && account.get('obppAutoPayAccountStatus')?.value != 'PENDINGREMOVAL'
+                                                                        && account.get('obppAutoPayAccountStatus')?.value != 'pendingremoval'
+                                                                        && account.get('obppAutoPayAccountStatus')?.value != 'lockedforprocessing'
+                                                                        && account.get('obppAutoPayAccountStatus')?.value != 'LOCKEDFORPROCESSING'
+                                                                        && account.get('obppAutoPayAccountStatus')?.value!='notenrolled'
+                                                                        && account.get('obppAutoPayAccountStatus')?.value!='suspend'
+                                                                        && account.get('obppAutoPayAccountStatus')?.value!='remove')">
+                                                                <select class="form-select custom-select"
+                                                                    formControlName="obppAutoPayAccountStatus" name="statusdrp"
+                                                                    id="statusdrp">
+                                                                    <option
+                                                                        *ngFor="let apstatus of autopaystatusnotenrol.availableOptions"
+                                                                        value="{{apstatus.name}}"
+                                                                        selected="{{apstatus.name=='notenrolled'}}">
+                                                                        {{apstatus.name|translate}}</option>
+
+                                                                </select>
+                                                                <label for=""
+                                                                    class=" control-label">Status<span>*</span></label>
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div *ngIf="!showCreatedUser && showCreateUser">
+                                        <button class="btn white-bg sec-btn" (click)="addManageUsersAccount(5)" formnovalidate>
+                                            {{'ADD_5_ACC_TEXT' | translate }}</button>
+                                    </div>
+                                    <div *ngIf="(showApproveRejectUser || showUpdateUser) &&  !showCreatedUser">
+                                        <button class="btn btn-primary btn-block primary-btn" (click)="focusOnNew();" tabindex="0"
+                                             (keydown.enter)="focusOnNew()"
+                                            [disabled]="flagEAPUAPuser || approvedUserAddAccount" formnovalidate>
+                                            {{'ADD_AN_ACCT_TEXT' | translate }}</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="!showCreatedUser" class="col-sm-5">
+                                <p *ngIf="doesAccountExist && !showErrors" class="error-block">
+                                    {{'ERR_ACCT_ONE_MSG' | translate }}</p>
+                            </div>
+                            <div *ngIf="!showCreatedUser" class="col-sm-5">
+                                <p *ngIf="pendingAccountAccess && (showApproveRejectUser||showUpdateUser) && showErrors"
+                                    class="error-block">{{'ERR_ACCT_DETAILS_MSG' | translate }}</p>
+                            </div>
+                            <div *ngIf="!showCreatedUser && showUpdateUser" class="mt-3">
+                                <div class="checkbox">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="acceptTerms"
+                                            name="acceptTerms" formControlName="sendEmailNotification"
+                                            (change)="checkSendEmailNotification($event)">
+                                        <label class="d-flex" for="acceptTerms">{{'EMAIL_NOTICE_TEXT'
+                                            | translate }}</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="!showCreatedUser && showUpdateUser" class="form-group">
+                                <div class="col-sm-7">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <div class="checkbox">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox" id="acceptTerms"
+                                                        name="acceptTerms"
+                                                        formControlName="sendAdditionalEmailNotification"
+                                                        [(ngModel)]="user.sendAdditionalEmailNotification">
+                                                    <label class="d-flex" for="acceptTerms">{{'EMAIL_ANOTHER_USER_TEXT'
+                                                        | translate }} </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6" *ngIf="user.sendAdditionalEmailNotification">
+                                            <div class="input-group" [ngClass]="{'has-error':additionalEMailErrMsg}">
+                                                <div class="input-group-addon">
+                                                    <img src="assets/images/icon-textfield-email.png" alt="email">
+                                                </div>
+                                                <input name="emailAnotherUser" class="form-control"
+                                                    formControlName="emailAnotherUser"
+                                                    [(ngModel)]="user.emailAnotherUser" (keyup)="validateEmail($event)"
+                                                    required="required" maxlength="100" />
+                                            </div>
+                                            <div *ngIf="additionalEMailErrMsg">
+                                                <span class="error-block">{{'ERR_EMAIL_VALID_MSG' |
+                                                    translate }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="!showCreatedUser && showCreateUser" class="flex-row-button mt-3">
+                                <button type="submit" class="btn blue-bg btn-wide" (click)="createUser()" formnovalidate
+                                    style="margin-right:5px" tabindex="0" (keydown.enter)="createUser()">{{'CREATE_USRER_TEXT'
+                                    | translate }}</button>
+                                <button class="btn  cta-blue info-btn sec-btn btn-width" (click)="cancel()" novalidate>{{'CANCEL'
+                                    | translate }}</button>
+                            </div>
+                            <div *ngIf="!showCreatedUser && showUpdateUser" class="flex-row mt-3 w-full">
+                                <div>
+                                    <button type="submit" class="btn btn-primary btn-block primary-btn" (click)="showManageUserSaveModal()"
+                                        formnovalidate>{{'SAVE'
+                                        | translate }}</button>
+                                    <button class="btn white-bg ml-3 sec-btn"  (click)="cancel()" novalidate>{{'CANCEL'
+                                        | translate }}</button>
+                                </div>
+                                <button type="submit" class="btn white-bg sec-btn" (click)="showConfirmDeleteModal()"
+                                    [disabled]="flagEAPUAPuser" formnovalidate>{{'DEL_USER_TEXT'
+                                    | translate }}</button>
+                            </div>
+                            <div *ngIf="!showCreatedUser && showApproveRejectUser" class="flex-row mt-3 w-full">
+                                <div>
+                                    <button type="submit" class="btn blue-bg" (click)="saveApprove()"
+                                        formnovalidate>{{'SAVE_APPROVE_TEXT'
+                                        | translate }}</button>
+                                    <button class="btn white-bg ml-3 sec-btn" (click)="cancel()" novalidate>{{'CANCEL'
+                                        | translate }}</button>
+                                </div>
+                                <button type="submit" class="btn white-bg sec-button" (click)="showConfirmRejectModal()"
+                                    formnovalidate>{{'REJECT'
+                                    | translate }}</button>
+                            </div>
+                            <!-- Reinstate Button -->
+                            <div *ngIf="showCreatedUser && showInactiveUser" class="mt-3">
+                                <button type="submit" class="btn blue-bg" (click)="reinstateUser()"
+                                    formnovalidate>{{'REINSTATE' |
+                                    translate }}</button>
+                            </div>
+                            <!-- End Reinstate Button -->
+                            <!-- Receive Email Notifications -->
+                            <div class="col-sm-4" style="margin-top:-10px; margin-bottom:10px;">
+                                <button *ngIf="resendTCButton" class="btn manageUserResendTCButton"
+                                    (click)="sendTermsAndConditions(user.emailAddress)">{{
+                                    'RESEND_TERMS_CONDITIONS' | translate }}</button>
+                            </div>
+                            <!-- End Email Notifications -->
+                            <!-- Additional Update Options -->
+                            <div *ngIf="showCreatedUser && user.sendEmailNotification" class="form-group">
+                                <div class="col-sm-7">
+                                    <label class="control-label">{{'EMAIL_NOTICE_TEXT' |
+                                        translate }}: </label> <label *ngIf="user.sendEmailNotification">{{'YES'
+                                        | translate }}</label> <label *ngIf="!user.sendEmailNotification">{{'NO'
+                                        | translate }}</label>
+                                </div>
+                            </div>
+                            <div *ngIf="showCreatedUser && user.sendAdditionalEmailNotification" class="form-group">
+                                <div class="col-sm-7">
+                                    <label class="control-label">{{'EMAIL_ANOTHER_USER_TEXT' |
+                                        translate }}</label> <label
+                                        *ngIf="user.sendAdditionalEmailNotification">{{user.emailAnotherUser}}</label>
+                                    <label *ngIf="!user.sendAdditionalEmailNotification">{{'NO'
+                                        | translate }}</label>
+                                </div>
+                            </div>
+                            <!-- End Additional Update Options -->
+                        </form>
+                        <div *ngIf="showCreatedUser && !showApprovedUser && !showInactiveUser" class="mt-3">
+                            <button class="btn blue-bg" (click)="updateView()">{{'UPDATE_TEXT' | translate }}
+                            </button>
+                        </div>
+                    </div>
+                    <!-- End Create User Form -->
+                </div>
+            </span>
+            <!--Begin Autopay Enroll Form-->
+            <app-obpp-enroll-autopay *ngIf="showEnrollAutoPay"></app-obpp-enroll-autopay>
+        </div>
+    </span>
+</div>
