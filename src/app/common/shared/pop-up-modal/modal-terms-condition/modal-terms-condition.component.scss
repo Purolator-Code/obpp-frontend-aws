@@ -1,0 +1,18 @@
+::ng-deep .modal-dialog {
+    max-width: 300px !important;
+}
+
+.modal-body { font-size: 15px;
+    text-align: center;
+    p {
+        margin: 0 !important;
+    }
+}
+
+.modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    outline: none;
+}

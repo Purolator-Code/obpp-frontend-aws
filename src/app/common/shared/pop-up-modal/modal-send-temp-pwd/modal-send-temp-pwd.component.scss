@@ -1,0 +1,37 @@
+.error {
+  color: red;
+}
+
+::ng-deep .warning {
+  background-color: #acacac;
+  color: white;
+  font-weight: bold !important;
+  height: 50px;
+}
+
+.success {
+  background-color: green;
+  color: white;
+  font-weight: bold !important;
+}
+
+.modal-footer {
+  text-align: center;
+  display: inherit;
+}
+
+::ng-deep .modal-content {
+  max-width: 300px !important;
+}
+
+.row {
+  align-items: center;
+}
+
+h4 {
+  font-size: 21px;
+}
+
+.modal-body label {
+  padding: 0px;
+}

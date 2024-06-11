@@ -1,0 +1,310 @@
+<div class="modal-header" [ngClass]="
+    modalType == 'error'
+      ? 'error'
+      : modalType == 'warning'
+      ? 'warning'
+      : 'success'
+  ">
+  <h3 class="modal-title w-100 text-center">
+    {{ my_modal_title | translate }}
+  </h3>
+</div>
+<div class="modal-body col-md-12">
+  <form [formGroup]="QuickPayInvoiceForm">
+    <div class="col-md-12 text-left">
+      <h3 class="panel-title">{{ "SEARCH_KEY" | translate }}</h3>
+    </div>
+
+    <div class="row" *ngIf="
+        errMsgFactory?.displayErrorMsgBlock &&
+        errMsgFactory?.getErrorMessageList().length > 0
+      ">
+      <div class="col-md-12 error-block">
+        <ul>
+          <li *ngFor="let errMsg of errMsgFactory?.getErrorMessageList()">
+            {{ errMsg.value | translate }}
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card panel-quickpay-accountSearch col-md-12">
+      <div class="row form-horizontal">
+        <div class="col-md-3 transactionLog-Container">
+          <h3 class="search-title">
+            {{ "SEARCH_BY_ACC_NUMBER_INVOICES" | translate }}
+          </h3>
+          <div class="input-group">
+            <div class="form-floating user-input">
+              <input type="text" id="acountNumber" [class]="
+                  QuickPayInvoiceForm.get('accountNumber')?.invalid &&
+                  QuickPayInvoiceForm.get('accountNumber')?.dirty
+                    ? 'form-control is-invalid'
+                    : 'form-control'
+                " formControlName="accountNumber" minlength="2" maxlength="12"
+                placeholder="{{ 'TL_ACCOUNT_LABEL' | translate }}" (input)="checkDuplicateAccount()" />
+              <label for="accountNumber">{{
+                "TL_ACCOUNT_LABEL" | translate
+                }}</label>
+              <div class="w-100" *ngIf="
+                  QuickPayInvoiceForm.get('accountNumber')?.invalid &&
+                  QuickPayInvoiceForm.get('accountNumber')?.dirty
+                ">
+                <span class="error-block">{{
+                  "INVALID_ACCOUNT_NUMBER_TEXT" | translate
+                  }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="input-group">
+            <div class="form-floating user-input">
+              <input type="text" name="invoiceNumber" class="form-control" formControlName="invoiceNumber"
+                maxLength="16" placeholder="{{
+                  'TL_INVOICE_NUMBER_LABEL' | translate
+                }}" style="border-radius: 0.25rem !important" aria-describedby="basic-addon1" 
+                [class]="
+                QuickPayInvoiceForm.get('invoiceNumber')?.invalid &&
+                QuickPayInvoiceForm.get('invoiceNumber')?.dirty
+                  ? 'form-control is-invalid'
+                  : 'form-control'"/>
+              <label for="invoiceNumber">{{
+                "TL_INVOICE_NUMBER_LABEL" | translate
+                }}</label>
+                <div class="w-100" *ngIf="
+                    QuickPayInvoiceForm.get('invoiceNumber')?.invalid &&
+                    QuickPayInvoiceForm.get('invoiceNumber')?.dirty
+                  ">
+                  <span class="error-block">{{
+                    "INVALID_INVOICE_NUMBER_POSTAL_CODE_TEXT" | translate
+                    }}</span>
+                </div>
+            </div>
+          </div>
+          <br>
+          <div class="d-flex justify-content-between">
+            <button type="submit" class="btn btn-primary btn-block primary-btn form-control"
+              (click)="seachByAccountOrInvoice()">
+              {{ "SEARCH_KEY" | translate }}
+            </button>
+            <button class="btn white-bg  sec-btn btn-width" (click)="clearFieldCol1()">
+              {{ "CLEAR_TEXT" | translate }}
+            </button>
+          </div>
+        </div>
+        
+        <!-- Second Column -->
+        <div class="col-md-6 transactionLog-Container">
+          <h3 class="search-title">
+            {{ "SEARCH_BY_ACC_NUMBER_NAME_INVOICES" | translate }}
+          </h3>
+          <div class="d-flex">
+            <div class="input-group pr-15">
+              <div class="form-floating user-input">
+                <input name="accountName" type="text" class="form-control" formControlName="accountName"
+                  placeholder="{{ 'TL_NAME_LABEL' | translate }}" />
+                <label for="accountName">{{
+                  "TL_NAME_LABEL" | translate
+                  }}</label>
+              </div>
+            </div>
+            <div class="input-group">
+              <div class="form-floating user-input">
+                <input name="phoneNumber" type="text" class="form-control" formControlName="phoneNumber"
+                  placeholder="{{ 'TELEPHONE_TEXT' | translate }}" />
+                <label for="phoneNumber">{{
+                  "TELEPHONE_TEXT" | translate
+                  }}</label>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex">
+            <div class="input-group pr-15">
+              <div class="form-floating user-input">
+                <input name="postalText" type="text" class="form-control" formControlName="postalCode" maxlength="25"
+                  placeholder="{{ 'POSTAL_TEXT' | translate }}" />
+                <label for="postalText">{{ "POSTAL_TEXT" | translate }}</label>
+                <span class="canadian-text">{{'CANADIAN_PC_ONLY' | translate}}</span>
+              </div>
+            </div>
+            <div class="input-group">
+              <div class="form-floating user-input">
+                <input name="city" type="text" class="form-control" formControlName="city" maxlength="25"
+                  placeholder="{{ 'CITY_TEXT' | translate }}" />
+                <label for="city">{{ "CITY_TEXT" | translate }}</label>
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="d-flex">
+            <div class="input-group pr-15">
+              <div class="form-floating user-input">
+                <input name="streetName" type="text" class="form-control" formControlName="streetName" maxlength="25"
+                  placeholder="{{ 'STREET_NAME_TEXT' | translate }}" />
+                <label for="streetName">{{
+                  "STREET_NAME_TEXT" | translate
+                  }}</label>
+              </div>
+            </div>
+            <div class="input-group">
+              <div class="form-floating user-input">
+                <input name="streetNumber" type="text" class="form-control" formControlName="streetNumber"
+                  maxlength="25" placeholder="{{ 'STREET_NUMBER_TEXT' | translate }}" />
+                <label for="streetNumber">{{
+                  "STREET_NUMBER_TEXT" | translate
+                  }}</label>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary btn-block primary-btn form-control" style="margin-right: 15px"
+              (click)="seachByAccountsInfo()">
+              {{ "SEARCH_KEY" | translate }}
+            </button>
+            <button class="btn white-bg  sec-btn btn-width" (click)="clearFieldCol2()">
+              {{ "CLEAR_TEXT" | translate }}
+            </button>
+          </div>
+        </div>
+        <!-- Third Column -->
+        <div class="col-md-3 transactionLog-Container">
+          <h3 class="search-title">
+            {{ "SEARCH_BY_BILL_OF_LADING" | translate }}
+          </h3>
+          <div class="input-group">
+            <div class="form-floating user-input">
+              <input name="billLanding" type="text" class="form-control" formControlName="billLanding"
+                placeholder="{{ 'BILL_OF_LADING_LABEL' | translate }}" />
+              <label for="billLanding">{{
+                "BILL_OF_LADING_LABEL" | translate
+                }}</label>
+            </div>
+          </div>
+          <div class="d-flex justify-content-between">
+            <button type="submit" class="btn btn-primary btn-block primary-btn form-control" (click)="seachByBOL()">
+              {{ "SEARCH_KEY" | translate }}
+            </button>
+            <button class="btn white-bg  sec-btn btn-width" (click)="clearFieldCol3()">
+              {{ "CLEAR_TEXT" | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table begins -->
+    <div class="mt-25">
+      <table class="table table-striped p-top-40 col-md-12" aria-live="polite">
+        <thead class="th-thead">
+          <tr>
+            <th style="vertical-align: middle">
+              <input type="checkbox" [(ngModel)]="selectAllData" [ngModelOptions]="{ standalone: true }" #selectAllResult
+                (change)="selectAllResults(selectAllData)" (keydown.enter)="selectAll($event)"/>
+            </th>
+            <th style="vertical-align: middle; width: 10%">
+              {{ "ACCOUNT_NUMBER_TEXT" | translate }}
+            </th>
+            <th style="vertical-align: middle; width: 20%">
+              {{ "TL_ACNT_NAME_LABEL" | translate }}
+            </th>
+            <th style="vertical-align: middle; width: 20%">
+              {{ "ADDRESS_FIELD_LABEL" | translate }}
+            </th>
+            <th style="vertical-align: middle">
+              {{ "PROVINCE_TEXT" | translate }}
+            </th>
+            <th style="vertical-align: middle">
+              {{ "POSTAL_CODE_TEXT" | translate }}
+            </th>
+            <th style="vertical-align: middle; width: 10%">
+              {{ "TELEPHONE_TEXT" | translate }}
+            </th>
+            <th style="vertical-align: middle">
+              {{ "LANGUAGE_TEXT" | translate }}
+            </th>
+            <th style="vertical-align: middle">
+              {{ "ACCOUNT_TYPE_TEXT" | translate }}
+            </th>
+            <th style="vertical-align: middle">
+              {{ "CURRENCY_TEXT" | translate }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="
+              let account of searchResults
+                | paginate : { itemsPerPage: 5, currentPage: p };
+              let i = index
+            ">
+            <td>
+              <input type="checkbox" [(ngModel)]="account.selected" [ngModelOptions]="{ standalone: true }" #selectOneResult
+                (change)="selectResult(account.selected)" (keydown.enter)="selectAccount($event,account.selected,account.accountNumber)" />
+            </td>
+            <td style="vertical-align: middle; width: 10%">
+              {{ account.accountNumber }}
+            </td>
+            <td style="vertical-align: middle; width: 20%">
+              {{ account.accountName }}
+            </td>
+            <td style="vertical-align: middle; width: 20%">
+              {{ account.address }} {{ account.city }}
+            </td>
+            <td>{{ account.province }}</td>
+            <td>{{ account.postalCode }}</td>
+            <td style="vertical-align: middle; width: 10%">
+              {{ account.telephone }}
+            </td>
+            <td>{{ account.language | translate }}</td>
+            <td>{{ account.accountType }}</td>
+            <td>{{ account.currency }}</td>
+          </tr>
+          <tr *ngIf="searchResults.length == 0">
+            <td colspan="10" class="text-blue text-center">
+              {{ "NO_INVOICES_MATCHING_ERROR_OPEN_INVOICES" | translate }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <pagination-controls *ngIf="searchResults.length != 0" 
+        (pageChange)="p = $event"
+        class="text-center"
+        [previousLabel]="'PREVIOUS' | translate"
+        [nextLabel]="'NEXT' | translate">
+      </pagination-controls>
+    </div>
+
+    <!-- Table Ends -->
+  </form>
+</div>
+<div class="modal-footer col-md-12">
+  <div class="col-md-12 t-err" *ngIf="isDuplicatePay">
+    <span class="text-primary text-left">
+      {{ "EMPLOYEE_DUPLICATE_ACCOUNT" | translate }}
+    </span>
+  </div>
+  <div class="col-md-12 t-err" *ngIf="isEmptySelection()">
+    <span class="text-primary text-left">
+      {{ "EMPTY_CHECKBOX_ADD_ACCOUNT" | translate }}
+    </span>
+  </div>
+  <div class="d-flex justify-content-between">
+    <div class="d-flex justify-content-between">
+      <button class="btn btn-primary btn-block primary-btn form-control freightPayNow"
+        style="width: 200px; margin-right: 20px" (click)="successActionFunc()">
+        {{ "ADD_SELECTED_ACCOUNTS_TEXT" | translate }}
+      </button>
+      <button class="btn white-bg  sec-btn btn-width1" style="width: 145px"
+        (click)="clearFieldCol1(); clearFieldCol2(); clearFieldCol3()">
+        {{ "NEW_SEARCH_TEXT" | translate }}
+      </button>
+    </div>
+    <button class="btn white-bg  sec-btn btn-width"
+      (click)="clearResults(); cancelActionFunc()">
+      {{ "EFT_GUIDELINES_CLOSE" | translate }}
+    </button>
+  </div>
+  <div class="col-md-12">
+    <span class="txt-puro-red">{{
+      "FIRST_HUNDRED_RECORDS_TEXT" | translate
+      }}</span>
+  </div>
+</div>

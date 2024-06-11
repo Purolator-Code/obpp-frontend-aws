@@ -1,0 +1,17 @@
+<div *ngIf="hasAlertMessage">
+  <p *ngFor="let alert of alerts" class="errors">
+    <ngb-alert *ngIf="lang != 'fr'" [dismissible]="false" (closed)="close(alert)"
+      class="d-flex align-items-start custom-alert">
+      <p style="padding:10px" tabindex="0">{{ alert.messageEn|translate }}</p>
+      <img class="icon close cursor-pointer" src="assets/images/icon-alert-general-remove.svg" (click)="close(alert)" tabindex="0"
+        alt="close"  (keyup.enter)="close(alert)">
+    </ngb-alert>
+    
+    <ngb-alert *ngIf="lang != 'en'" [type]="alert.type" [dismissible]="false" (closed)="close(alert)"
+      class="custom-alertd-flex align-items-start custom-alert">
+      <p style="padding:10px" tabindex="0">{{ alert.messageFr | translate }}</p>
+      <img class="icon close cursor-pointer" src="assets/images/icon-alert-general-remove.svg" (click)="close(alert)" tabindex="0"
+        alt="close"  (keyup.enter)="close(alert)">
+    </ngb-alert>
+  </p>
+</div>

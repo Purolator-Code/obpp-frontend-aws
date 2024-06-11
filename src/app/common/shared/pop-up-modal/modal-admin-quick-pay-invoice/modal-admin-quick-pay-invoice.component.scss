@@ -1,0 +1,174 @@
+.lbl {
+  align-self: center !important;
+}
+
+.lbl-err {
+  align-self: flex-start !important;
+  position: relative;
+  top: 10px !important;
+}
+
+.p-top-40 {
+  padding-top: 40px !important;
+}
+
+.t-err {
+  text-align: left;
+  padding-left: 25px !important;
+}
+
+.error {
+  background-color: red;
+  color: white;
+  font-weight: bold !important;
+}
+
+.table-scrollable {
+  display: block;
+  height: 400px;
+  overflow-x: auto;
+}
+
+.tbc-rev {
+  display: revert !important;
+}
+
+.tbc {
+  display: table !important;
+}
+
+.table-scrollable > tbody {
+  width: 100% !important;
+}
+
+.table-scrollable > thead {
+  position: sticky;
+  top: 0px;
+  z-index: 1;
+  width: 100% !important;
+}
+
+::ng-deep .warning {
+  background-color: #acacac;
+  color: white;
+  font-weight: bold !important;
+}
+
+.success {
+  background-color: green;
+  color: white;
+  font-weight: bold !important;
+}
+
+.modal-body {
+  font-size: 15px;
+  white-space: pre-wrap;
+}
+
+.modal-footer {
+  text-align: center;
+  display: inherit;
+}
+
+.modal-title {
+  color: #fff;
+  font-size: 40px;
+}
+
+.fa-icon-field {
+  height: 100% !important;
+}
+
+.modal-dialog {
+  min-width: 576px !important;
+  width: 100% !important;
+  margin: 1.75rem auto !important;
+  max-width: 1200px !important;
+}
+
+.panel-title {
+  font-size: 20px;
+  color: #001996;
+}
+
+.panel-quickpay-accountSearch {
+  background-color: #ededed;
+  padding: 30px;
+}
+
+.search-title {
+  font-size: 16px;
+  color: black;
+  font-weight: 600;
+}
+
+.info-btn {
+  width: 85px;
+}
+
+.primary-btn {
+  width: 150px;
+}
+
+.pr-15 {
+  padding-right: 15px;
+}
+
+.th-thead {
+  background-color: #d3d3d3;
+  height: 55px;
+}
+
+.mt-25 {
+  margin-top: 25px;
+}
+
+::ng-deep .ngx-pagination .current {
+  background: #001996 !important;
+}
+
+.canadian-text{
+  color: red;
+  font-size: 10px;
+}
+
+input[type='text']:focus{
+  outline: 2px solid #001996 !important ;
+  border: none !important;
+}
+
+input[type='checkbox']:focus{
+  outline: 2px solid #001996 !important ;
+  border: none !important;
+}
+.btn-width{
+  width:76px !important;
+  height: 50px !important;
+}
+.sec-btn:focus{
+  outline: 3px solid #001996;
+  background-color: #ffffff !important;
+  color: #001996 !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+.btn-width{
+  width:80px !important;
+  height: 55px !important;
+  line-height: 0px !important;
+ 
+}
+.btn-width1{
+  width: 155px !important;
+  height: 55px !important;
+}
+.white-bg {
+  color: #001996;
+  background: #ffffff;
+  border: 1px solid #000000;
+  height: 50px;
+}
+button:hover{
+  outline :1px solid #0a58ca !important;
+  border: 1px solid #0a58ca !important;
+ }

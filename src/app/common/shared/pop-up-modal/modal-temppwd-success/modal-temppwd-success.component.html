@@ -1,0 +1,13 @@
+<div>
+    <div class="modal-header" [ngClass]="modalType == 'error' ? 'error' : modalType == 'warning' ? 'warning' : 'success'">
+            <h4 class="modal-title">{{'SEND_TEMP_PASSWORD_SUCCESS_TITLE' | translate}}</h4>
+        </div>
+        <div class="modal-body text-center">
+         {{'SEND_TEMP_PASSWORD_SUCCESS_TEXT' | translate}} - {{user_data}} - {{'SEND_TEMP_PASSWORD_SUCCESS_TEXT_PART2' | translate}}     
+        </div>
+        
+         
+        <div class="modal-footer d-flex justify-content-center">
+            <button class="btn btn-primary btn-block primary-btn" (click)="closeTempPasswordSuccessModal()">{{'OK' | translate}}</button>
+        </div>
+    </div>

@@ -1,0 +1,66 @@
+.errors{
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    background: #FFEEEE;
+    border: 1px solid #DB0000;
+    border-radius: 4px;
+}
+
+.custom-alert {
+    background-color: #FFEEEE !important;
+    color: #DB0000 !important;
+    margin: 0 !important;
+    font-size: 16px;
+}
+
+.close {
+    font-size: 20px;
+    float: right;
+}
+
+::ng-deep .warning {
+    background-color: #acacac;
+    color: white;
+    font-weight: bold !important;
+}
+
+.success {
+    background-color: green;
+    color: white;
+    font-weight: bold !important;
+}
+
+.modal-body { font-size: 15px;
+    white-space: pre-wrap;
+    text-align: center;
+}
+
+.modal-footer {
+    text-align: center;
+    display: inherit;
+}
+
+.modal-title {
+    font-weight: bold !important;
+}
+
+.modal-content {
+    max-width: 400px !important;
+}
+
+.fa-icon-field {
+    height: 100% !important;
+}
+
+img:focus{
+    outline: 2px solid #E00000;
+    border-radius: 50%;
+   }
+  
+   img:hover{
+     outline: 2px solid #E00000 ;
+     border-radius: 50%;
+   }

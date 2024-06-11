@@ -1,0 +1,60 @@
+.error {
+    background-color: red;
+    color: white;
+    font-weight: bold !important;
+}
+
+::ng-deep .warning {
+    background-color: #acacac;
+    color: white;
+    font-weight: bold !important;
+}
+
+.success {
+    background-color: green;
+    color: white;
+    font-weight: bold !important;
+}
+
+.modal-body { font-size: 15px;
+    white-space: pre-wrap;
+    text-align: center;
+}
+
+.modal-footer {
+    text-align: center;
+    display: inherit;
+}
+
+.modal-title {
+    font-weight: bold !important;
+}
+
+::ng-deep .modal-content {
+    max-width: 750px !important;
+}
+
+.form-newPassword-container {
+    margin-bottom: 0;
+}
+
+.row {
+    align-items: center;
+}
+
+ h3 {
+    font-size:  22px; 
+    font-weight: 100 !important;
+}
+
+.input-group-addon{
+    padding: 5px;
+}
+
+.form-group.row {
+    justify-content: space-between;
+}
+
+.fa-icon-field {
+    height: 100% !important;
+} 

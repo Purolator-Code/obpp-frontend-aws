@@ -1,0 +1,97 @@
+<div class="modal-header" [ngClass]="modalType == 'error' ? 'error' : modalType == 'warning' ? 'warning' : 'success'">
+    <h3 class="modal-title w-100 text-center">{{my_modal_title | translate}}</h3>
+</div>
+<div class="modal-body">
+    <p> {{my_modal_content | translate}}</p>
+    <div class="alert alert-danger" role="alert" *ngIf="displayErrorMsgBlock">
+        <div class="container">
+            <div class="col-xs-6 error-padding-left">
+                <ul>
+                    <li>{{errMsg | translate}}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <form [formGroup]="changeForm">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text fa-icon-field" id="basic-addon1">
+                                <i class="fa fa-envelope" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                        <input type="email" class="form-control" formControlName="username"
+                            placeholder="{{'LOGIN_EMAIL_PLACEHOLDER_KEY' | translate}}" required=true
+                            aria-label="Username" aria-describedby="basic-addon1">
+                        <div class="w-100" *ngIf="changeForm.get('username')?.invalid && (changeForm.get('username')?.dirty)">
+                            <span class="error-block">{{ 'EMAIL_VALID' | translate }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text fa-icon-field" id="basic-addon1">
+                                <i class="fa fa-key"></i>
+                            </span>
+                        </div>
+                        <input type="password" class="form-control" formControlName="password" minlength="8"
+                            maxLength="16" placeholder="{{'LOGIN_PASSWORD_PLACEHOLDER_KEY' | translate}}"
+                            aria-label="Password" aria-describedby="basic-addon1">
+                        <div class="w-100"
+                            *ngIf="changeForm.get('password')?.invalid && (changeForm.get('password')?.dirty)">
+                            <span class="error-block">{{ 'VALID_PASSWORD_TEXT' | translate }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+
+                <div class="d-grid gap-2 p-bottom-10">
+                    <button [disabled]="changeForm.invalid" type="button" *ngIf="firstButtonLabel"
+                        class="btn btn-primary btn-block primary-btn btn-block w-100"
+                        (click)="successActionFunc(changeForm)">{{firstButtonLabel |
+                        translate}}</button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div>
+                    <label class="pull-left">
+                        <input type="checkbox" formControlName="remember"> {{'REMEMBER_ME_TEXT' | translate}}
+                        &#160;<img alt="{{'LOGIN_REMEMBERME_TOOLTIP_TEXT' | translate}}" tabindex="0" class="icon" placement="right" style="padding:0px" src="assets/images/icon-tooltip.svg"
+                        ngbTooltip="{{'LOGIN_REMEMBERME_TOOLTIP_TEXT' | translate}}">
+                    </label>
+                </div>
+            </div>
+            <div class="col-sm-2">
+            </div>
+            <div class="col-sm-4">
+                <div class="mt-1">
+                    <a href="javascript:void(0)" (click)="forgotPassword()">{{'FORGOT_PSWD_TEXT' | translate}}</a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="d-grid gap-2 p-bottom-10">
+                    <button  type="button" *ngIf="secondButtonLabel"
+                        class="btn btn-primary cta-blue info-btn w-100"
+                        (click)="cancelActionFunc()">{{secondButtonLabel |
+                        translate}}</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+

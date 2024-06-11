@@ -1,0 +1,40 @@
+.modal-header {
+  background-color: #fff;
+  color: #001996;
+  font-size: 2em;
+  line-height: 1.2;
+  font-weight: 500 !important;
+  text-align: center;
+  padding: 8px 0;
+}
+
+h4 {
+  font-size: 21px;
+  margin: auto;
+}
+
+::ng-deep .modal-dialog {
+  width: auto;
+}
+
+.modal-title {
+  color: #fff;
+}
+
+.btn-block {
+    width: auto;
+    height: 53px !important;
+}
+
+.sec-btn:focus{
+  outline: 3px solid #001996;
+   background-color: #ffffff !important;
+   color: #001996 !important;
+   box-shadow: none !important;
+   border: none !important;
+ }
+
+.primary-btn {
+    width: 179px !important;
+    height: 55px;
+}

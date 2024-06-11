@@ -1,0 +1,10 @@
+<div *ngFor="let alert of alerts" class="alert-width">
+  
+  <ngb-alert [type]="alert['type']" [dismissible]="false">
+    <i class="fa fa-file-text"></i>
+    {{ alert.accNumber }}
+    <button (click)="closeModal(alert)" class="close text-white"><i class="fa fa-times-circle close cursor-pointer"></i></button>
+
+  </ngb-alert>
+  
+</div>

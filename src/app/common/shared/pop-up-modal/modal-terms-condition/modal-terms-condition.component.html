@@ -1,0 +1,21 @@
+<div class="modal-body">
+  <p>{{ my_modal_content | translate }}</p>
+</div>
+<div class="modal-footer d-flex justify-content-center">
+  <button
+    type="button"
+    *ngIf="firstButtonLabel"
+    class="btn btn-primary btn-block primary-btn"
+    (click)="successActionFunc()"
+  >
+    {{ firstButtonLabel | translate }}
+  </button>
+  <button
+    type="button"
+    *ngIf="secondButtonLabel"
+    class="btn btn-primary cta-blue info-btn"
+    (click)="cancelActionFunc()"
+  >
+    {{ secondButtonLabel | translate }}
+  </button>
+</div>

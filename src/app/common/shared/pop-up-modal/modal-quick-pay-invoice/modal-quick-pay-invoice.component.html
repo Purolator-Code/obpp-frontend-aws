@@ -1,0 +1,80 @@
+<div class="modal-header" [ngClass]="modalType == 'error' ? 'error' : modalType == 'warning' ? 'warning' : 'success'">
+  <h3 class="modal-title w-100 text-center">{{my_modal_title | translate}}</h3>
+</div>
+<div class="modal-body">
+  <p class="card-text">{{'PAY_FOR_SINGLE_INVOICE_KEY' | translate }}</p>
+
+  <form [formGroup]="QuickPayInvoiceForm">
+    <div class="form-group input-group mb-3">
+      <div class="input-group">
+        <div class="form-floating user-input p-bottom-24">
+          <input type="text" class="form-control" formControlName="accountNumber" id="accountNumber"
+            placeholder="{{'ACCOUNT_NUMBER_TEXT' | translate}}" aria-label="accountNumber"
+            aria-describedby="basic-addon1" (input)="checkDuplicateAccount()" minlength="2" maxlength="12"
+            [class]="QuickPayInvoiceForm.get('accountNumber')?.invalid && QuickPayInvoiceForm.get('accountNumber')?.dirty ? 'form-control is-invalid' : 'form-control'">
+          <label for="accountNumber">{{'ACCOUNT_NUMBER_TEXT' | translate}}</label>
+          <div class="w-100"
+            *ngIf="QuickPayInvoiceForm.get('accountNumber')?.invalid && QuickPayInvoiceForm.get('accountNumber')?.dirty">
+            <span class="error-block">{{ 'INVALID_ACCOUNT_NUMBER_TEXT' | translate }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group input-group mb-3">
+      <p style="margin-bottom:0px !important" class="w-100 text-start">{{ 'VERIFIACTION_QUICK_PAY' | translate }}
+        <img alt="{{ 'TOOLTIP_QP_PC_INVOICE' | translate}}" tabindex="0" class="icon" src="assets/images/icon-tooltip.svg"
+          ngbTooltip="{{ 'TOOLTIP_QP_PC_INVOICE' | translate}}">
+      </p>
+      <div [ngStyle]="{display:'flex'}">
+        <div class="input-group">
+            <div class="form-floating user-input p-bottom-24">
+                <input type="text" class="form-control user-input" id="invoiceNumber"
+                    formControlName="invoiceNumber" maxLength="15" (keyup)="disablePostalOrInvoice('invoice')"
+                    placeholder="{{'INVOICE_NUMBER_TEXT' | translate}}"
+                    style="border-radius: 0.25rem !important; height: 55px;" aria-describedby="basic-addon1"
+                    [class]="QuickPayInvoiceForm.get('invoiceNumber')?.invalid && QuickPayInvoiceForm.get('invoiceNumber')?.dirty ?
+                    'form-control is-invalid' : 'form-control'"  [readonly]="isInvoiceNumberDisabled">
+                <label for="invoiceNumber">{{'INVOICE_NUMBER_TEXT' | translate}}</label>
+                <div class="w-100"
+                    *ngIf="QuickPayInvoiceForm.get('invoiceNumber')?.invalid && QuickPayInvoiceForm.get('invoiceNumber')?.dirty">
+                    <span class="text-danger error-message">{{ 'INVALID_INVOICE_NUMBER_TEXT' | translate
+                        }}</span>
+                </div>
+                <div class="w-100" *ngIf="isDuplicatePay">
+                    <span class="text-danger error-message">{{ 'DUPLICATE_ACCOUNT_QUICKPAY' | translate
+                        }}</span>
+                </div>
+            </div>
+        </div>
+        <span [ngStyle]="{padding:'18px 5px 15px'}">{{"OR"|translate}}</span>
+        <div class="input-group">
+            <div class="form-floating user-input p-bottom-24">
+                <input type="text" class="form-control user-input" id="postalCode" formControlName="postalCode"
+                    maxLength="11" placeholder="{{'POSTAL_CODE_TEXT' | translate}}" [readonly]="isPostalCodeDisabled"
+                    style="border-radius: 0.25rem !important; height: 55px;" aria-describedby="basic-addon1"
+                    [class]="QuickPayInvoiceForm.get('postalCode')?.invalid && QuickPayInvoiceForm.get('postalCode')?.dirty ?
+                    'form-control is-invalid' : 'form-control'" (keyup)="disablePostalOrInvoice('postal')">
+                <label for="invoiceNumber">{{'POSTAL_CODE_TEXT' | translate}}</label>
+                <div class="w-100"
+                    *ngIf="QuickPayInvoiceForm.get('postalCode')?.invalid && QuickPayInvoiceForm.get('postalCode')?.dirty">
+                    <span class="text-danger error-message">{{ 'INVALID_POSTAL_CODE_TEXT' | translate
+                        }}</span>
+                </div>
+                <div class="w-100" *ngIf="isDuplicatePay">
+                    <span class="text-danger error-message">{{ 'DUPLICATE_ACCOUNT_QUICKPAY' | translate
+                        }}</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer d-flex justify-content-center">
+  <button [disabled]="QuickPayInvoiceForm.invalid" type="button" *ngIf="firstButtonLabel"
+    class="btn btn-primary btn-block primary-btn" (click)="successActionFunc()">{{firstButtonLabel |
+    translate}}</button>
+  <button type="button" *ngIf="secondButtonLabel" class="btn btn-primary cta-blue info-btn"
+    (click)="cancelActionFunc()">{{secondButtonLabel | translate}}</button>
+</div>

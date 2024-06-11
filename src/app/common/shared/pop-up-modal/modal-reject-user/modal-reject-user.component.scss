@@ -1,0 +1,59 @@
+.error {
+  color: red;
+}
+
+::ng-deep .warning {
+  background-color: #acacac;
+  color: white;
+  font-weight: bold !important;
+}
+
+.success {
+  background-color: green;
+  color: white;
+  font-weight: bold !important;
+}
+
+.modal-footer {
+  text-align: center;
+  display: inherit;
+}
+
+.modal-content {
+  max-width: 300px !important;
+}
+
+.row {
+  align-items: center;
+}
+
+h4 {
+  font-size: 21px;
+}
+
+.modal-body label {
+  padding: 0px;
+}
+
+.sec-btn:focus{
+  outline: 3px solid #001996;
+  background-color: #ffffff !important;
+  color: #001996 !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.form-control:focus {
+  color: #212529;
+  background-color: #fff !important;
+  outline: 2px solid #001996 !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.white-bg {
+  color: #001996;
+  background: #ffffff;
+  border: 1px solid #001996;
+  height: 50px;
+}

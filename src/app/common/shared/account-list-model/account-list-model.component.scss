@@ -1,0 +1,57 @@
+.error {
+    background-color: red;
+    color: white;
+    font-weight: bold !important;
+}
+
+.alert-width {
+    display: inline-flex !important;
+}
+
+.alert-success {
+    background-color: green;
+    font-weight: bold !important;
+    color:white;
+}
+
+.close {
+    background-color: green !important;
+    border: 0px;
+    padding: 0px;
+    font-size: 20px;
+    padding-left: 10px;
+}
+
+::ng-deep .warning {
+    background-color: #acacac;
+    color: white;
+    font-weight: bold !important;
+}
+
+.success {
+    background-color: #777 !important;
+    color: white;
+    font-weight: bold !important;
+}
+
+.modal-body { font-size: 15px;
+    white-space: pre-wrap;
+    text-align: center;
+}
+
+.modal-footer {
+    text-align: center;
+    display: inherit;
+}
+
+.modal-title {
+    font-weight: bold !important;
+}
+
+.modal-content {
+    max-width: 400px !important;
+}
+
+.fa-icon-field {
+    height: 100% !important;
+}
