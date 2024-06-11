@@ -1,0 +1,420 @@
+/* You can add global styles to this file, and also import other style files */
+/*
+ * OBPP - InnovaPost
+ */
+$primary-color-1: #f00000;
+$primary-color-2: #001996;
+$secondary-color-1: #00a9ce;
+$secondary-color-2: #a2aaad;
+$secondary-color-3: #ffa300;
+$secondary-color-4: #fbdd40;
+$secondary-color-5: #64a70b;
+$secondary-color-6: #c800a1;
+$secondary-color-7: #000000;
+$secondary-color-8: #f8c81e;
+$secondary-color-9: #d3d3d3;
+$secondary-color-10: #f5f6f6;
+$secondary-color-11: #495057;
+$secondary-color-12: #c0c0c0;
+$text-color: #111111;
+$text-color-alt: #001996;
+$text-color-light: #ffffff;
+$text-color-hover: #0a38e6;
+$medium-font-size: 16px;
+$base-font-size: 14px;
+$dropdown-font-size: 14px;
+$btn-font-size: 14px;
+$base-error-font-size: 12px;
+$base-error-color: #f00000;
+$base-font-family: "Open Sans";
+$base-text-color: #495057;
+$footer-font-size: 12px;
+$base-white: #ffffff;
+$text-color-hover: #0a38e6;
+$color-drop-shadows: #d3d3d3;
+$button-secondary-bg-color: #fbdd40;
+$button-secondary-active-bg-color: #f8c81e;
+$text-black: #000000;
+$user-register-botom-space: 1rem;
+
+@font-face {
+  font-family: "Open Sans";
+  src: local("Open Sans"),
+    url(../src/assets/font/OpenSans-VariableFont_wdthwght.ttf)
+      format("truetype");
+}
+
+.form-select {
+  font-size: $base-font-size;
+}
+
+.help-block {
+  font-size: $base-error-font-size;
+}
+
+.txt-puro-red {
+  color: $base-error-color;
+}
+
+.dropdown-toggle::after {
+  vertical-align: 0.5em;
+}
+
+.bgc-secondary-2 {
+  background-color: $secondary-color-2;
+}
+
+.bgc-secondary-9 {
+  background-color: $secondary-color-9;
+}
+
+.bgc-secondary-10 {
+  background-color: $base-white;
+}
+
+#myTabContent {
+  border: 1px solid $secondary-color-2;
+  border-radius: 0.25rem;
+  padding: 1rem;
+  background-color: white;
+}
+
+.acct-summ-tbl {
+  .nav-tabs {
+    height: max-content;
+    .nav-item {
+      height: max-content;
+      border-radius: 0.8rem 0.8rem 0 0;
+      font-size: $base-font-size;
+      font-weight: 400;
+      margin-right: 2rem;
+      color: $secondary-color-11;
+
+      .nav-link {
+        color: $secondary-color-11;
+        font-size: $medium-font-size;
+        border-bottom: none;
+        text-align: center;
+        font-weight: 400;
+        padding: 0.75rem 3rem;
+        &.active {
+          background-color: $base-white;
+          color: $primary-color-2;
+          border-width: 1px 1px 0px 1px;
+          border-style: solid;
+          border-color: #c0c0c0;
+        }
+      }
+    }
+  }
+}
+
+.acct-summ {
+  background-color: $primary-color-2;
+}
+
+.m-1p35 {
+  margin: 0.35rem;
+}
+
+.user-icon {
+  background-color: $primary-color-2;
+  border: 1px solid $primary-color-2;
+  :hover {
+    border: 1px solid $primary-color-2;
+  }
+}
+
+.error-message,
+.error-block {
+  font-size: $base-error-font-size;
+  color: $primary-color-1;
+}
+
+.fa-icon-field {
+  height: 100% !important;
+}
+
+.btn-primary {
+  background-color: $primary-color-2;
+}
+
+.btn-primary:focus{
+border:none;
+box-shadow:none;
+outline:none;
+background-color: $primary-color-2;
+}
+
+.cta-blue {
+  border: 1px solid $primary-color-2 ;
+  background-color: $base-white;
+  color: $primary-color-2;
+  font-size: 16px;
+}
+
+.cta-blue:hover {
+  background-color: $primary-color-2;
+  color: $base-white;
+}
+
+.user-icon-dd {
+  left: -150px !important;
+}
+
+.user-icon-login {
+  border-radius: 0.25rem;
+  background-color: $base-white;
+  color: $primary-color-2;
+  font-size: 1.5rem;
+}
+
+.dropdown-menu {
+  font-size: $dropdown-font-size;
+}
+
+.navbar .logout-menu {
+  left: -21em;
+  transition: 0.5s;
+  width: 350px;
+}
+
+#navbarSubNav {
+  background-color: $primary-color-2;
+}
+
+.nav-tabs {
+  border-bottom: 0px;
+  height: 62px;
+}
+
+.nav-tabs > .nav-item {
+  height: 62px;
+  color: $base-white;
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+}
+
+.nav-tabs > .nav-item a {
+  color: $text-color;
+}
+
+.navbar-nav > .nav-item a {
+  font-size: $base-font-size;
+  padding: 0.5rem 0.5rem;
+  color: $base-text-color;
+}
+
+.navbar-right {
+  align-items: center;
+  align-content: flex-end;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.bg-white {
+  background-color: $base-white;
+}
+
+::ng-deep .container,
+.container-fluid {
+  max-width: 1024px !important;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+body {
+  font-family: $base-font-family;
+  position: relative;
+  color: $base-text-color;
+  font-size: $base-font-size;
+}
+
+input:focus {
+  box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%), 0 0 8px rgb(172 172 172 / 60%) !important;
+}
+
+input,
+.form-control {
+  font-size: $base-font-size;
+  border-color: #495057;
+}
+
+.txt-puro-blue {
+  color: $primary-color-2;
+}
+
+.header-title-border {
+  border-radius: 4px;
+  height: 62px;
+}
+
+.footer-bottom {
+  border-top: 1px solid $color-drop-shadows;
+  font-size: $footer-font-size;
+  height: 92px;
+}
+
+.p-top-10 {
+  padding-top: 10px;
+}
+
+.p-bottom-10 {
+  padding-bottom: 10px;
+}
+
+.p-bottom-24 {
+  padding-bottom: 24px;
+}
+
+.p-right-10 {
+  padding-right: 10px;
+}
+
+.p-left-10 {
+  padding-left: 10px;
+}
+
+// While printing, few contents are not needed to be in the layout
+
+@media print {
+  div.tab-content {
+    border: 0px !important;
+  }
+
+  .no-print,
+  .no-print * {
+    display: none !important;
+  }
+}
+
+.home-tab :hover {
+  border-bottom: 1px solid $secondary-color-1;
+  text-decoration: none;
+}
+.home-tab :active {
+  border-bottom: 1px solid $primary-color-2;
+  text-decoration: none;
+}
+
+.nav-link {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.text-color-primary {
+  color: $text-color !important;
+  text-decoration: none;
+}
+
+.card-main {
+  height: 490px;
+  width: 625px;
+  font-family: $base-font-family;
+}
+
+.card-head {
+  height: 100px;
+  padding: 24px 96px 24px 96px;
+  background: #ffffff;
+  border-bottom: 1px solid #c0c0c0c0;
+}
+
+.card-body {
+  padding: 24px 96px 64px 96px;
+  gap: 24px;
+}
+
+.user-input {
+  height: 79px;
+  width: 100%;
+}
+
+.primary-btn {
+  width: 158px;
+  height: 55px;
+}
+
+.primary-btn:hover {
+  background-color: $base-white;
+  color: $primary-color-2;
+  outline: 1px solid #0a38e6;
+
+}
+
+.primary-btn:focus {
+    outline: 4px solid $secondary-color-1;
+    border: 2px;
+    box-shadow: none;
+}
+
+.icon-tooltip {
+  width: 16px;
+  height: 16px;
+}
+
+.info-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 158px;
+  height: 55px;
+}
+
+.remember-size {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.font-p {
+  font-size: 16px;
+}
+
+.input-margin {
+  margin-bottom: 2rem;
+}
+
+.phoneNumber-width {
+  width: 345px;
+}
+
+.phoneNumberExt-width {
+  width: 160px;
+}
+
+img.icon-tooltip.icon-position {
+  margin: auto;
+  margin-left: 5px !important;
+}
+
+.card-title {
+  font-size: 40px;
+}
+
+.user-input-height {
+  height: 55px;
+}
+
+input[type="checkbox"] {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+}
+
+input[type="checkbox"]:checked::before {
+  background-color: #001996;
+}
+
+input.ng-invalid.ng-dirty {
+  border-color: red;
+}
+
+.modal-header {
+  background-color: #001996 !important;
+  color: #fff !important;
+}
